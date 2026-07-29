@@ -10,27 +10,38 @@ export default async function CertificatesPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
 
-  // Fetch all events where the user has a "time_in" record
+  // Fetch all attendance logs to determine completed events
   const { data: attendanceLogs } = await supabase
     .from('attendance')
     .select(`
       event_id,
+      type,
       timestamp,
       events ( id, title, date, points_awarded )
     `)
     .eq('user_id', user.id)
-    .eq('type', 'time_in')
     .order('timestamp', { ascending: false })
 
-  // Remove duplicates in case they somehow got multiple time_in for the same event
-  const uniqueEvents = new Map()
+  // Group by event_id to check for BOTH time_in and time_out
+  const eventStatus = new Map()
   attendanceLogs?.forEach(log => {
-    if (!uniqueEvents.has(log.event_id) && log.events) {
-      uniqueEvents.set(log.event_id, log.events)
+    if (!eventStatus.has(log.event_id)) {
+      eventStatus.set(log.event_id, {
+        hasTimeIn: false,
+        hasTimeOut: false,
+        event: log.events
+      })
     }
+    
+    const status = eventStatus.get(log.event_id)
+    if (log.type === 'time_in') status.hasTimeIn = true
+    if (log.type === 'time_out') status.hasTimeOut = true
   })
   
-  const earnedCertificates = Array.from(uniqueEvents.values())
+  // An event is only "earned" if the user has BOTH time_in and time_out
+  const earnedCertificates = Array.from(eventStatus.values())
+    .filter(status => status.hasTimeIn && status.hasTimeOut)
+    .map(status => status.event)
 
   return (
     <div className="p-6 md:p-8 max-w-4xl mx-auto space-y-6">
