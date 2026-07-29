@@ -41,8 +41,10 @@ export async function login(prevState: any, formData: FormData) {
 
   if (status === 'pending') {
     redirect('/pending')
-  } else if (actualRole === 'admin' || actualRole === 'officer') {
+  } else if (actualRole === 'admin') {
     redirect('/admin/verification')
+  } else if (actualRole === 'officer') {
+    redirect('/admin/scanner')
   } else {
     redirect('/dashboard')
   }

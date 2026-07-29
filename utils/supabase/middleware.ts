@@ -66,8 +66,15 @@ export async function updateSession(request: NextRequest) {
     }
 
     // Restrict admin routes
-    if (path.startsWith('/admin') && role !== 'admin') {
-      return NextResponse.redirect(new URL('/dashboard', request.url))
+    if (path.startsWith('/admin')) {
+      if (role === 'admin') {
+        // Admins can access anything in /admin
+      } else if (role === 'officer' && path.startsWith('/admin/scanner')) {
+        // Officers can ONLY access the scanner
+      } else {
+        // Everyone else gets booted
+        return NextResponse.redirect(new URL('/dashboard', request.url))
+      }
     }
   }
 

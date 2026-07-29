@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Link from 'next/link'
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 
 function LoginForm({ role }: { role: string }) {
   const [state, formAction, isPending] = useActionState(login, null)
@@ -38,6 +38,8 @@ function LoginForm({ role }: { role: string }) {
 }
 
 export default function LoginPage() {
+  const [activeRole, setActiveRole] = useState('member')
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">
       <Card className="w-full max-w-md">
@@ -48,22 +50,30 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="member" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="member">Member</TabsTrigger>
-              <TabsTrigger value="officer">Officer</TabsTrigger>
-              <TabsTrigger value="admin">Admin</TabsTrigger>
-            </TabsList>
-            <TabsContent value="member">
-              <LoginForm role="member" />
-            </TabsContent>
-            <TabsContent value="officer">
-              <LoginForm role="officer" />
-            </TabsContent>
-            <TabsContent value="admin">
-              <LoginForm role="admin" />
-            </TabsContent>
-          </Tabs>
+          <div className="w-full">
+            <div className="grid w-full grid-cols-3 bg-muted p-1 rounded-lg mb-4">
+              {['member', 'officer', 'admin'].map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setActiveRole(r);
+                  }}
+                  className={`relative z-50 cursor-pointer flex items-center justify-center rounded-md py-2 px-1 text-sm font-bold transition-all ${
+                    activeRole === r 
+                      ? 'bg-white text-[#35408e] shadow-md border-b-2 border-[#fbb03b]' 
+                      : 'text-gray-500 hover:bg-gray-200 hover:text-gray-900'
+                  }`}
+                >
+                  {r.charAt(0).toUpperCase() + r.slice(1)}
+                </button>
+              ))}
+            </div>
+            
+            <LoginForm role={activeRole} />
+          </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
           <div className="text-sm text-gray-500 text-center w-full">
