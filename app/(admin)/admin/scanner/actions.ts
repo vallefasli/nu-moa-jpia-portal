@@ -27,30 +27,7 @@ export async function processScan(qrToken: string, eventId: string) {
     return { success: false, error: result.error || 'Scan failed' }
   }
 
-  // If time_in, award points!
-  if (result.type === 'time_in' && result.user_id) {
-    const { data: eventData } = await supabase
-      .from('events')
-      .select('points_awarded')
-      .eq('id', eventId)
-      .single()
 
-    if (eventData) {
-      // Get current points
-      const { data: userData } = await supabase
-        .from('users')
-        .select('points')
-        .eq('id', result.user_id)
-        .single()
-        
-      if (userData) {
-        await supabase
-          .from('users')
-          .update({ points: (userData.points || 0) + (eventData.points_awarded || 0) })
-          .eq('id', result.user_id)
-      }
-    }
-  }
 
   // Fetch student details for the overlay
   const { data: profile } = await supabase

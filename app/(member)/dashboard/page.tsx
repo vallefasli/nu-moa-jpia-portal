@@ -21,18 +21,21 @@ export default async function MemberDashboardPage() {
   // Fetch profile
   const { data: profile } = await supabase
     .from('users')
-    .select('full_name, student_no, committee, points')
+    .select('full_name, student_no, committee')
     .eq('id', user.id)
     .single()
 
   if (!profile) return null
 
-  // Fetch total events attended
-  const { count: attendanceCount } = await supabase
+  // Fetch all time_in attendance with event points
+  const { data: attendanceData } = await supabase
     .from('attendance')
-    .select('*', { count: 'exact', head: true })
+    .select('events(points_awarded)')
     .eq('user_id', user.id)
     .eq('type', 'time_in')
+    
+  const attendanceCount = attendanceData?.length || 0
+  const totalPoints = attendanceData?.reduce((sum, log: any) => sum + (log.events?.points_awarded || 0), 0) || 0
 
   // Fetch recent activity
   const { data: recentActivity } = await supabase
@@ -50,8 +53,8 @@ export default async function MemberDashboardPage() {
     .limit(3)
 
   const initials = profile.full_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase()
-  const currentTier = getTier(profile.points || 0)
-  const progressPercent = currentTier.next ? ((profile.points || 0) / currentTier.max) * 100 : 100
+  const currentTier = getTier(totalPoints)
+  const progressPercent = currentTier.next ? (totalPoints / currentTier.max) * 100 : 100
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 md:p-8 space-y-8">
@@ -94,7 +97,7 @@ export default async function MemberDashboardPage() {
             </div>
             <div>
               <p className="text-xs md:text-sm font-semibold text-gray-500 uppercase tracking-wider">Total Points</p>
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900 mt-1">{profile.points || 0}</h2>
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900 mt-1">{totalPoints}</h2>
             </div>
           </CardContent>
         </Card>
