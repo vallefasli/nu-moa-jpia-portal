@@ -150,13 +150,15 @@ CREATE OR REPLACE FUNCTION public.process_optimistic_scan(
 DECLARE
   v_user_id UUID;
   v_user_status user_status;
-  v_attendance_count INT;
+  v_last_type attendance_type;
+  v_last_timestamp TIMESTAMPTZ;
   v_type attendance_type;
 BEGIN
-  -- 1. Find user by QR token
+  -- 1. Find user by QR token (Lock the row to prevent concurrent race conditions!)
   SELECT id, account_status INTO v_user_id, v_user_status
   FROM public.users
-  WHERE qr_token = p_qr_token;
+  WHERE qr_token = p_qr_token
+  FOR UPDATE;
 
   IF NOT FOUND THEN
     RETURN jsonb_build_object('success', false, 'error', 'Invalid QR Code');
@@ -167,18 +169,26 @@ BEGIN
     RETURN jsonb_build_object('success', false, 'error', 'User account is ' || v_user_status);
   END IF;
 
-  -- 3. Determine attendance type (time_in or time_out)
-  SELECT COUNT(*) INTO v_attendance_count
+  -- 3. Get the most recent attendance record
+  SELECT type, timestamp INTO v_last_type, v_last_timestamp
   FROM public.attendance
-  WHERE event_id = p_event_id AND user_id = v_user_id;
+  WHERE event_id = p_event_id AND user_id = v_user_id
+  ORDER BY timestamp DESC
+  LIMIT 1;
 
-  IF v_attendance_count % 2 = 0 THEN
+  -- 4. Database-level Anti-Double Scan (5 second cooldown)
+  IF v_last_timestamp IS NOT NULL AND EXTRACT(EPOCH FROM (NOW() - v_last_timestamp)) < 5 THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Already scanned. Please wait 5s.');
+  END IF;
+
+  -- 5. Determine new attendance type
+  IF v_last_type IS NULL OR v_last_type = 'time_out' THEN
     v_type := 'time_in';
   ELSE
     v_type := 'time_out';
   END IF;
 
-  -- 4. Record attendance
+  -- 6. Record attendance
   INSERT INTO public.attendance (event_id, user_id, officer_id, type)
   VALUES (p_event_id, v_user_id, p_officer_id, v_type);
 
