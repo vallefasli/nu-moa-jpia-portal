@@ -123,7 +123,7 @@ export default async function MemberDashboardPage() {
               <div className="text-right">
                 <div className="text-[10px] uppercase font-bold tracking-widest text-gray-400 mb-1">Next Tier</div>
                 <div className="font-bold text-gray-800 bg-gray-100 px-3 py-1 rounded-full text-sm">
-                  {currentTier.max - (profile.points || 0)} pts to {currentTier.next}
+                  {currentTier.max - totalPoints} pts to {currentTier.next}
                 </div>
               </div>
             )}

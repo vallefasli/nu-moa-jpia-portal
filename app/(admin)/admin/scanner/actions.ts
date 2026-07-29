@@ -9,6 +9,12 @@ export async function processScan(qrToken: string, eventId: string) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { success: false, error: 'Not authenticated' }
 
+  // STRICT SECURITY ENFORCEMENT
+  const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single()
+  if (profile?.role !== 'admin' && profile?.role !== 'officer') {
+    return { success: false, error: 'Unauthorized: Only officers and admins can scan QR codes' }
+  }
+
   // Execute the RPC to record attendance safely
   const { data, error } = await supabase.rpc('process_optimistic_scan', {
     p_event_id: eventId,
@@ -21,32 +27,34 @@ export async function processScan(qrToken: string, eventId: string) {
   }
 
   // The RPC returns a jsonb object
-  const result = data as { success: boolean, error?: string, user_id?: string, type?: string }
+  const result = data as { success: boolean, error?: string, user_id?: string, type?: string, student_name?: string, student_no?: string }
 
   if (!result.success) {
     return { success: false, error: result.error || 'Scan failed' }
   }
-
-
-
-  // Fetch student details for the overlay
-  const { data: profile } = await supabase
-    .from('users')
-    .select('full_name, student_no')
-    .eq('id', result.user_id)
-    .single()
 
   revalidatePath('/admin/scanner')
 
   return {
     success: true,
     type: result.type,
-    student: profile
+    student: {
+      full_name: result.student_name,
+      student_no: result.student_no
+    }
   }
 }
 
 export async function manualCheckIn(query: string, eventId: string) {
   const supabase = await createClient()
+
+  // STRICT SECURITY ENFORCEMENT
+  const { data: { user: currentUser } } = await supabase.auth.getUser()
+  if (!currentUser) return { success: false, error: 'Not authenticated' }
+  const { data: profile } = await supabase.from('users').select('role').eq('id', currentUser.id).single()
+  if (profile?.role !== 'admin' && profile?.role !== 'officer') {
+    return { success: false, error: 'Unauthorized: Only officers and admins can manually check-in' }
+  }
 
   // 1. Try finding by student number first
   let { data: user, error: findError } = await supabase
@@ -78,6 +86,12 @@ export async function searchMembers(query: string) {
   if (!query || query.length < 2) return []
   
   const supabase = await createClient()
+
+  // STRICT SECURITY ENFORCEMENT
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
+  const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single()
+  if (profile?.role !== 'admin' && profile?.role !== 'officer') return []
   
   let { data } = await supabase
     .from('users')

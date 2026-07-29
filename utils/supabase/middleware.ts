@@ -46,37 +46,5 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 
-  if (user) {
-    // Fetch custom user profile to check role and status
-    const { data: profile } = await supabase
-      .from('users')
-      .select('role, account_status')
-      .eq('id', user.id)
-      .single()
-
-    const role = profile?.role || 'member'
-    const status = profile?.account_status || 'pending'
-
-    // Restrict pending users
-    if (status === 'pending' && path !== '/pending') {
-      return NextResponse.redirect(new URL('/pending', request.url))
-    }
-    if (status === 'active' && path === '/pending') {
-      return NextResponse.redirect(new URL('/dashboard', request.url))
-    }
-
-    // Restrict admin routes
-    if (path.startsWith('/admin')) {
-      if (role === 'admin') {
-        // Admins can access anything in /admin
-      } else if (role === 'officer' && path.startsWith('/admin/scanner')) {
-        // Officers can ONLY access the scanner
-      } else {
-        // Everyone else gets booted
-        return NextResponse.redirect(new URL('/dashboard', request.url))
-      }
-    }
-  }
-
   return supabaseResponse
 }
