@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { Users, ScanLine, LogOut } from 'lucide-react'
+import { Users, ScanLine, LogOut, Calendar, ClipboardList } from 'lucide-react'
 import { logout } from '@/app/(auth)/actions'
 import { cn } from '@/lib/utils'
 
@@ -57,6 +57,29 @@ export default async function AdminLayout({
                 <ScanLine className="w-5 h-5 text-gray-500" />
               </div>
               Event Scanner
+            </Link>
+          )}
+          {role === 'admin' && (
+            <Link
+              href="/admin/events"
+              className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+            >
+              <div className="p-2 rounded-lg bg-gray-100">
+                <Calendar className="w-5 h-5 text-gray-500" />
+              </div>
+              Event Management
+            </Link>
+          )}
+
+          {role === 'admin' && (
+            <Link
+              href="/admin/attendance"
+              className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+            >
+              <div className="p-2 rounded-lg bg-gray-100">
+                <ClipboardList className="w-5 h-5 text-gray-500" />
+              </div>
+              Attendance Logs
             </Link>
           )}
         </nav>
@@ -127,6 +150,33 @@ export default async function AdminLayout({
               </div>
               <span className="text-[10px] font-bold tracking-wide">
                 Scanner
+              </span>
+            </Link>
+          )}
+          {role === 'admin' && (
+            <Link
+              href="/admin/events"
+              className="relative flex flex-col items-center justify-center p-2 rounded-2xl min-w-[72px] text-gray-400 hover:text-gray-600"
+            >
+              <div className="p-2 rounded-xl mb-1 bg-transparent">
+                <Calendar className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold tracking-wide">
+                Events
+              </span>
+            </Link>
+          )}
+
+          {role === 'admin' && (
+            <Link
+              href="/admin/attendance"
+              className="relative flex flex-col items-center justify-center p-2 rounded-2xl min-w-[72px] text-gray-400 hover:text-gray-600"
+            >
+              <div className="p-2 rounded-xl mb-1 bg-transparent">
+                <ClipboardList className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold tracking-wide">
+                Logs
               </span>
             </Link>
           )}

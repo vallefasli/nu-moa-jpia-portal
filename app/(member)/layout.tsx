@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Calendar, QrCode, User, LogOut } from 'lucide-react'
+import { Home, Calendar, QrCode, User, LogOut, Award } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { logout } from '@/app/(auth)/actions'
 
@@ -17,6 +17,7 @@ export default function MemberLayout({
     { name: 'Dashboard', href: '/dashboard', icon: Home },
     { name: 'Events', href: '/events', icon: Calendar },
     { name: 'My QR', href: '/id', icon: QrCode },
+    { name: 'Certificates', href: '/certificates', icon: Award },
     { name: 'Profile', href: '/profile', icon: User },
   ]
 

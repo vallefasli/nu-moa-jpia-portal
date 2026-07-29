@@ -20,14 +20,20 @@ CREATE TABLE public.users (
   updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
+CREATE TYPE event_category AS ENUM ('Academic', 'Social', 'Community', 'General');
+
 -- Events Table
 CREATE TABLE public.events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
   description TEXT,
+  location TEXT,
+  event_type event_category DEFAULT 'General' NOT NULL,
   date DATE NOT NULL,
   time_start TIME NOT NULL,
   time_end TIME NOT NULL,
+  points_awarded INT DEFAULT 0,
+  capacity INT,
   status event_status DEFAULT 'upcoming' NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
   updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
