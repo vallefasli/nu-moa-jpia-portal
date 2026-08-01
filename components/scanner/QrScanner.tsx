@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode'
-import { processScan } from '@/app/(admin)/admin/scanner/actions'
+import { processScan } from '@/app/(officer)/scanner/actions'
 import { Camera, RefreshCw, Zap, ZapOff, CheckCircle2, XCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'

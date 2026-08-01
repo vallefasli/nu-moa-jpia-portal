@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { Users, ScanLine, LogOut, Calendar, ClipboardList, BarChart3, Download, UserCog } from 'lucide-react'
+import { Users, LogOut, Calendar, ClipboardList, BarChart3, Download, UserCog } from 'lucide-react'
 import { logout } from '@/app/(auth)/actions'
 import { cn } from '@/lib/utils'
 import { AutoLogout } from '@/components/AutoLogout'
@@ -24,6 +24,13 @@ export default async function AdminLayout({
 
   const role = profile?.role
 
+  if (role !== 'admin') {
+    if (role === 'officer') {
+      redirect('/scanner')
+    } else {
+      redirect('/dashboard')
+    }
+  }
   return (
     <div className="flex h-[100dvh] bg-gray-50 flex-col md:flex-row overflow-hidden font-sans">
       <AutoLogout />
@@ -34,7 +41,7 @@ export default async function AdminLayout({
             <h2 className="text-2xl font-extrabold tracking-tight">NU MOA JPIA</h2>
           </div>
           <p className="text-[10px] text-gray-400 font-bold tracking-[0.2em] uppercase mt-2">
-            {role === 'admin' ? 'Admin Portal' : 'Officer Portal'}
+            Admin Portal
           </p>
         </div>
         <nav className="flex-1 px-4 mt-6 space-y-1.5">
@@ -62,17 +69,6 @@ export default async function AdminLayout({
             </Link>
           )}
           
-          {(role === 'admin' || role === 'officer') && (
-            <Link
-              href="/admin/scanner"
-              className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
-            >
-              <div className="p-2 rounded-lg bg-gray-100">
-                <ScanLine className="w-5 h-5 text-gray-500" />
-              </div>
-              Event Scanner
-            </Link>
-          )}
           {role === 'admin' && (
             <Link
               href="/admin/events"
@@ -188,20 +184,6 @@ export default async function AdminLayout({
               </div>
               <span className="text-[10px] font-bold tracking-wide">
                 Members
-              </span>
-            </Link>
-          )}
-
-          {(role === 'admin' || role === 'officer') && (
-            <Link
-              href="/admin/scanner"
-              className="relative flex flex-col items-center justify-center p-2 rounded-2xl min-w-[72px] text-gray-400 hover:text-gray-600"
-            >
-              <div className="p-2 rounded-xl mb-1 bg-transparent">
-                <ScanLine className="w-6 h-6" />
-              </div>
-              <span className="text-[10px] font-bold tracking-wide">
-                Scanner
               </span>
             </Link>
           )}

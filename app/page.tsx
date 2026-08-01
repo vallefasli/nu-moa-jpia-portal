@@ -72,8 +72,8 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <div className="w-full">
-            <div className="grid w-full grid-cols-3 bg-muted p-1 rounded-lg mb-4">
-              {['member', 'officer', 'admin'].map((r) => (
+            <div className="grid w-full grid-cols-2 bg-muted p-1 rounded-lg mb-4">
+              {['member', 'officer'].map((r) => (
                 <button
                   key={r}
                   type="button"
@@ -97,12 +97,18 @@ export default function LoginPage() {
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
-          <div className="text-sm text-gray-500 text-center w-full">
-            Don't have an account?{' '}
-            <Link href="/register" className="text-[#fbb03b] font-medium hover:underline">
-              Sign up
-            </Link>
-          </div>
+          {activeRole === 'member' ? (
+            <div className="text-sm text-gray-500 text-center w-full">
+              Don't have an account?{' '}
+              <Link href="/register" className="text-[#fbb03b] font-medium hover:underline">
+                Sign up
+              </Link>
+            </div>
+          ) : (
+            <div className="text-xs text-gray-500 text-center w-full bg-gray-100 p-2.5 rounded-md border border-gray-200">
+              Officer accounts are managed by system administrators. Contact your admin for access.
+            </div>
+          )}
         </CardFooter>
       </Card>
     </div>

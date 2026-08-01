@@ -33,8 +33,10 @@ export async function updateSession(request: NextRequest) {
 
   const path = request.nextUrl.pathname
 
+  const isAuthRoute = path === '/' || path.startsWith('/register') || path.startsWith('/verify') || path === '/admin-login'
+
   // Auth routes should redirect to dashboard if already logged in
-  if (path === '/' || path.startsWith('/register') || path.startsWith('/verify')) {
+  if (isAuthRoute) {
     if (user) {
       return NextResponse.redirect(new URL('/dashboard', request.url))
     }
@@ -42,7 +44,10 @@ export async function updateSession(request: NextRequest) {
   }
 
   // If no user and not an auth route, redirect to login
-  if (!user && path !== '/' && !path.startsWith('/register') && !path.startsWith('/verify')) {
+  if (!user && !isAuthRoute) {
+    if (path.startsWith('/admin')) {
+      return NextResponse.redirect(new URL('/admin-login', request.url))
+    }
     return NextResponse.redirect(new URL('/', request.url))
   }
 
