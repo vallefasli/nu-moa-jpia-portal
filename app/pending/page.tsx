@@ -11,17 +11,17 @@ export default function PendingVerificationPage() {
           <div className="mx-auto bg-amber-100 p-3 rounded-full w-16 h-16 flex items-center justify-center">
             <AlertCircle className="w-8 h-8 text-[#fbb03b]" />
           </div>
-          <CardTitle className="text-2xl font-bold text-[#35408e]">Verification in Progress</CardTitle>
+          <CardTitle className="text-2xl font-bold text-[#35408e]">Account Created!</CardTitle>
           <CardDescription className="text-base">
-            Your account is currently under review by our administrators.
+            What happens next?
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center text-gray-600 flex flex-col items-center">
-          <p className="mb-4">
-            We need to verify your student information before granting you access to the member dashboard and digital ID.
+          <p className="mb-4 text-left w-full">
+            <strong>1. Email Verification:</strong> Please check your email inbox (and spam folder) and click the confirmation link to verify your email address.
           </p>
-          <p className="text-sm mb-6">
-            Please check back later or contact an officer if you believe this is taking too long.
+          <p className="mb-6 text-left w-full">
+            <strong>2. Officer Approval:</strong> After your email is verified, an administrator will review your student details. You will be able to log in once your account is activated.
           </p>
           
           <form action={logout}>
