@@ -97,7 +97,7 @@ export async function signup(prevState: any, formData: FormData) {
   }
 
   if (data.session === null) {
-    return { redirect: '/pending' }
+    return { success: true }
   }
 
   revalidatePath('/', 'layout')

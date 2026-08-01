@@ -12,6 +12,7 @@ import { useState } from 'react'
 export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null)
   const [isPending, setIsPending] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
   const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -26,12 +27,41 @@ export default function RegisterPage() {
         setError(result.error)
       } else if (result?.redirect) {
         router.push(result.redirect)
+      } else if (result?.success) {
+        setIsSuccess(true)
       }
     } catch (err) {
       setError(String(err))
     } finally {
       setIsPending(false)
     }
+  }
+
+  if (isSuccess) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4 py-12">
+        <Card className="w-full max-w-md border-t-4 border-t-green-500">
+          <CardHeader className="space-y-4">
+            <div className="mx-auto bg-green-100 p-3 rounded-full w-16 h-16 flex items-center justify-center">
+              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <CardTitle className="text-2xl font-bold text-center text-[#35408e]">Account Created!</CardTitle>
+            <CardDescription className="text-center text-base">
+              A verification email has been sent to your address to confirm your account.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex justify-center pt-4">
+            <Link href="/" className="w-full">
+              <Button className="w-full bg-[#35408e] hover:bg-[#28306e]">
+                Go to Login
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   return (
