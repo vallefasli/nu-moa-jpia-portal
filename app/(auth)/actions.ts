@@ -33,7 +33,7 @@ export async function login(prevState: any, formData: FormData) {
   if (requestedRole !== actualRole) {
     await supabase.auth.signOut()
     return { 
-      error: `Unauthorized: This account belongs to a ${actualRole.charAt(0).toUpperCase() + actualRole.slice(1)}. Please login using the ${actualRole.charAt(0).toUpperCase() + actualRole.slice(1)} tab.` 
+      error: `Invalid login credentials for the ${requestedRole} portal.` 
     }
   }
 
@@ -76,6 +76,9 @@ export async function signup(prevState: any, formData: FormData) {
   })
 
   if (error) {
+    if (error.message.toLowerCase().includes('rate limit')) {
+      return { error: 'Our servers are currently busy (Rate Limit). Your account might have already been created successfully. Please wait a few minutes, then try logging in.' }
+    }
     return { error: error.message }
   }
 
