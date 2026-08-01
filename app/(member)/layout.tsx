@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { MemberSidebar } from './MemberNav'
 import { FeedbackWidget } from './components/FeedbackWidget'
+import { AutoLogout } from '@/components/AutoLogout'
 
 export default async function MemberLayout({
   children,
@@ -25,6 +26,7 @@ export default async function MemberLayout({
 
   return (
     <div className="flex h-[100dvh] bg-gray-50 flex-col md:flex-row overflow-hidden font-sans">
+      <AutoLogout />
       <MemberSidebar />
 
       {/* Main Content Area */}

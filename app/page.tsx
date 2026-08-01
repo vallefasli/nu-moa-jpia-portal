@@ -7,7 +7,9 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Link from 'next/link'
-import { useActionState, useState } from 'react'
+import { useActionState, useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { toast } from 'sonner'
 
 function LoginForm({ role }: { role: string }) {
   const [state, formAction, isPending] = useActionState(login, null)
@@ -39,6 +41,17 @@ function LoginForm({ role }: { role: string }) {
 
 export default function LoginPage() {
   const [activeRole, setActiveRole] = useState('member')
+  const searchParams = useSearchParams()
+  
+  useEffect(() => {
+    if (searchParams.get('expired') === 'true') {
+      toast.error('Session Expired', {
+        description: 'You have been logged out due to inactivity.'
+      })
+      // Clean up the URL
+      window.history.replaceState({}, '', '/')
+    }
+  }, [searchParams])
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">

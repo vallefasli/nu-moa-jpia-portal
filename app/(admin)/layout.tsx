@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { Users, ScanLine, LogOut, Calendar, ClipboardList, BarChart3, Download } from 'lucide-react'
 import { logout } from '@/app/(auth)/actions'
 import { cn } from '@/lib/utils'
+import { AutoLogout } from '@/components/AutoLogout'
 
 export default async function AdminLayout({
   children,
@@ -25,6 +26,7 @@ export default async function AdminLayout({
 
   return (
     <div className="flex h-[100dvh] bg-gray-50 flex-col md:flex-row overflow-hidden font-sans">
+      <AutoLogout />
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-72 flex-col bg-white border-r border-gray-200 z-10 transition-all duration-300">
         <div className="p-8 pb-4">
