@@ -21,7 +21,7 @@ export default async function MemberDashboardPage() {
   // Fetch profile
   const { data: profile } = await supabase
     .from('users')
-    .select('full_name, student_no, committee')
+    .select('full_name, student_no, member_id, committee')
     .eq('id', user.id)
     .single()
 
@@ -65,13 +65,21 @@ export default async function MemberDashboardPage() {
             {initials}
           </div>
           <div>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight leading-tight">{profile.full_name}</h1>
-            <p className="text-gray-500 font-mono text-sm tracking-wide mt-0.5">{profile.student_no}</p>
-            {profile.committee && (
-              <Badge variant="secondary" className="mt-2 bg-[#35408e]/10 text-[#35408e] hover:bg-[#35408e]/20 border-none transition-colors px-3 py-1 text-xs font-bold uppercase tracking-wider">
-                {profile.committee} Committee
-              </Badge>
-            )}
+            <div className="flex-1 text-center md:text-left">
+              <h1 className="text-3xl font-black text-gray-900 tracking-tight">{profile.full_name}</h1>
+              <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-3 mt-2">
+                <Badge variant="secondary" className="bg-[#35408e]/10 text-[#35408e] hover:bg-[#35408e]/20 font-bold justify-center md:justify-start">
+                  {profile.member_id}
+                </Badge>
+                <p className="text-gray-500 font-medium">Student No: {profile.student_no}</p>
+                {profile.committee && (
+                  <>
+                    <span className="hidden md:inline text-gray-300">•</span>
+                    <p className="text-gray-500 font-medium">{profile.committee} Committee</p>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@ export default async function VerificationQueuePage() {
   // Fetch pending users
   const { data: users, error } = await supabase
     .from('users')
-    .select('id, full_name, student_no, program, year_level, committee, email, created_at, account_status')
+    .select('id, full_name, student_no, member_id, program, year_level, committee, email, created_at, account_status')
     .eq('account_status', 'pending')
     .order('created_at', { ascending: true })
 
@@ -70,7 +70,10 @@ export default async function VerificationQueuePage() {
                   users.map((user) => (
                     <TableRow key={user.id}>
                       <TableCell className="font-medium">{user.full_name}</TableCell>
-                      <TableCell>{user.student_no}</TableCell>
+                      <TableCell>
+                        <div className="font-bold text-[#35408e]">{user.member_id}</div>
+                        <div className="text-sm text-gray-500">{user.student_no}</div>
+                      </TableCell>
                       <TableCell>
                         {user.program} - {user.year_level}
                         {user.committee && <div className="text-xs text-gray-500 mt-1">Comm: {user.committee}</div>}

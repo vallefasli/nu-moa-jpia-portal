@@ -27,8 +27,9 @@ export function ReportsClient({
   }
 
   const exportRoster = () => {
-    const headers = ['Student No', 'Full Name', 'Email', 'Program', 'Year Level', 'Committee', 'Role', 'Status']
+    const headers = ['Member ID', 'Student No', 'Full Name', 'Email', 'Program', 'Year Level', 'Committee', 'Role', 'Status']
     const rows = users.map(u => [
+      u.member_id,
       u.student_no,
       `"${u.full_name}"`, // Quote strings to handle commas
       u.email,
@@ -46,8 +47,9 @@ export function ReportsClient({
   const exportAttendance = (eventId: string, eventTitle: string) => {
     const eventLogs = attendance.filter(a => a.event_id === eventId)
     
-    const headers = ['Student No', 'Full Name', 'Type', 'Timestamp', 'Recorded By']
+    const headers = ['Member ID', 'Student No', 'Full Name', 'Type', 'Timestamp', 'Recorded By']
     const rows = eventLogs.map(log => [
+      log.users?.member_id || 'Unknown',
       log.users?.student_no || 'Unknown',
       `"${log.users?.full_name || 'Unknown'}"`,
       log.type === 'time_in' ? 'TIME IN' : 'TIME OUT',

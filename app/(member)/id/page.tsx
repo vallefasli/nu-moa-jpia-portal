@@ -10,10 +10,10 @@ export default async function DigitalIdPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  // Fetch profile to get qr_token
+  // Fetch profile to get qr_token and member_id
   const { data: profile } = await supabase
     .from('users')
-    .select('full_name, student_no, program, year_level, qr_token')
+    .select('full_name, student_no, member_id, program, year_level, qr_token')
     .eq('id', user.id)
     .single()
 
@@ -75,7 +75,10 @@ export default async function DigitalIdPage() {
               </div>
               <div className="text-left flex-1">
                 <h3 className="font-extrabold text-gray-900 text-xl tracking-tight leading-none mb-1">{profile.full_name}</h3>
-                <p className="text-gray-500 font-mono text-sm tracking-wide">{profile.student_no}</p>
+                <div className="flex flex-col gap-0.5">
+                  <p className="text-[#35408e] font-mono text-sm tracking-wide font-bold">{profile.member_id}</p>
+                  <p className="text-gray-400 font-mono text-xs tracking-wide">SN: {profile.student_no}</p>
+                </div>
               </div>
             </div>
             
