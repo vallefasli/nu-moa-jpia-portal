@@ -61,6 +61,18 @@ export async function signup(prevState: any, formData: FormData) {
 
   const supabase = await createClient()
 
+  // Pre-flight check: Ensure student number is unique
+  // The database trigger will fail with a 500 error if we don't catch this early!
+  const { data: existingStudent } = await supabase
+    .from('users')
+    .select('id')
+    .eq('student_no', student_no)
+    .single()
+
+  if (existingStudent) {
+    return { error: 'This Student Number is already registered.' }
+  }
+
   const { error, data } = await supabase.auth.signUp({
     email,
     password,

@@ -7,17 +7,32 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useActionState, Suspense, useEffect } from 'react'
+import { useState } from 'react'
 
 export default function RegisterPage() {
-  const [state, formAction, isPending] = useActionState(signup, null)
+  const [error, setError] = useState<string | null>(null)
+  const [isPending, setIsPending] = useState(false)
   const router = useRouter()
 
-  useEffect(() => {
-    if (state?.redirect) {
-      router.push(state.redirect)
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setIsPending(true)
+    setError(null)
+    
+    const formData = new FormData(e.currentTarget)
+    try {
+      const result = await signup(null, formData)
+      if (result?.error) {
+        setError(result.error)
+      } else if (result?.redirect) {
+        router.push(result.redirect)
+      }
+    } catch (err) {
+      setError(String(err))
+    } finally {
+      setIsPending(false)
     }
-  }, [state?.redirect, router])
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4 py-12">
@@ -29,10 +44,10 @@ export default function RegisterPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={formAction} className="space-y-4">
-            {state?.error && (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
               <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm mb-4 border border-red-100">
-                {state.error}
+                {error}
               </div>
             )}
             <div className="grid grid-cols-2 gap-4">
