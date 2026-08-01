@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { Users, ScanLine, LogOut, Calendar, ClipboardList } from 'lucide-react'
+import { Users, ScanLine, LogOut, Calendar, ClipboardList, BarChart3, Download } from 'lucide-react'
 import { logout } from '@/app/(auth)/actions'
 import { cn } from '@/lib/utils'
 
@@ -80,6 +80,30 @@ export default async function AdminLayout({
                 <ClipboardList className="w-5 h-5 text-gray-500" />
               </div>
               Attendance Logs
+            </Link>
+          )}
+
+          {role === 'admin' && (
+            <Link
+              href="/admin/analytics"
+              className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+            >
+              <div className="p-2 rounded-lg bg-gray-100">
+                <BarChart3 className="w-5 h-5 text-gray-500" />
+              </div>
+              Analytics
+            </Link>
+          )}
+
+          {role === 'admin' && (
+            <Link
+              href="/admin/reports"
+              className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+            >
+              <div className="p-2 rounded-lg bg-gray-100">
+                <Download className="w-5 h-5 text-gray-500" />
+              </div>
+              Data Export
             </Link>
           )}
         </nav>
@@ -177,6 +201,34 @@ export default async function AdminLayout({
               </div>
               <span className="text-[10px] font-bold tracking-wide">
                 Logs
+              </span>
+            </Link>
+          )}
+
+          {role === 'admin' && (
+            <Link
+              href="/admin/analytics"
+              className="relative flex flex-col items-center justify-center p-2 rounded-2xl min-w-[60px] text-gray-400 hover:text-gray-600"
+            >
+              <div className="p-2 rounded-xl mb-1 bg-transparent">
+                <BarChart3 className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold tracking-wide">
+                Data
+              </span>
+            </Link>
+          )}
+
+          {role === 'admin' && (
+            <Link
+              href="/admin/reports"
+              className="relative flex flex-col items-center justify-center p-2 rounded-2xl min-w-[60px] text-gray-400 hover:text-gray-600"
+            >
+              <div className="p-2 rounded-xl mb-1 bg-transparent">
+                <Download className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold tracking-wide">
+                Export
               </span>
             </Link>
           )}

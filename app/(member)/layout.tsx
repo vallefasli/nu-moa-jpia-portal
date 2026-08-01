@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { MemberSidebar } from './MemberNav'
+import { FeedbackWidget } from './components/FeedbackWidget'
 
 export default async function MemberLayout({
   children,
@@ -31,6 +32,7 @@ export default async function MemberLayout({
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out h-full">
           {children}
         </div>
+        <FeedbackWidget userId={user.id} />
       </main>
     </div>
   )
