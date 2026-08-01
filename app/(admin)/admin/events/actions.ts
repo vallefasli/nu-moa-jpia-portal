@@ -21,6 +21,11 @@ export async function createEvent(formData: FormData) {
   const points_awarded = parseInt(formData.get('points_awarded') as string) || 0
   const capacity = parseInt(formData.get('capacity') as string) || null
 
+  // Validation
+  if (time_start && time_end && time_start >= time_end) {
+    return { error: 'End time must be after start time' }
+  }
+
   const { error } = await supabase.from('events').insert({
     title,
     description,
@@ -57,6 +62,11 @@ export async function updateEvent(id: string, formData: FormData) {
   const points_awarded = parseInt(formData.get('points_awarded') as string) || 0
   const capacity = parseInt(formData.get('capacity') as string) || null
   const status = formData.get('status') as string
+
+  // Validation
+  if (time_start && time_end && time_start >= time_end) {
+    return { error: 'End time must be after start time' }
+  }
 
   const { error } = await supabase.from('events').update({
     title,

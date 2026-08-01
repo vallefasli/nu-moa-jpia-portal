@@ -18,6 +18,7 @@ export default async function ReportsPage() {
     .from('users')
     .select('student_no, full_name, email, program, year_level, committee, role, account_status')
     .order('full_name', { ascending: true })
+    .limit(100000)
 
   // Fetch all events for the list
   const { data: events } = await supabase
@@ -39,6 +40,7 @@ export default async function ReportsPage() {
       )
     `)
     .order('timestamp', { ascending: false })
+    .limit(100000)
 
   return (
     <div className="p-4 md:p-8">

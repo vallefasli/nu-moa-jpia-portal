@@ -27,35 +27,15 @@ export default async function MemberDashboardPage() {
 
   if (!profile) return null
 
-  // Fetch ALL attendance logs for the user to determine completed events
-  const { data: attendanceData } = await supabase
-    .from('attendance')
-    .select('event_id, type, events(points_awarded)')
+  // Fetch total points and attendance stats efficiently using the PostgreSQL View
+  const { data: userStats } = await supabase
+    .from('user_points_view')
+    .select('total_points, events_attended')
     .eq('user_id', user.id)
-    
-  // Group by event_id to check for BOTH time_in and time_out
-  const eventStatus = new Map()
-  attendanceData?.forEach(log => {
-    if (!eventStatus.has(log.event_id)) {
-      eventStatus.set(log.event_id, {
-        hasTimeIn: false,
-        hasTimeOut: false,
-        event: log.events
-      })
-    }
-    
-    const status = eventStatus.get(log.event_id)
-    if (log.type === 'time_in') status.hasTimeIn = true
-    if (log.type === 'time_out') status.hasTimeOut = true
-  })
-  
-  // An event is only "earned" if the user has BOTH time_in and time_out
-  const earnedEvents = Array.from(eventStatus.values())
-    .filter(status => status.hasTimeIn && status.hasTimeOut)
-    .map(status => status.event)
-    
-  const attendanceCount = earnedEvents.length
-  const totalPoints = earnedEvents.reduce((sum, ev: any) => sum + (ev.points_awarded || 0), 0)
+    .single()
+
+  const attendanceCount = userStats?.events_attended || 0
+  const totalPoints = userStats?.total_points || 0
 
   // Fetch recent activity
   const { data: recentActivity } = await supabase
