@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Link from 'next/link'
-import { useActionState, useState, useEffect } from 'react'
+import { useActionState, useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 
@@ -39,8 +39,7 @@ function LoginForm({ role }: { role: string }) {
   )
 }
 
-export default function LoginPage() {
-  const [activeRole, setActiveRole] = useState('member')
+function ExpiredToastHandler() {
   const searchParams = useSearchParams()
   
   useEffect(() => {
@@ -53,8 +52,17 @@ export default function LoginPage() {
     }
   }, [searchParams])
 
+  return null
+}
+
+export default function LoginPage() {
+  const [activeRole, setActiveRole] = useState('member')
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">
+      <Suspense fallback={null}>
+        <ExpiredToastHandler />
+      </Suspense>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center text-[#35408e]">Welcome Back</CardTitle>
