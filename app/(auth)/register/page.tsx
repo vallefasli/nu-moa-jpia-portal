@@ -27,11 +27,6 @@ export default function RegisterPage() {
                 {state.error}
               </div>
             )}
-            {state?.success && (
-              <div className="bg-green-50 text-green-700 p-4 rounded-md text-sm mb-4 border border-green-200">
-                {state.success}
-              </div>
-            )}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="full_name">Full Name</Label>

@@ -83,7 +83,7 @@ export async function signup(prevState: any, formData: FormData) {
   }
 
   if (data.session === null) {
-    return { success: 'Registration successful! Please check your inbox and click the confirmation link before an admin can approve your account.' }
+    redirect(`/verify?email=${encodeURIComponent(email)}`)
   }
 
   revalidatePath('/', 'layout')
@@ -95,4 +95,24 @@ export async function logout() {
   await supabase.auth.signOut()
   revalidatePath('/', 'layout')
   redirect('/')
+}
+
+export async function verifyOtp(prevState: any, formData: FormData) {
+  const email = formData.get('email') as string
+  const code = formData.get('code') as string
+
+  const supabase = await createClient()
+
+  const { error } = await supabase.auth.verifyOtp({
+    email,
+    token: code,
+    type: 'signup',
+  })
+
+  if (error) {
+    return { error: 'Invalid or expired code. Please try again.' }
+  }
+
+  revalidatePath('/', 'layout')
+  redirect('/pending')
 }
