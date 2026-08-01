@@ -6,10 +6,18 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import Link from 'next/link'
-import { useActionState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useActionState, Suspense, useEffect } from 'react'
 
 export default function RegisterPage() {
   const [state, formAction, isPending] = useActionState(signup, null)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (state?.redirect) {
+      router.push(state.redirect)
+    }
+  }, [state?.redirect, router])
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4 py-12">
