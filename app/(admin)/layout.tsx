@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { Users, ScanLine, LogOut, Calendar, ClipboardList, BarChart3, Download } from 'lucide-react'
+import { Users, ScanLine, LogOut, Calendar, ClipboardList, BarChart3, Download, UserCog } from 'lucide-react'
 import { logout } from '@/app/(auth)/actions'
 import { cn } from '@/lib/utils'
 import { AutoLogout } from '@/components/AutoLogout'
@@ -47,6 +47,18 @@ export default async function AdminLayout({
                 <Users className="w-5 h-5 text-gray-500" />
               </div>
               Verification Queue
+            </Link>
+          )}
+
+          {role === 'admin' && (
+            <Link
+              href="/admin/members"
+              className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+            >
+              <div className="p-2 rounded-lg bg-gray-100">
+                <UserCog className="w-5 h-5 text-gray-500" />
+              </div>
+              Manage Members
             </Link>
           )}
           
@@ -162,6 +174,20 @@ export default async function AdminLayout({
               </div>
               <span className="text-[10px] font-bold tracking-wide">
                 Queue
+              </span>
+            </Link>
+          )}
+
+          {role === 'admin' && (
+            <Link
+              href="/admin/members"
+              className="relative flex flex-col items-center justify-center p-2 rounded-2xl min-w-[72px] text-gray-400 hover:text-gray-600"
+            >
+              <div className="p-2 rounded-xl mb-1 bg-transparent">
+                <UserCog className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold tracking-wide">
+                Members
               </span>
             </Link>
           )}
