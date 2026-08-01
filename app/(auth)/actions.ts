@@ -76,7 +76,8 @@ export async function signup(prevState: any, formData: FormData) {
   })
 
   if (error) {
-    const errorMsg = error.message || JSON.stringify(error) || 'An unknown error occurred'
+    console.error('Signup Error Details:', error)
+    const errorMsg = error.message || String(error) || 'An unknown error occurred'
     if (errorMsg.toLowerCase().includes('rate limit')) {
       return { error: 'Our servers are currently busy (Rate Limit). Your account might have already been created successfully. Please wait a few minutes, then try logging in.' }
     }
