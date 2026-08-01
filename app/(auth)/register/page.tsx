@@ -94,17 +94,54 @@ export default function RegisterPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="program">Program</Label>
-                <Input id="program" name="program" required placeholder="BS Accountancy" />
+                <select 
+                  id="program" 
+                  name="program" 
+                  required 
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="" disabled selected>Select Program</option>
+                  <option value="BS Accountancy">BS Accountancy</option>
+                  <option value="BS Management Accounting">BS Management Accounting</option>
+                  <option value="BS Business Administration">BS Business Administration</option>
+                </select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="year_level">Year Level</Label>
-                <Input id="year_level" name="year_level" required placeholder="3rd Year" />
+                <select 
+                  id="year_level" 
+                  name="year_level" 
+                  required 
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="" disabled selected>Select Year</option>
+                  <option value="1st Year">1st Year</option>
+                  <option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option>
+                  <option value="4th Year">4th Year</option>
+                  <option value="5th Year">5th Year</option>
+                  <option value="Irregular">Irregular / Extended</option>
+                </select>
               </div>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="committee">Committee (Optional)</Label>
-              <Input id="committee" name="committee" placeholder="e.g. Academics" />
+              <select 
+                id="committee" 
+                name="committee" 
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="None">None (General Member)</option>
+                <option value="Academics">Academics</option>
+                <option value="Non-Academics">Non-Academics</option>
+                <option value="Membership">Membership</option>
+                <option value="Finance">Finance</option>
+                <option value="Audit">Audit</option>
+                <option value="Communications">Communications</option>
+                <option value="Creatives">Creatives</option>
+                <option value="Logistics">Logistics</option>
+              </select>
             </div>
 
             <div className="space-y-2">

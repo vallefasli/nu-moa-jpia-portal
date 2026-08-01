@@ -55,3 +55,40 @@ export async function rejectUser(userId: string) {
   revalidatePath('/admin/verification')
   return { success: true }
 }
+
+export async function removeMember(userId: string) {
+  const supabase = await createClient()
+  
+  const { error } = await supabase
+    .from('users')
+    .update({ account_status: 'rejected' })
+    .eq('id', userId)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/admin/members')
+  return { success: true }
+}
+
+export async function updateMemberProfile(userId: string, data: { full_name: string, program: string, year_level: string, committee: string }) {
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from('users')
+    .update({ 
+      full_name: data.full_name,
+      program: data.program,
+      year_level: data.year_level,
+      committee: data.committee
+    })
+    .eq('id', userId)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/admin/members')
+  return { success: true }
+}
