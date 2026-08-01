@@ -97,11 +97,11 @@ export async function signup(prevState: any, formData: FormData) {
   }
 
   if (data.session === null) {
-    return { redirect: `/verify?email=${encodeURIComponent(email)}` }
+    return { redirect: '/pending' }
   }
 
   revalidatePath('/', 'layout')
-  return { redirect: '/pending' }
+  return { redirect: '/dashboard' }
 }
 
 export async function logout() {
