@@ -52,7 +52,7 @@ export default async function AnalyticsPage() {
   // Group by user -> event to check for both time_in and time_out (our new logic!)
   const userEventStatus = new Map()
   
-  attendance?.forEach(log => {
+  attendance?.forEach((log: any) => {
     const key = `${log.user_id}_${log.event_id}`
     if (!userEventStatus.has(key)) {
       userEventStatus.set(key, { hasTimeIn: false, hasTimeOut: false, points: log.events?.points_awarded || 0, userId: log.user_id })
