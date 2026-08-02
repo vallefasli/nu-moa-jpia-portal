@@ -39,7 +39,7 @@ function LoginForm({ role }: { role: string }) {
   )
 }
 
-function ExpiredToastHandler() {
+function AuthStateSync({ setActiveRole }: { setActiveRole: (role: string) => void }) {
   const searchParams = useSearchParams()
   
   useEffect(() => {
@@ -50,7 +50,12 @@ function ExpiredToastHandler() {
       // Clean up the URL
       window.history.replaceState({}, '', '/')
     }
-  }, [searchParams])
+
+    const tab = searchParams.get('tab')
+    if (tab && ['member', 'officer', 'admin'].includes(tab)) {
+      setActiveRole(tab)
+    }
+  }, [searchParams, setActiveRole])
 
   return null
 }
@@ -61,7 +66,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">
       <Suspense fallback={null}>
-        <ExpiredToastHandler />
+        <AuthStateSync setActiveRole={setActiveRole} />
       </Suspense>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
@@ -72,8 +77,8 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <div className="w-full">
-            <div className="grid w-full grid-cols-2 bg-muted p-1 rounded-lg mb-4">
-              {['member', 'officer'].map((r) => (
+            <div className="grid w-full grid-cols-3 bg-muted p-1 rounded-lg mb-4">
+              {['member', 'officer', 'admin'].map((r) => (
                 <button
                   key={r}
                   type="button"
@@ -103,6 +108,10 @@ export default function LoginPage() {
               <Link href="/register" className="text-[#fbb03b] font-medium hover:underline">
                 Sign up
               </Link>
+            </div>
+          ) : activeRole === 'admin' ? (
+            <div className="text-xs text-gray-500 text-center w-full bg-red-50 p-2.5 rounded-md border border-red-100">
+              Restricted area. Authorized personnel only.
             </div>
           ) : (
             <div className="text-xs text-gray-500 text-center w-full bg-gray-100 p-2.5 rounded-md border border-gray-200">
