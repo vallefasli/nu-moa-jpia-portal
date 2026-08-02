@@ -59,10 +59,7 @@ export async function rejectUser(userId: string) {
 export async function removeMember(userId: string) {
   const supabase = await createClient()
   
-  const { error } = await supabase
-    .from('users')
-    .update({ account_status: 'rejected' })
-    .eq('id', userId)
+  const { error } = await supabase.rpc('delete_user_by_admin', { target_user_id: userId })
 
   if (error) {
     return { error: error.message }
