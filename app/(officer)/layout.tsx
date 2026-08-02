@@ -51,11 +51,11 @@ export default async function OfficerLayout({
             Event Scanner
           </Link>
         </nav>
-        
+
         {/* Desktop Sidebar Logout */}
         <div className="p-6 border-t border-gray-100 bg-gray-50">
           <form action={logout}>
-            <button 
+            <button
               type="submit"
               className="flex w-full items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors"
             >
@@ -70,13 +70,13 @@ export default async function OfficerLayout({
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto relative w-full h-full bg-[#f8f9fc]">
-        
+
         {/* Mobile Top Header with Logout */}
         <div className="md:hidden flex items-center justify-between p-4 px-6 bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
           <div className="flex items-center gap-2">
             <h2 className="font-bold text-gray-900 text-lg tracking-tight">NU MOA JPIA</h2>
             <div className="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">
-               {role}
+              {role}
             </div>
           </div>
           <form action={logout}>

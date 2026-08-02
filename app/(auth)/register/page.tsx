@@ -111,9 +111,10 @@ export default function RegisterPage() {
                   id="program" 
                   name="program" 
                   required 
+                  defaultValue=""
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <option value="" disabled selected>Select Program</option>
+                  <option value="" disabled>Select Program</option>
                   <option value="BS Accountancy">BS Accountancy</option>
                   <option value="BS Management Accounting">BS Management Accounting</option>
                   <option value="BS Business Administration">BS Business Administration</option>
@@ -125,9 +126,10 @@ export default function RegisterPage() {
                   id="year_level" 
                   name="year_level" 
                   required 
+                  defaultValue=""
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <option value="" disabled selected>Select Year</option>
+                  <option value="" disabled>Select Year</option>
                   <option value="1st Year">1st Year</option>
                   <option value="2nd Year">2nd Year</option>
                   <option value="3rd Year">3rd Year</option>
@@ -143,6 +145,7 @@ export default function RegisterPage() {
               <select 
                 id="committee" 
                 name="committee" 
+                defaultValue="None"
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <option value="None">None (General Member)</option>
