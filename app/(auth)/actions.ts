@@ -92,7 +92,20 @@ export async function signup(prevState: any, formData: FormData) {
 
   if (error) {
     console.error('Signup Error Details:', error)
-    const errorMsg = error.message || String(error) || 'An unknown error occurred'
+    
+    let errorMsg = 'An unknown error occurred'
+    if (error?.message) {
+      errorMsg = error.message
+    } else if (typeof error === 'string') {
+      errorMsg = error
+    } else if (error && typeof error === 'object') {
+      // Sometimes Supabase returns nested error objects without a message property
+      errorMsg = (error as any).error_description || (error as any).msg || JSON.stringify(error)
+      if (errorMsg === '{}') {
+        errorMsg = 'A server error occurred during signup. Please try again.'
+      }
+    }
+
     if (errorMsg.toLowerCase().includes('rate limit')) {
       return { error: 'Our servers are currently busy (Rate Limit). Your account might have already been created successfully. Please wait a few minutes, then try logging in.' }
     }
