@@ -56,7 +56,15 @@ export async function login(prevState: any, formData: FormData) {
 export async function signup(prevState: any, formData: FormData) {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
-  const full_name = formData.get('full_name') as string
+  const first_name = formData.get('first_name') as string
+  const middle_name = formData.get('middle_name') as string
+  const last_name = formData.get('last_name') as string
+  
+  // Clean up and combine names, ignoring empty middle names
+  const full_name = [first_name, middle_name, last_name]
+    .filter(n => n && n.trim().length > 0)
+    .map(n => n.trim())
+    .join(' ')
   const student_no = formData.get('student_no') as string
   const program = formData.get('program') as string
   const year_level = formData.get('year_level') as string
