@@ -133,7 +133,7 @@ BEGIN
   VALUES (
     new.id,
     new.email,
-    new.raw_user_meta_data->>'full_name',
+    COALESCE(new.raw_user_meta_data->>'full_name', 'System Account'),
     new.raw_user_meta_data->>'student_no',
     new.raw_user_meta_data->>'program',
     new.raw_user_meta_data->>'year_level',
