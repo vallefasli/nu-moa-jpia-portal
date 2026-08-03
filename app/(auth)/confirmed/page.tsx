@@ -18,11 +18,11 @@ export default function ConfirmedPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-4">
-          <Button asChild className="w-full bg-[#35408e] hover:bg-[#28306e] text-base py-6">
-            <Link href="/">
+          <Link href="/" className="w-full">
+            <Button className="w-full bg-[#35408e] hover:bg-[#28306e] text-base py-6">
               Back to Home
-            </Link>
-          </Button>
+            </Button>
+          </Link>
         </CardContent>
       </Card>
     </div>
