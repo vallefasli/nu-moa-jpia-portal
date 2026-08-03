@@ -52,11 +52,11 @@ export default function RegisterPage() {
   if (isSuccess) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4 py-12">
-        <Card className="w-full max-w-md border-t-4 border-t-green-500">
+        <Card className="w-full max-w-md border-t-4 border-t-[#fbb03b]">
           <CardHeader className="space-y-4">
-            <div className="mx-auto bg-green-100 p-3 rounded-full w-16 h-16 flex items-center justify-center">
-              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+            <div className="mx-auto bg-[#fbb03b]/20 p-3 rounded-full w-16 h-16 flex items-center justify-center">
+              <svg className="w-8 h-8 text-[#d99730]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
               </svg>
             </div>
             <CardTitle className="text-2xl font-bold text-center text-[#35408e]">Registration Submitted</CardTitle>
