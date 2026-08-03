@@ -69,13 +69,14 @@ export async function removeMember(userId: string) {
   return { success: true }
 }
 
-export async function updateMemberProfile(userId: string, data: { full_name: string, program: string, year_level: string, committee: string }) {
+export async function updateMemberProfile(userId: string, data: { full_name: string, student_no: string, program: string, year_level: string, committee: string }) {
   const supabase = await createClient()
 
   const { error } = await supabase
     .from('users')
     .update({ 
       full_name: data.full_name,
+      student_no: data.student_no,
       program: data.program,
       year_level: data.year_level,
       committee: data.committee

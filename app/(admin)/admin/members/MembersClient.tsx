@@ -6,7 +6,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { EditMemberDialog } from './EditMemberDialog'
 import { Button } from '@/components/ui/button'
-import { Trash2 } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Trash2, Search } from 'lucide-react'
 import { removeMember } from '@/app/(admin)/actions'
 import { toast } from 'sonner'
 import { useTransition } from 'react'
@@ -26,8 +27,16 @@ type User = {
 
 export default function MembersClient({ initialUsers }: { initialUsers: User[] }) {
   const [isPending, startTransition] = useTransition()
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const yearLevels = ['1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year', 'Irregular']
+  const yearLevels = ['All', '1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year', 'Irregular']
+
+  const filteredUsers = initialUsers.filter(u => 
+    !searchQuery || 
+    u.full_name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    u.student_no.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    u.program.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   const handleRemove = (userId: string, name: string) => {
     if (confirm(`Are you sure you want to remove ${name}? They will no longer be able to log in.`)) {
@@ -49,7 +58,17 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
         <CardDescription>Browse all registered members grouped by their academic year.</CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="1st Year" className="w-full">
+        <div className="mb-6 relative max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Input 
+            placeholder="Search by name, student number, or program..." 
+            className="pl-9 bg-white"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
+        <Tabs defaultValue="All" className="w-full">
           <TabsList className="flex flex-wrap h-auto mb-6">
             {yearLevels.map((year) => (
               <TabsTrigger key={year} value={year} className="flex-1 min-w-[100px]">
@@ -59,7 +78,9 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
           </TabsList>
 
           {yearLevels.map((year) => {
-            const yearUsers = initialUsers.filter(u => u.year_level === year || (year === 'Irregular' && !yearLevels.slice(0, 5).includes(u.year_level)))
+            const yearUsers = year === 'All' 
+              ? filteredUsers 
+              : filteredUsers.filter(u => u.year_level === year || (year === 'Irregular' && !yearLevels.slice(1, 6).includes(u.year_level)))
             
             return (
               <TabsContent key={year} value={year}>

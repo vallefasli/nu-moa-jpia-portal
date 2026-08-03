@@ -20,6 +20,7 @@ import { updateMemberProfile } from '@/app/(admin)/actions'
 type User = {
   id: string
   full_name: string
+  student_no: string
   program: string
   year_level: string
   committee: string
@@ -34,6 +35,7 @@ export function EditMemberDialog({ user }: { user: User }) {
     const formData = new FormData(e.currentTarget)
     const data = {
       full_name: formData.get('full_name') as string,
+      student_no: formData.get('student_no') as string,
       program: formData.get('program') as string,
       year_level: formData.get('year_level') as string,
       committee: formData.get('committee') as string,
@@ -68,6 +70,11 @@ export function EditMemberDialog({ user }: { user: User }) {
             <div className="space-y-2">
               <Label htmlFor="full_name">Full Name</Label>
               <Input id="full_name" name="full_name" defaultValue={user.full_name} required />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="student_no">Student Number</Label>
+              <Input id="student_no" name="student_no" defaultValue={user.student_no} required />
             </div>
 
             <div className="space-y-2">

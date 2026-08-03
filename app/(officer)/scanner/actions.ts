@@ -113,3 +113,27 @@ export async function searchMembers(query: string) {
     
   return data || []
 }
+
+export async function deleteOfficerAttendance(id: string) {
+  const supabase = await createClient()
+
+  // STRICT SECURITY ENFORCEMENT
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Not authenticated' }
+  const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single()
+  if (profile?.role !== 'admin' && profile?.role !== 'officer') {
+    return { success: false, error: 'Unauthorized: Only officers and admins can delete scans' }
+  }
+
+  const { error } = await supabase
+    .from('attendance')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    return { success: false, error: error.message }
+  }
+
+  revalidatePath('/scanner')
+  return { success: true }
+}

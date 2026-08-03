@@ -3,12 +3,12 @@
 import { useState, useTransition, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { QrScanner } from '@/components/scanner/QrScanner'
-import { manualCheckIn, searchMembers } from './actions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Search, Loader2, CalendarDays, Activity, User } from 'lucide-react'
+import { Search, Loader2, CalendarDays, Activity, User, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { manualCheckIn, searchMembers, deleteOfficerAttendance } from './actions'
 
 export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[], initialFeed: any[] }) {
   const router = useRouter()
@@ -74,6 +74,24 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
       toast.error(res.error)
     }
   }
+
+  const handleDeleteScan = (id: string, name: string) => {
+    if (confirm(`Are you sure you want to remove ${name}'s attendance record?`)) {
+      startTransition(async () => {
+        const res = await deleteOfficerAttendance(id)
+        if (res.success) {
+          toast.success("Attendance record removed")
+          handleScanComplete()
+        } else {
+          toast.error(res.error)
+        }
+      })
+    }
+  }
+
+  const headcount = initialFeed.reduce((acc: number, entry: any) => {
+    return entry.type === 'time_in' ? acc + 1 : acc - 1
+  }, 0)
 
   return (
     <div className="w-full max-w-6xl mx-auto p-4 md:p-8 grid lg:grid-cols-12 gap-8">
@@ -156,7 +174,7 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
               </CardTitle>
               {isPending && <Loader2 className="w-4 h-4 animate-spin text-gray-400" />}
             </div>
-            <p className="text-xs text-gray-500 font-medium">Headcount: {initialFeed.filter(f => f.type === 'time_in').length}</p>
+            <p className="text-xs text-gray-500 font-medium">Headcount (Recent): {Math.max(0, headcount)}</p>
           </CardHeader>
           <CardContent className="flex-1 overflow-y-auto p-0">
             <div className="divide-y divide-gray-50">
@@ -176,9 +194,20 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
                         {entry.type === 'time_in' ? 'TIME IN' : 'TIME OUT'}
                       </div>
                     </div>
-                    <div className="mt-2 text-[10px] text-gray-400 font-medium uppercase tracking-wider flex justify-between">
-                      <span>{new Date(entry.timestamp).toLocaleTimeString()}</span>
-                      <span>Officer ID: {entry.officer_id.split('-')[0]}</span>
+                    <div className="mt-2 flex justify-between items-end">
+                      <div className="text-[10px] text-gray-400 font-medium uppercase tracking-wider flex gap-4">
+                        <span>{new Date(entry.timestamp).toLocaleTimeString()}</span>
+                        <span>Officer ID: {entry.officer_id.split('-')[0]}</span>
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-6 w-6 text-red-400 hover:text-red-600 hover:bg-red-50"
+                        onClick={() => handleDeleteScan(entry.id, entry.users?.full_name)}
+                        disabled={isPending}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
                     </div>
                   </div>
                 ))

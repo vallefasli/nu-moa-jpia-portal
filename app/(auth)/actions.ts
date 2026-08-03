@@ -107,11 +107,11 @@ export async function signup(prevState: any, formData: FormData) {
     } else if (typeof error === 'string') {
       errorMsg = error
     } else if (error && typeof error === 'object') {
-      // Sometimes Supabase returns nested error objects without a message property
       errorMsg = (error as any).error_description || (error as any).msg || JSON.stringify(error)
-      if (errorMsg === '{}') {
-        errorMsg = 'A server error occurred during signup. Please try again.'
-      }
+    }
+
+    if (errorMsg === '{}') {
+      errorMsg = 'Server Error (500): This is often caused by invalid SMTP credentials in Supabase, or a failure to send the confirmation email. Please check your Supabase Auth settings.'
     }
 
     if (errorMsg.toLowerCase().includes('rate limit')) {

@@ -10,16 +10,17 @@ export default async function CertificateViewPage({ params }: { params: { id: st
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
 
-  // Verify they attended the event
-  const { data: attendance } = await supabase
+  // Verify they attended the event fully (both time_in and time_out)
+  const { data: attendanceLogs } = await supabase
     .from('attendance')
-    .select('id')
+    .select('type')
     .eq('user_id', user.id)
     .eq('event_id', params.id)
-    .eq('type', 'time_in')
-    .single()
 
-  if (!attendance) {
+  const hasTimeIn = attendanceLogs?.some(log => log.type === 'time_in')
+  const hasTimeOut = attendanceLogs?.some(log => log.type === 'time_out')
+
+  if (!hasTimeIn || !hasTimeOut) {
     redirect('/certificates') // Not authorized to view certificate
   }
 

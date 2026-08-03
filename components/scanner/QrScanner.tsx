@@ -72,49 +72,6 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
     eventIdRef.current = eventId
   }, [eventId])
 
-  useEffect(() => {
-    isComponentMounted.current = true
-    const initScanner = async () => {
-      // Delay slightly to ensure DOM is fully painted
-      await new Promise(r => setTimeout(r, 100))
-      if (!isComponentMounted.current) return
-
-      try {
-        const html5Qrcode = new Html5Qrcode("qr-reader")
-        scannerRef.current = html5Qrcode
-        setScanner(html5Qrcode)
-
-        const devices = await Html5Qrcode.getCameras()
-        if (!isComponentMounted.current) return
-        
-        if (devices && devices.length) {
-          setCameras(devices)
-          startScanning(html5Qrcode, devices[0].id)
-        } else {
-          setCameraError("No cameras found on this device.")
-        }
-      } catch (err) {
-        console.error("Error getting cameras", err)
-        setCameraError("Could not access camera. Please check permissions.")
-      }
-    }
-    
-    initScanner()
-
-    return () => {
-      isComponentMounted.current = false
-      if (scannerRef.current) {
-        if (scannerRef.current.isScanning) {
-          scannerRef.current.stop().catch(console.error).finally(() => {
-            scannerRef.current?.clear()
-          })
-        } else {
-          scannerRef.current.clear()
-        }
-      }
-    }
-  }, [])
-
   const startScanning = async (qrInstance: Html5Qrcode, cameraId: string) => {
     try {
       if (qrInstance.isScanning) await qrInstance.stop()
@@ -158,7 +115,7 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
             showOverlay(false, null, res.error)
           }
         },
-        (error) => {
+        (_error) => {
           // Ignore frequent frame scan failures
         }
       )
@@ -170,6 +127,50 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
       setCameraError("Scanner failed to start. Ensure camera isn't in use by another app.")
     }
   }
+
+  useEffect(() => {
+    isComponentMounted.current = true
+    const initScanner = async () => {
+      // Delay slightly to ensure DOM is fully painted
+      await new Promise(r => setTimeout(r, 100))
+      if (!isComponentMounted.current) return
+
+      try {
+        const html5Qrcode = new Html5Qrcode("qr-reader")
+        scannerRef.current = html5Qrcode
+        setScanner(html5Qrcode)
+
+        const devices = await Html5Qrcode.getCameras()
+        if (!isComponentMounted.current) return
+        
+        if (devices && devices.length) {
+          setCameras(devices)
+          startScanning(html5Qrcode, devices[0].id)
+        } else {
+          setCameraError("No cameras found on this device.")
+        }
+      } catch (err) {
+        console.error("Error getting cameras", err)
+        setCameraError("Could not access camera. Please check permissions.")
+      }
+    }
+    
+    initScanner()
+
+    return () => {
+      isComponentMounted.current = false
+      if (scannerRef.current) {
+        if (scannerRef.current.isScanning) {
+          scannerRef.current.stop().catch(console.error).finally(() => {
+            scannerRef.current?.clear()
+          })
+        } else {
+          scannerRef.current.clear()
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const switchCamera = () => {
     if (!scanner || cameras.length < 2) return
@@ -187,9 +188,9 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
   }
 
   return (
-    <div className="relative w-full max-w-md mx-auto overflow-hidden rounded-2xl bg-black ring-4 ring-gray-900 shadow-2xl">
+    <div className="relative w-full max-w-[440px] mx-auto overflow-hidden rounded-2xl bg-black ring-4 ring-gray-900 shadow-2xl">
       {/* Viewfinder */}
-      <div id="qr-reader" className="w-full h-full min-h-[400px] border-none"></div>
+      <div id="qr-reader" className="w-full h-full min-h-[420px] border-none"></div>
 
       {/* Camera Error Overlay */}
       {cameraError && (
