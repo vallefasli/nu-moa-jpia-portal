@@ -33,7 +33,8 @@ export async function updateSession(request: NextRequest) {
 
   const path = request.nextUrl.pathname
 
-  const isAuthRoute = path === '/' || path.startsWith('/register') || path.startsWith('/verify') || path.startsWith('/admin-login') || path.startsWith('/auth/confirm') || path.startsWith('/confirmed')
+  const isAuthRoute = path === '/' || path.startsWith('/register') || path.startsWith('/verify') || path.startsWith('/admin-login')
+  const isPublicRoute = path.startsWith('/auth/confirm') || path.startsWith('/confirmed')
 
   // Auth routes should redirect to dashboard if already logged in
   if (isAuthRoute) {
@@ -43,8 +44,8 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse
   }
 
-  // If no user and not an auth route, redirect to login
-  if (!user && !isAuthRoute) {
+  // If no user and not an auth route or public route, redirect to login
+  if (!user && !isAuthRoute && !isPublicRoute) {
     if (path.startsWith('/admin')) {
       return NextResponse.redirect(new URL('/admin-login', request.url))
     }
