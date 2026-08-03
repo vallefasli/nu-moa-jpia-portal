@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { headers } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
 
 export async function login(prevState: any, formData: FormData) {
@@ -84,10 +85,15 @@ export async function signup(prevState: any, formData: FormData) {
     return { error: 'This Student Number is already registered.' }
   }
 
+  const headersList = await headers()
+  const host = headersList.get('host') || 'localhost:3000'
+  const protocol = host.includes('localhost') ? 'http' : 'https'
+
   const { error, data } = await supabase.auth.signUp({
     email,
     password,
     options: {
+      emailRedirectTo: `${protocol}://${host}/auth/confirm`,
       data: {
         full_name,
         student_no,
