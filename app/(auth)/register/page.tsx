@@ -15,6 +15,7 @@ export default function RegisterPage() {
   const [isPending, setIsPending] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -23,6 +24,15 @@ export default function RegisterPage() {
     setError(null)
     
     const formData = new FormData(e.currentTarget)
+    const password = formData.get('password') as string
+    const confirmPassword = formData.get('confirm_password') as string
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match")
+      setIsPending(false)
+      return
+    }
+
     try {
       const result = await signup(null, formData)
       if (result?.error) {
@@ -180,6 +190,30 @@ export default function RegisterPage() {
                   className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 focus:outline-none"
                 >
                   {showPassword ? (
+                    <EyeOff className="h-5 w-5" aria-hidden="true" />
+                  ) : (
+                    <Eye className="h-5 w-5" aria-hidden="true" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirm_password">Confirm Password</Label>
+              <div className="relative">
+                <Input 
+                  id="confirm_password" 
+                  name="confirm_password" 
+                  type={showConfirmPassword ? "text" : "password"} 
+                  required 
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+                >
+                  {showConfirmPassword ? (
                     <EyeOff className="h-5 w-5" aria-hidden="true" />
                   ) : (
                     <Eye className="h-5 w-5" aria-hidden="true" />
