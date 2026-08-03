@@ -33,7 +33,7 @@ export async function updateSession(request: NextRequest) {
 
   const path = request.nextUrl.pathname
 
-  const isAuthRoute = path === '/' || path.startsWith('/register') || path.startsWith('/verify') || path.startsWith('/admin-login')
+  const isAuthRoute = path === '/' || path.startsWith('/register') || path.startsWith('/verify') || path.startsWith('/admin-login') || path.startsWith('/auth/confirm') || path.startsWith('/confirmed')
 
   // Auth routes should redirect to dashboard if already logged in
   if (isAuthRoute) {

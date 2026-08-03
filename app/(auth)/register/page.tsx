@@ -49,9 +49,9 @@ export default function RegisterPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
               </svg>
             </div>
-            <CardTitle className="text-2xl font-bold text-center text-[#35408e]">Account Created!</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center text-[#35408e]">Registration Submitted</CardTitle>
             <CardDescription className="text-center text-base">
-              A verification email has been sent to your address to confirm your account.
+              We've sent a verification link to your email. You must verify your email and wait for an admin to approve your account before you can log in.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center pt-4">
