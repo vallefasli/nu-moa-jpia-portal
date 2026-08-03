@@ -51,6 +51,13 @@ function AuthStateSync({ setActiveRole }: { setActiveRole: (role: string) => voi
       window.history.replaceState({}, '', '/')
     }
 
+    if (searchParams.get('error') === 'invalid_token') {
+      toast.error('Invalid or Expired Link', {
+        description: 'The confirmation link is invalid or was opened in a different browser. Please try signing up again if your account is not verified.'
+      })
+      window.history.replaceState({}, '', '/')
+    }
+
     const tab = searchParams.get('tab')
     if (tab && ['member', 'officer'].includes(tab)) {
       setActiveRole(tab)
