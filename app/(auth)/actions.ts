@@ -160,3 +160,127 @@ export async function verifyOtp(prevState: any, formData: FormData) {
   revalidatePath('/', 'layout')
   redirect('/pending')
 }
+
+export async function confirmEmailToken(params: { code?: string | null; token_hash?: string | null; type?: string | null }) {
+  const supabase = await createClient()
+
+  if (params.code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(params.code)
+    if (error) {
+      return { error: error.message }
+    }
+    revalidatePath('/', 'layout')
+    return { success: true }
+  }
+
+  if (params.token_hash && params.type) {
+    const { error } = await supabase.auth.verifyOtp({
+      type: params.type as any,
+      token_hash: params.token_hash,
+    })
+    if (error) {
+      return { error: error.message }
+    }
+    revalidatePath('/', 'layout')
+    return { success: true }
+  }
+
+  return { error: 'Invalid or missing verification link parameters.' }
+}
+
+export async function resendConfirmationEmail(email: string) {
+  if (!email || !email.includes('@')) {
+    return { error: 'Please enter a valid email address.' }
+  }
+
+  const supabase = await createClient()
+  const headersList = await headers()
+  const host = headersList.get('host') || 'localhost:3000'
+  const protocol = host.includes('localhost') ? 'http' : 'https'
+
+  const { error } = await supabase.auth.resend({
+    type: 'signup',
+    email,
+    options: {
+      emailRedirectTo: `${protocol}://${host}/auth/confirm`,
+    },
+  })
+
+  if (error) {
+    if (error.message.toLowerCase().includes('rate limit')) {
+      return { error: 'Please wait a few minutes before requesting another verification email.' }
+    }
+    return { error: error.message }
+  }
+
+  return { success: true }
+}
+
+export async function signInWithOAuth(provider: 'google' | 'azure') {
+  const supabase = await createClient()
+  const headersList = await headers()
+  const host = headersList.get('host') || 'localhost:3000'
+  const protocol = host.includes('localhost') ? 'http' : 'https'
+  
+  const redirectUrl = `${protocol}://${host}/auth/callback`
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo: redirectUrl,
+    },
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  if (data.url) {
+    redirect(data.url)
+  }
+}
+
+export async function completeOnboarding(prevState: any, formData: FormData) {
+  const student_no = formData.get('student_no') as string
+  const program = formData.get('program') as string
+  const year_level = formData.get('year_level') as string
+  const committee = formData.get('committee') as string
+
+  const supabase = await createClient()
+
+  // First, verify student number is not taken
+  const { data: existingStudent } = await supabase
+    .from('users')
+    .select('id')
+    .eq('student_no', student_no)
+    .single()
+
+  if (existingStudent) {
+    return { error: 'This Student Number is already registered.' }
+  }
+
+  // Get current user session
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    return { error: 'Not authenticated.' }
+  }
+
+  // Update user profile in public.users
+  const { error: updateError } = await supabase
+    .from('users')
+    .update({
+      student_no,
+      program,
+      year_level,
+      committee,
+    })
+    .eq('id', user.id)
+
+  if (updateError) {
+    return { error: updateError.message }
+  }
+
+  revalidatePath('/', 'layout')
+  return { redirect: '/dashboard' }
+}

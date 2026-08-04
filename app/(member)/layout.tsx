@@ -16,9 +16,13 @@ export default async function MemberLayout({
 
   const { data: profile } = await supabase
     .from('users')
-    .select('account_status')
+    .select('account_status, student_no')
     .eq('id', user.id)
     .single()
+
+  if (profile && !profile.student_no) {
+    redirect('/onboarding')
+  }
 
   if (profile?.account_status !== 'active') {
     redirect('/pending')
