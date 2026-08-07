@@ -1,7 +1,8 @@
 import { createClient } from '@/utils/supabase/server'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { CalendarDays, Clock, MapPin, Users, Trophy } from 'lucide-react'
+import { CalendarDays, Clock, MapPin, Users, Trophy, CheckCircle2 } from 'lucide-react'
+import { AttendedEventCard } from './AttendedEventCard'
 
 export default async function EventsPage() {
   const supabase = await createClient()
@@ -15,8 +16,22 @@ export default async function EventsPage() {
     .select('*')
     .order('date', { ascending: true })
 
-  const upcomingEvents = events?.filter(e => new Date(`${e.date}T${e.time_start}`) > new Date() && e.status !== 'completed') || []
-  const pastEvents = events?.filter(e => new Date(`${e.date}T${e.time_start}`) <= new Date() || e.status === 'completed') || []
+  // Fetch user's attendance (time_out only for completed attendance), feedback, and certificates
+  const [attendanceRes, feedbackRes, certsRes] = await Promise.all([
+    supabase.from('attendance').select('event_id').eq('user_id', user.id).eq('type', 'time_out'),
+    supabase.from('event_feedbacks').select('event_id').eq('user_id', user.id),
+    supabase.from('certificates').select('event_id, template_url').eq('user_id', user.id)
+  ])
+
+  const attendedEventIds = new Set(attendanceRes.data?.map(a => a.event_id) || [])
+  const feedbackEventIds = new Set(feedbackRes.data?.map(f => f.event_id) || [])
+  const certificatesData = certsRes.data || []
+
+  const attendedEvents = events?.filter(e => attendedEventIds.has(e.id)) || []
+  const unattendedEvents = events?.filter(e => !attendedEventIds.has(e.id)) || []
+
+  const upcomingEvents = unattendedEvents.filter(e => new Date(`${e.date}T${e.time_start}`) > new Date() && e.status !== 'completed')
+  const pastEvents = unattendedEvents.filter(e => new Date(`${e.date}T${e.time_start}`) <= new Date() || e.status === 'completed')
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 md:p-8 pb-24 md:pb-8 space-y-10">
@@ -48,6 +63,31 @@ export default async function EventsPage() {
           </div>
         )}
       </div>
+
+      {attendedEvents.length > 0 && (
+        <div className="pt-10 border-t-2 border-dashed border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both">
+          <h2 className="text-xl font-extrabold text-gray-900 mb-6 flex items-center gap-3">
+            <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600 shadow-inner">
+              <CheckCircle2 className="w-5 h-5" />
+            </div>
+            Attended Events
+          </h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            {attendedEvents.map((event) => {
+              const hasFeedback = feedbackEventIds.has(event.id)
+              const cert = certificatesData.find(c => c.event_id === event.id)
+              return (
+                <AttendedEventCard 
+                  key={event.id} 
+                  event={event} 
+                  feedbackStatus={hasFeedback ? 'submitted' : 'none'}
+                  certificateLink={cert?.template_url}
+                />
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="pt-10 border-t-2 border-dashed border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
         <h2 className="text-xl font-bold text-gray-400 mb-6 flex items-center gap-2">

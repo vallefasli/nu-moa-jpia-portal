@@ -10,17 +10,26 @@ export default async function CertificatesPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
 
-  // Fetch all attendance logs to determine completed events
-  const { data: attendanceLogs } = await supabase
-    .from('attendance')
-    .select(`
-      event_id,
-      type,
-      timestamp,
-      events ( id, title, date, points_awarded )
-    `)
-    .eq('user_id', user.id)
-    .order('timestamp', { ascending: false })
+  // Fetch all attendance logs and certificates
+  const [attendanceRes, certsRes] = await Promise.all([
+    supabase
+      .from('attendance')
+      .select(`
+        event_id,
+        type,
+        timestamp,
+        events ( id, title, date, points_awarded )
+      `)
+      .eq('user_id', user.id)
+      .order('timestamp', { ascending: false }),
+    supabase
+      .from('certificates')
+      .select('event_id, template_url')
+      .eq('user_id', user.id)
+  ])
+  
+  const attendanceLogs = attendanceRes.data
+  const certificatesMap = new Map(certsRes.data?.map(c => [c.event_id, c.template_url]) || [])
 
   // Group by event_id to check for BOTH time_in and time_out
   const eventStatus = new Map()
@@ -85,13 +94,27 @@ export default async function CertificatesPage() {
                 </div>
 
                 <div className="mt-auto">
-                  <Link 
-                    href={`/certificates/${ev.id}`}
-                    className="flex w-full items-center justify-center gap-2 h-10 bg-gray-900 hover:bg-[#35408e] text-white rounded-lg font-semibold transition-colors"
-                  >
-                    <Download className="w-4 h-4" />
-                    Download Certificate
-                  </Link>
+                  {(() => {
+                    const certUrl = certificatesMap.get(ev.id)
+                    return certUrl ? (
+                      <a 
+                        href={certUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex w-full items-center justify-center gap-2 h-10 bg-[#35408e] hover:bg-[#252d69] text-white rounded-lg font-semibold transition-colors shadow-md"
+                      >
+                        <Download className="w-4 h-4" />
+                        View Certificate
+                      </a>
+                    ) : (
+                      <button 
+                        disabled
+                        className="flex w-full items-center justify-center gap-2 h-10 bg-gray-100 text-gray-400 rounded-lg font-semibold cursor-not-allowed border border-gray-200"
+                      >
+                        Pending Release
+                      </button>
+                    )
+                  })()}
                 </div>
               </CardContent>
             </Card>
