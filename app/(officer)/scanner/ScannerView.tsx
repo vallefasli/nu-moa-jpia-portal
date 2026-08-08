@@ -115,7 +115,9 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
     }
   }
 
-  const headcount = initialFeed.reduce((acc: number, entry: any) => {
+  const filteredFeed = initialFeed.filter((entry: any) => entry.event_id === selectedEvent)
+  
+  const headcount = filteredFeed.reduce((acc: number, entry: any) => {
     return entry.type === 'time_in' ? acc + 1 : acc - 1
   }, 0)
 
@@ -213,12 +215,16 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
           </CardHeader>
           <CardContent className="flex-1 overflow-y-auto p-0">
             <div className="divide-y divide-gray-50">
-              {initialFeed.length === 0 ? (
+              {!selectedEvent ? (
+                <div className="p-8 text-center text-gray-400 text-sm">
+                  Waiting for an active event...
+                </div>
+              ) : filteredFeed.length === 0 ? (
                 <div className="p-8 text-center text-gray-400 text-sm">
                   Waiting for scans...
                 </div>
               ) : (
-                initialFeed.map((entry: any) => (
+                filteredFeed.map((entry: any) => (
                   <div key={entry.id} className="p-4 hover:bg-gray-50 transition-colors animate-in fade-in slide-in-from-left-2 duration-300">
                     <div className="flex justify-between items-start">
                       <div>

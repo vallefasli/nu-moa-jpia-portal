@@ -35,6 +35,7 @@ export default async function ScannerPage() {
     .from('attendance')
     .select(`
       id,
+      event_id,
       timestamp,
       type,
       officer_id,
