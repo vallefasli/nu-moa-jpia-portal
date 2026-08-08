@@ -20,6 +20,7 @@ export async function createEvent(formData: FormData) {
   const time_end = formData.get('time_end') as string
   const points_awarded = parseInt(formData.get('points_awarded') as string) || 0
   const capacity = parseInt(formData.get('capacity') as string) || null
+  const custom_feedback_questions = JSON.parse((formData.get('custom_feedback_questions') as string) || '[]')
 
   // Validation
   if (time_start && time_end && time_start >= time_end) {
@@ -36,7 +37,8 @@ export async function createEvent(formData: FormData) {
     time_end,
     points_awarded,
     capacity,
-    status: 'upcoming'
+    status: 'upcoming',
+    custom_feedback_questions
   })
 
   if (error) return { error: error.message }
@@ -62,6 +64,7 @@ export async function updateEvent(id: string, formData: FormData) {
   const points_awarded = parseInt(formData.get('points_awarded') as string) || 0
   const capacity = parseInt(formData.get('capacity') as string) || null
   const status = formData.get('status') as string
+  const custom_feedback_questions = JSON.parse((formData.get('custom_feedback_questions') as string) || '[]')
 
   // Validation
   if (time_start && time_end && time_start >= time_end) {
@@ -79,6 +82,7 @@ export async function updateEvent(id: string, formData: FormData) {
     points_awarded,
     capacity,
     status,
+    custom_feedback_questions,
     updated_at: new Date().toISOString()
   }).eq('id', id)
 
@@ -97,5 +101,27 @@ export async function deleteEvent(id: string) {
   
   if (error) return { error: error.message }
   revalidatePath('/admin/events')
+  return { success: true }
+}
+
+export async function clearAllEvents() {
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated' }
+  const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single()
+  if (profile?.role !== 'admin') return { error: 'Unauthorized' }
+
+  // Delete all attendance records, feedbacks, and certificates linked to events
+  await supabase.from('attendance').delete().neq('id', '00000000-0000-0000-0000-000000000000')
+  await supabase.from('event_feedbacks').delete().neq('event_id', '00000000-0000-0000-0000-000000000000')
+  await supabase.from('certificates').delete().neq('event_id', '00000000-0000-0000-0000-000000000000')
+  
+  const { error } = await supabase.from('events').delete().neq('id', '00000000-0000-0000-0000-000000000000')
+
+  if (error) return { error: error.message }
+  revalidatePath('/admin/events')
+  revalidatePath('/events')
+  revalidatePath('/officer-certificates')
   return { success: true }
 }

@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { ScanLine, LogOut } from 'lucide-react'
+import { ScanLine, LogOut, FileBadge } from 'lucide-react'
 import { logout } from '@/app/(auth)/actions'
 import { AutoLogout } from '@/components/AutoLogout'
 
@@ -49,6 +49,15 @@ export default async function OfficerLayout({
               <ScanLine className="w-5 h-5 text-gray-500" />
             </div>
             Event Scanner
+          </Link>
+          <Link
+            href="/officer-certificates"
+            className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+          >
+            <div className="p-2 rounded-lg bg-gray-100">
+              <FileBadge className="w-5 h-5 text-gray-500" />
+            </div>
+            Certificates
           </Link>
         </nav>
 
@@ -103,6 +112,17 @@ export default async function OfficerLayout({
             </div>
             <span className="text-[10px] font-bold tracking-wide">
               Scanner
+            </span>
+          </Link>
+          <Link
+            href="/officer-certificates"
+            className="relative flex flex-col items-center justify-center p-2 rounded-2xl min-w-[72px] text-gray-400 hover:text-gray-600"
+          >
+            <div className="p-2 rounded-xl mb-1 bg-transparent">
+              <FileBadge className="w-6 h-6" />
+            </div>
+            <span className="text-[10px] font-bold tracking-wide">
+              Certificates
             </span>
           </Link>
         </div>

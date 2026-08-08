@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { Users, LogOut, Calendar, ClipboardList, BarChart3, Download, UserCog } from 'lucide-react'
+import { Users, LogOut, Calendar, ClipboardList, BarChart3, Download, UserCog, ScanLine, FileBadge } from 'lucide-react'
 import { logout } from '@/app/(auth)/actions'
 import { cn } from '@/lib/utils'
 import { AutoLogout } from '@/components/AutoLogout'
@@ -116,6 +116,20 @@ export default async function AdminLayout({
               Data Export
             </Link>
           )}
+
+          {role === 'admin' && (
+            <Link
+              href="/scanner"
+              className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+            >
+              <div className="p-2 rounded-lg bg-gray-100">
+                <ScanLine className="w-5 h-5 text-gray-500" />
+              </div>
+              Event Scanner
+            </Link>
+          )}
+
+
         </nav>
         
         {/* Desktop Sidebar Logout */}
@@ -242,6 +256,22 @@ export default async function AdminLayout({
               </span>
             </Link>
           )}
+
+          {role === 'admin' && (
+            <Link
+              href="/scanner"
+              className="relative flex flex-col items-center justify-center p-2 rounded-2xl min-w-[60px] text-gray-400 hover:text-gray-600"
+            >
+              <div className="p-2 rounded-xl mb-1 bg-transparent">
+                <ScanLine className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold tracking-wide">
+                Scanner
+              </span>
+            </Link>
+          )}
+
+
         </div>
       </nav>
     </div>

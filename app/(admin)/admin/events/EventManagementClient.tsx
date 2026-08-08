@@ -4,8 +4,9 @@ import { useState, useTransition } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Plus, Edit2, Trash2, Calendar, MapPin, Users, Award, MoreVertical, X } from 'lucide-react'
-import { createEvent, updateEvent, deleteEvent } from './actions'
+import { Plus, Edit2, Trash2, Calendar, MapPin, Users, Award, MoreVertical, X, Trash } from 'lucide-react'
+import { createEvent, updateEvent, deleteEvent, clearAllEvents } from './actions'
+import { getEventStatus } from '@/lib/utils'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
@@ -15,20 +16,24 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
   
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingEvent, setEditingEvent] = useState<any | null>(null)
+  const [customQuestions, setCustomQuestions] = useState<any[]>([])
 
   const handleOpenModal = (event: any = null) => {
     setEditingEvent(event)
+    setCustomQuestions(event?.custom_feedback_questions || [])
     setIsModalOpen(true)
   }
 
   const handleCloseModal = () => {
     setEditingEvent(null)
+    setCustomQuestions([])
     setIsModalOpen(false)
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
+    formData.append('custom_feedback_questions', JSON.stringify(customQuestions))
     
     startTransition(async () => {
       let res;
@@ -72,17 +77,27 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {events.map(ev => (
-          <Card key={ev.id} className="overflow-hidden border-gray-200 shadow-sm flex flex-col">
-            <div className={`h-2 w-full ${ev.status === 'ongoing' ? 'bg-green-500' : ev.status === 'completed' ? 'bg-gray-400' : 'bg-blue-500'}`} />
-            <CardContent className="p-5 flex-1 flex flex-col">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="font-bold text-lg text-gray-900 leading-tight">{ev.title}</h3>
-                  <span className="inline-block mt-1 px-2 py-0.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full uppercase tracking-wider">
-                    {ev.event_type || 'General'}
-                  </span>
-                </div>
+        {events.map(ev => {
+          const effectiveStatus = getEventStatus(ev)
+          return (
+            <Card key={ev.id} className="overflow-hidden border-gray-200 shadow-sm flex flex-col">
+              <div className={`h-2 w-full ${effectiveStatus === 'ongoing' ? 'bg-emerald-500' : effectiveStatus === 'completed' ? 'bg-gray-300' : 'bg-blue-500'}`} />
+              <CardContent className="p-5 flex-1 flex flex-col">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="font-bold text-lg text-gray-900 leading-tight">{ev.title}</h3>
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full uppercase tracking-wider">
+                        {ev.event_type || 'General'}
+                      </span>
+                      <span className={`px-2 py-0.5 text-xs font-bold rounded-full uppercase tracking-wider ${
+                        effectiveStatus === 'ongoing' ? 'bg-emerald-100 text-emerald-700' : 
+                        effectiveStatus === 'completed' ? 'bg-gray-100 text-gray-500' : 'bg-blue-50 text-blue-700'
+                      }`}>
+                        {effectiveStatus}
+                      </span>
+                    </div>
+                  </div>
                 <div className="flex gap-1">
                   <button onClick={() => handleOpenModal(ev)} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                     <Edit2 className="w-4 h-4" />
@@ -117,7 +132,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
               </div>
             </CardContent>
           </Card>
-        ))}
+        )})}
         {events.length === 0 && (
           <div className="col-span-full py-12 text-center text-gray-500">
             No events found. Create one to get started!
@@ -185,15 +200,17 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-gray-100 pt-4">
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1">Status</label>
-                    <select name="status" defaultValue={editingEvent?.status || 'upcoming'} className="w-full h-10 rounded-md border border-input bg-gray-50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-                      <option value="upcoming">Upcoming</option>
-                      <option value="ongoing">Ongoing</option>
-                      <option value="completed">Completed</option>
-                    </select>
-                  </div>
+                <div className={`grid grid-cols-1 ${editingEvent ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-4 border-t border-gray-100 pt-4`}>
+                  {editingEvent && (
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-1">Status Override</label>
+                      <select name="status" defaultValue={editingEvent?.status || 'upcoming'} className="w-full h-10 rounded-md border border-input bg-gray-50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+                        <option value="upcoming">Upcoming</option>
+                        <option value="ongoing">Ongoing</option>
+                        <option value="completed">Completed</option>
+                      </select>
+                    </div>
+                  )}
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-1">Capacity</label>
                     <Input type="number" name="capacity" defaultValue={editingEvent?.capacity} placeholder="Leave blank for unlimited" className="bg-gray-50" />
@@ -202,6 +219,63 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                     <label className="block text-sm font-bold text-gray-700 mb-1">Points Awarded</label>
                     <Input type="number" name="points_awarded" defaultValue={editingEvent?.points_awarded || 0} required min="0" className="bg-gray-50" />
                   </div>
+                </div>
+
+                <div className="border-t border-gray-100 pt-4 space-y-4">
+                  <div className="flex justify-between items-center">
+                    <label className="block text-sm font-bold text-gray-700">Custom Feedback Questions (Optional)</label>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setCustomQuestions([...customQuestions, { id: crypto.randomUUID(), question: '', type: 'text' }])}
+                      className="text-xs h-7"
+                    >
+                      <Plus className="w-3 h-3 mr-1" /> Add Question
+                    </Button>
+                  </div>
+                  {customQuestions.length > 0 ? (
+                    <div className="space-y-3">
+                      {customQuestions.map((cq, index) => (
+                        <div key={cq.id} className="flex gap-2 items-start bg-gray-50 p-3 rounded-lg border border-gray-100">
+                          <div className="flex-1 space-y-2">
+                            <Input 
+                              value={cq.question}
+                              onChange={(e) => {
+                                const newQs = [...customQuestions]
+                                newQs[index].question = e.target.value
+                                setCustomQuestions(newQs)
+                              }}
+                              placeholder="e.g. How was the guest speaker?"
+                              className="bg-white h-8 text-sm"
+                              required
+                            />
+                            <select 
+                              value={cq.type}
+                              onChange={(e) => {
+                                const newQs = [...customQuestions]
+                                newQs[index].type = e.target.value
+                                setCustomQuestions(newQs)
+                              }}
+                              className="w-full h-8 rounded-md border border-input bg-white px-2 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                            >
+                              <option value="text">Text Response</option>
+                              <option value="rating">1-5 Star Rating</option>
+                            </select>
+                          </div>
+                          <button 
+                            type="button"
+                            onClick={() => setCustomQuestions(customQuestions.filter(q => q.id !== cq.id))}
+                            className="p-1.5 text-gray-400 hover:text-red-500 rounded-md hover:bg-red-50 transition-colors"
+                          >
+                            <Trash className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-gray-400 italic">No custom questions added. The standard rating & comments form will be used.</p>
+                  )}
                 </div>
               </div>
 

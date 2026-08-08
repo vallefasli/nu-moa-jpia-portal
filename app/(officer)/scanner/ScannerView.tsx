@@ -17,11 +17,19 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [isPending, startTransition] = useTransition()
-
   // Initialize event from local storage or defaults
   useEffect(() => {
+    const todayStr = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0]
+    
+    const eventToday = activeEvents.find(ev => ev.date === todayStr)
+    const ongoingEvent = activeEvents.find(ev => ev.status === 'ongoing')
     const savedEvent = localStorage.getItem('lastActiveEvent')
-    if (savedEvent && activeEvents.some(ev => ev.id === savedEvent)) {
+    
+    if (eventToday) {
+      setSelectedEvent(eventToday.id)
+    } else if (ongoingEvent) {
+      setSelectedEvent(ongoingEvent.id)
+    } else if (savedEvent && activeEvents.some(ev => ev.id === savedEvent)) {
       setSelectedEvent(savedEvent)
     } else if (activeEvents.length > 0) {
       setSelectedEvent(activeEvents[0].id)
