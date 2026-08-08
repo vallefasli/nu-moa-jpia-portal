@@ -24,32 +24,33 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
     // 1. Explicitly ongoing event
     let currentEvent = activeEvents.find(ev => ev.status === 'ongoing')
     
-    // 2. Event happening RIGHT NOW
+    // 2. Event happening RIGHT NOW or within 1 hour
     if (!currentEvent) {
-      currentEvent = activeEvents.find(ev => {
+      // Sort events by start time so we evaluate earliest first
+      const sortedEvents = [...activeEvents].sort((a, b) => {
+         const aStart = new Date(`${a.date}T${a.time_start?.slice(0, 8)}+08:00`).getTime()
+         const bStart = new Date(`${b.date}T${b.time_start?.slice(0, 8)}+08:00`).getTime()
+         return aStart - bStart
+      })
+
+      currentEvent = sortedEvents.find(ev => {
+        if (ev.status === 'completed') return false
         if (!ev.time_start || !ev.time_end) return false
+        
         const start = new Date(`${ev.date}T${ev.time_start.slice(0, 8)}+08:00`)
         const end = new Date(`${ev.date}T${ev.time_end.slice(0, 8)}+08:00`)
-        return now >= start && now <= end
+        
+        const oneHourBeforeStart = new Date(start.getTime() - 60 * 60 * 1000)
+        
+        // Not passed and within 1 hour before start
+        return now <= end && now >= oneHourBeforeStart
       })
-    }
-    
-    // 3. Next upcoming event for today
-    if (!currentEvent) {
-      currentEvent = activeEvents.find(ev => {
-        if (!ev.time_start) return ev.date === todayStr
-        const start = new Date(`${ev.date}T${ev.time_start.slice(0, 8)}+08:00`)
-        return now < start && ev.date === todayStr
-      })
-    }
-    
-    // 4. Fallback to any event today, or the first one in the list
-    if (!currentEvent) {
-      currentEvent = activeEvents.find(ev => ev.date === todayStr) || activeEvents[0]
     }
     
     if (currentEvent) {
       setSelectedEvent(currentEvent.id)
+    } else {
+      setSelectedEvent('')
     }
   }, [activeEvents])
 
@@ -123,63 +124,79 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
       {/* Scanner & Controls (Left Column) */}
       <div className="lg:col-span-7 space-y-6">
         
-        {/* Event Selector */}
-        <Card className="border-gray-200 shadow-sm">
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="p-2 bg-yellow-100 rounded-lg text-[#fbb03b]">
-              <CalendarDays className="w-5 h-5" />
-            </div>
-            <div className="flex-1 text-lg font-bold text-gray-900">
-              {activeEvents.find(ev => ev.id === selectedEvent)?.title || "No active event"}
-            </div>
-          </CardContent>
-        </Card>
+        {selectedEvent ? (
+          <>
+            {/* Event Selector */}
+            <Card className="border-gray-200 shadow-sm">
+              <CardContent className="p-4 flex items-center gap-4">
+                <div className="p-2 bg-yellow-100 rounded-lg text-[#fbb03b]">
+                  <CalendarDays className="w-5 h-5" />
+                </div>
+                <div className="flex-1 text-lg font-bold text-gray-900">
+                  {activeEvents.find(ev => ev.id === selectedEvent)?.title || "No active event"}
+                </div>
+              </CardContent>
+            </Card>
 
-        {/* The Camera Scanner */}
-        <QrScanner eventId={selectedEvent} onScanComplete={handleScanComplete} />
+            {/* The Camera Scanner */}
+            <QrScanner eventId={selectedEvent} onScanComplete={handleScanComplete} />
 
-        {/* Manual Fallback with Autocomplete */}
-        <Card className="border-gray-200 shadow-sm overflow-visible">
-          <div className="h-1 bg-gradient-to-r from-gray-200 to-gray-300" />
-          <CardContent className="p-5 overflow-visible">
-            <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">Manual Fallback Search</p>
-            <form onSubmit={handleManualSubmit} className="relative flex gap-3">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                <Input 
-                  placeholder="Search by Name or Student No..." 
-                  className="pl-10 h-11 bg-gray-50 border-gray-200"
-                  value={manualQuery}
-                  onChange={e => setManualQuery(e.target.value)}
-                  autoComplete="off"
-                />
-                
-                {/* Autocomplete Dropdown */}
-                {manualQuery.length >= 2 && searchResults.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden max-h-60 overflow-y-auto">
-                    {searchResults.map((user) => (
-                      <button
-                        key={user.id}
-                        type="button"
-                        onClick={() => {
-                          setManualQuery(user.student_no)
-                          handleManualSubmit(undefined, user.student_no)
-                        }}
-                        className="w-full flex flex-col items-start px-4 py-3 hover:bg-gray-50 border-b border-gray-50 last:border-0 transition-colors"
-                      >
-                        <span className="font-bold text-gray-900 text-sm">{user.full_name}</span>
-                        <span className="text-xs text-gray-500 font-mono">{user.student_no}</span>
-                      </button>
-                    ))}
+            {/* Manual Fallback with Autocomplete */}
+            <Card className="border-gray-200 shadow-sm overflow-visible">
+              <div className="h-1 bg-gradient-to-r from-gray-200 to-gray-300" />
+              <CardContent className="p-5 overflow-visible">
+                <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">Manual Fallback Search</p>
+                <form onSubmit={handleManualSubmit} className="relative flex gap-3">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                    <Input 
+                      placeholder="Search by Name or Student No..." 
+                      className="pl-10 h-11 bg-gray-50 border-gray-200"
+                      value={manualQuery}
+                      onChange={e => setManualQuery(e.target.value)}
+                      autoComplete="off"
+                    />
+                    
+                    {/* Autocomplete Dropdown */}
+                    {manualQuery.length >= 2 && searchResults.length > 0 && (
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden max-h-60 overflow-y-auto">
+                        {searchResults.map((user) => (
+                          <button
+                            key={user.id}
+                            type="button"
+                            onClick={() => {
+                              setManualQuery(user.student_no)
+                              handleManualSubmit(undefined, user.student_no)
+                            }}
+                            className="w-full flex flex-col items-start px-4 py-3 hover:bg-gray-50 border-b border-gray-50 last:border-0 transition-colors"
+                          >
+                            <span className="font-bold text-gray-900 text-sm">{user.full_name}</span>
+                            <span className="text-xs text-gray-500 font-mono">{user.student_no}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
+                  <Button type="submit" className="h-11 px-8 bg-gray-900 hover:bg-gray-800">
+                    Submit
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </>
+        ) : (
+          <Card className="border-gray-200 shadow-sm bg-gray-50/50">
+            <CardContent className="p-12 flex flex-col items-center justify-center text-center">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-gray-400">
+                <CalendarDays className="w-8 h-8" />
               </div>
-              <Button type="submit" className="h-11 px-8 bg-gray-900 hover:bg-gray-800">
-                Submit
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+              <h3 className="text-lg font-bold text-gray-900">No events available at the moment</h3>
+              <p className="text-sm text-gray-500 mt-2 max-w-sm">
+                The scanner will automatically become available 1 hour before the next scheduled event starts.
+              </p>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Live Feed (Right Column) */}
