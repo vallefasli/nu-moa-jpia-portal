@@ -104,13 +104,15 @@ export function FeedbackModal({ eventId, eventTitle, customQuestions = [] }: Fee
             />
           </div>
 
-          {customQuestions.map((q) => (
-            <div key={q.id || q.question} className="space-y-2">
+          {customQuestions.map((q, index) => {
+            const answerKey = q.id || q.question || `question_${index}`
+            return (
+            <div key={answerKey} className="space-y-2">
               <Label>{q.question}</Label>
               {q.type === 'text' ? (
                 <Input 
-                  value={customAnswers[q.question] || ''}
-                  onChange={(e) => setCustomAnswers(prev => ({ ...prev, [q.question]: e.target.value }))}
+                  value={customAnswers[answerKey] || ''}
+                  onChange={(e) => setCustomAnswers(prev => ({ ...prev, [answerKey]: e.target.value }))}
                   placeholder="Your answer..."
                 />
               ) : (
@@ -119,9 +121,9 @@ export function FeedbackModal({ eventId, eventTitle, customQuestions = [] }: Fee
                     <button
                       key={star}
                       type="button"
-                      onClick={() => setCustomAnswers(prev => ({ ...prev, [q.question]: star }))}
+                      onClick={() => setCustomAnswers(prev => ({ ...prev, [answerKey]: star }))}
                       className={`p-1 rounded-full hover:scale-110 transition-transform ${
-                        (customAnswers[q.question] || 0) >= star ? 'text-blue-400' : 'text-gray-200'
+                        (customAnswers[answerKey] || 0) >= star ? 'text-blue-400' : 'text-gray-200'
                       }`}
                     >
                       <Star className="w-6 h-6 fill-current" />
@@ -130,7 +132,7 @@ export function FeedbackModal({ eventId, eventTitle, customQuestions = [] }: Fee
                 </div>
               )}
             </div>
-          ))}
+          )})}
 
           <DialogFooter>
             <Button type="submit" disabled={loading || rating === 0} className="w-full bg-[#fbb03b] hover:bg-[#e09e35] text-white">

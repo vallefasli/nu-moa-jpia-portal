@@ -3,7 +3,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 
-export async function distributeCertificates(eventId: string, certificateLink: string) {
+export async function distributeCertificates(eventId: string, certificateLink: string, selectedUserIds?: string[]) {
   const supabase = await createClient()
 
   // Authorize
@@ -14,14 +14,35 @@ export async function distributeCertificates(eventId: string, certificateLink: s
     return { success: false, error: 'Unauthorized' }
   }
 
-  const { error } = await supabase
-    .from('events')
-    .update({ certificate_link: certificateLink })
-    .eq('id', eventId)
+  if (!selectedUserIds) {
+    // Distribute to all
+    const { error } = await supabase
+      .from('events')
+      .update({ certificate_link: certificateLink })
+      .eq('id', eventId)
 
-  if (error) {
-    console.error('Error distributing certificates:', error)
-    return { success: false, error: 'Failed to update certificate link.' }
+    if (error) {
+      console.error('Error distributing certificates:', error)
+      return { success: false, error: 'Failed to update certificate link.' }
+    }
+  } else {
+    // Distribute selectively
+    const { data: feedbacks } = await supabase
+      .from('event_feedbacks')
+      .select('user_id, additional_responses')
+      .eq('event_id', eventId)
+      .in('user_id', selectedUserIds)
+
+    if (feedbacks) {
+      for (const f of feedbacks) {
+        const newResponses = { ...(f.additional_responses || {}), certificate_link: certificateLink }
+        await supabase
+          .from('event_feedbacks')
+          .update({ additional_responses: newResponses })
+          .eq('event_id', eventId)
+          .eq('user_id', f.user_id)
+      }
+    }
   }
 
   revalidatePath('/officer-certificates')

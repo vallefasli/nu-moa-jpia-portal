@@ -30,6 +30,7 @@ export function CertificatesClient({
   const [templateUrl, setTemplateUrl] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set())
 
   const selectedEvent = events.find(e => e.id === selectedEventId)
 
@@ -40,6 +41,7 @@ export function CertificatesClient({
     setIsLoadingFeedbacks(true)
     setFeedbacks([])
     setSearchQuery('')
+    setSelectedUsers(new Set())
     
     const res = await getEventFeedbacks(event.id)
     if (res.success && res.data) {
@@ -63,7 +65,9 @@ export function CertificatesClient({
     }
 
     setIsSubmitting(true)
-    const res = await distributeCertificates(selectedEventId, templateUrl)
+    const isAll = selectedUsers.size === 0 || selectedUsers.size === feedbacks.length
+    const userIds = isAll ? undefined : Array.from(selectedUsers)
+    const res = await distributeCertificates(selectedEventId, templateUrl, userIds)
     setIsSubmitting(false)
 
     if (res.success) {
@@ -177,6 +181,17 @@ export function CertificatesClient({
                   <table className="w-full text-sm text-left">
                     <thead className="bg-gray-50/80 text-gray-500 text-xs uppercase font-bold tracking-wider border-b border-gray-100 sticky top-0 backdrop-blur-sm z-10">
                       <tr>
+                        <th className="px-4 py-3 w-10">
+                          <input 
+                            type="checkbox" 
+                            className="rounded border-gray-300 text-[#35408e] focus:ring-[#35408e]"
+                            checked={selectedUsers.size === filteredFeedbacks.length && filteredFeedbacks.length > 0}
+                            onChange={(e) => {
+                              if (e.target.checked) setSelectedUsers(new Set(filteredFeedbacks.map(f => f.user_id)))
+                              else setSelectedUsers(new Set())
+                            }}
+                          />
+                        </th>
                         <th className="px-4 py-3 font-semibold">Member</th>
                         <th className="px-4 py-3 font-semibold">Feedback</th>
                       </tr>
@@ -184,6 +199,19 @@ export function CertificatesClient({
                     <tbody className="divide-y divide-gray-100">
                       {filteredFeedbacks.map((feedback) => (
                         <tr key={feedback.user_id} className="hover:bg-gray-50/50 transition-colors group">
+                          <td className="px-4 py-3 align-top">
+                            <input 
+                              type="checkbox"
+                              className="rounded border-gray-300 text-[#35408e] focus:ring-[#35408e]"
+                              checked={selectedUsers.has(feedback.user_id)}
+                              onChange={(e) => {
+                                const newSet = new Set(selectedUsers)
+                                if (e.target.checked) newSet.add(feedback.user_id)
+                                else newSet.delete(feedback.user_id)
+                                setSelectedUsers(newSet)
+                              }}
+                            />
+                          </td>
                           <td className="px-4 py-3 align-top">
                             <div className="font-bold text-gray-900 group-hover:text-[#35408e] transition-colors">{feedback.users.full_name}</div>
                             <div className="text-xs text-gray-500 mt-0.5 font-mono">{feedback.users.student_no}</div>
@@ -253,6 +281,11 @@ export function CertificatesClient({
                 <p className="text-[10px] text-gray-500 leading-tight">
                   Paste the Google Drive folder link containing the certificates.
                 </p>
+                {selectedUsers.size > 0 && selectedUsers.size < feedbacks.length && (
+                  <p className="text-[10px] text-blue-600 font-medium bg-blue-50 p-2 rounded border border-blue-100">
+                    Distributing to {selectedUsers.size} selected members only.
+                  </p>
+                )}
               </div>
 
               <div className="mt-auto pt-4">

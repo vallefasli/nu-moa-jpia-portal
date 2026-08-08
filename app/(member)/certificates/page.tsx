@@ -24,12 +24,12 @@ export default async function CertificatesPage() {
       .order('timestamp', { ascending: false }),
     supabase
       .from('event_feedbacks')
-      .select('event_id')
+      .select('event_id, additional_responses')
       .eq('user_id', user.id)
   ])
   
   const attendanceLogs = attendanceRes.data || []
-  const feedbackEventIds = new Set(feedbackRes.data?.map(f => f.event_id) || [])
+  const feedbackDataMap = new Map(feedbackRes.data?.map(f => [f.event_id, f]) || [])
 
   // Group by event_id to check for BOTH time_in and time_out
   const eventStatus = new Map()
@@ -75,7 +75,8 @@ export default async function CertificatesPage() {
             <EventRecordCard 
               key={ev.id} 
               event={ev} 
-              feedbackSubmitted={feedbackEventIds.has(ev.id)}
+              feedbackSubmitted={feedbackDataMap.has(ev.id)}
+              feedbackData={feedbackDataMap.get(ev.id)}
             />
           ))}
         </div>

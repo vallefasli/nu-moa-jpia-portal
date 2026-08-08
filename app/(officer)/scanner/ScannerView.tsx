@@ -112,16 +112,9 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
             <div className="p-2 bg-yellow-100 rounded-lg text-[#fbb03b]">
               <CalendarDays className="w-5 h-5" />
             </div>
-            <select 
-              className="flex-1 bg-transparent text-lg font-bold text-gray-900 focus:outline-none"
-              value={selectedEvent}
-              onChange={handleEventChange}
-            >
-              <option value="" disabled>Select Active Event...</option>
-              {activeEvents.map(ev => (
-                <option key={ev.id} value={ev.id}>{ev.title}</option>
-              ))}
-            </select>
+            <div className="flex-1 text-lg font-bold text-gray-900">
+              {activeEvents.find(ev => ev.id === selectedEvent)?.title || "No active event"}
+            </div>
           </CardContent>
         </Card>
 

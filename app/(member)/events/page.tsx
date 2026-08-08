@@ -26,8 +26,8 @@ export default async function EventsPage() {
     const startTimeStr = e.time_start ? e.time_start.slice(0, 8) : '00:00:00'
     const endTimeStr = e.time_end ? e.time_end.slice(0, 8) : '23:59:59'
     
-    const start = new Date(`${e.date}T${startTimeStr}`)
-    const end = new Date(`${e.date}T${endTimeStr}`)
+    const start = new Date(`${e.date}T${startTimeStr}+08:00`)
+    const end = new Date(`${e.date}T${endTimeStr}+08:00`)
 
     if (e.status === 'completed' || now > end) {
       pastEvents.push(e)

@@ -14,12 +14,14 @@ interface EventRecordCardProps {
     custom_feedback_questions?: any[]
   }
   feedbackSubmitted: boolean
+  feedbackData?: any
 }
 
-export function EventRecordCard({ event, feedbackSubmitted }: EventRecordCardProps) {
+export function EventRecordCard({ event, feedbackSubmitted, feedbackData }: EventRecordCardProps) {
   const isPendingFeedback = !feedbackSubmitted
-  const isPendingDistribution = feedbackSubmitted && !event.certificate_link
-  const isCertificateReady = feedbackSubmitted && !!event.certificate_link
+  const certificateLink = event.certificate_link || feedbackData?.additional_responses?.certificate_link
+  const isPendingDistribution = feedbackSubmitted && !certificateLink
+  const isCertificateReady = feedbackSubmitted && !!certificateLink
 
   return (
     <Card className="overflow-hidden border-gray-200 shadow-sm hover:shadow-md transition-shadow group relative">
@@ -65,7 +67,7 @@ export function EventRecordCard({ event, feedbackSubmitted }: EventRecordCardPro
 
           {isCertificateReady && (
             <a 
-              href={event.certificate_link}
+              href={certificateLink}
               target="_blank"
               rel="noopener noreferrer"
               className="flex w-full items-center justify-center gap-2 h-10 bg-[#35408e] hover:bg-[#252d69] text-white rounded-lg font-semibold transition-colors shadow-md"
