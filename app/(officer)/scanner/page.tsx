@@ -26,7 +26,7 @@ export default async function ScannerPage() {
   
   const { data: activeEvents } = await supabase
     .from('events')
-    .select('id, title, status, date')
+    .select('id, title, status, date, time_start, time_end')
     .or(`status.in.(ongoing,upcoming),date.gte.${todayStr}`)
     .order('date', { ascending: true })
 

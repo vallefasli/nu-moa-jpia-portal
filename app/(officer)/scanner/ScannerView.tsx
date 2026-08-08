@@ -17,22 +17,39 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [isPending, startTransition] = useTransition()
-  // Initialize event from local storage or defaults
   useEffect(() => {
     const todayStr = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0]
+    const now = new Date()
     
-    const eventToday = activeEvents.find(ev => ev.date === todayStr)
-    const ongoingEvent = activeEvents.find(ev => ev.status === 'ongoing')
-    const savedEvent = localStorage.getItem('lastActiveEvent')
+    // 1. Explicitly ongoing event
+    let currentEvent = activeEvents.find(ev => ev.status === 'ongoing')
     
-    if (eventToday) {
-      setSelectedEvent(eventToday.id)
-    } else if (ongoingEvent) {
-      setSelectedEvent(ongoingEvent.id)
-    } else if (savedEvent && activeEvents.some(ev => ev.id === savedEvent)) {
-      setSelectedEvent(savedEvent)
-    } else if (activeEvents.length > 0) {
-      setSelectedEvent(activeEvents[0].id)
+    // 2. Event happening RIGHT NOW
+    if (!currentEvent) {
+      currentEvent = activeEvents.find(ev => {
+        if (!ev.time_start || !ev.time_end) return false
+        const start = new Date(`${ev.date}T${ev.time_start.slice(0, 8)}+08:00`)
+        const end = new Date(`${ev.date}T${ev.time_end.slice(0, 8)}+08:00`)
+        return now >= start && now <= end
+      })
+    }
+    
+    // 3. Next upcoming event for today
+    if (!currentEvent) {
+      currentEvent = activeEvents.find(ev => {
+        if (!ev.time_start) return ev.date === todayStr
+        const start = new Date(`${ev.date}T${ev.time_start.slice(0, 8)}+08:00`)
+        return now < start && ev.date === todayStr
+      })
+    }
+    
+    // 4. Fallback to any event today, or the first one in the list
+    if (!currentEvent) {
+      currentEvent = activeEvents.find(ev => ev.date === todayStr) || activeEvents[0]
+    }
+    
+    if (currentEvent) {
+      setSelectedEvent(currentEvent.id)
     }
   }, [activeEvents])
 
