@@ -3,7 +3,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 
-export async function distributeCertificates(eventId: string, userIds: string[], templateUrl: string) {
+export async function distributeCertificates(eventId: string, certificateLink: string) {
   const supabase = await createClient()
 
   // Authorize
@@ -14,23 +14,48 @@ export async function distributeCertificates(eventId: string, userIds: string[],
     return { success: false, error: 'Unauthorized' }
   }
 
-  // Insert or update certificates for each selected user
-  const upsertData = userIds.map(userId => ({
-    event_id: eventId,
-    user_id: userId,
-    template_url: templateUrl,
-    issue_date: new Date().toISOString().split('T')[0]
-  }))
-
   const { error } = await supabase
-    .from('certificates')
-    .upsert(upsertData, { onConflict: 'event_id,user_id' })
+    .from('events')
+    .update({ certificate_link: certificateLink })
+    .eq('id', eventId)
 
   if (error) {
     console.error('Error distributing certificates:', error)
-    return { success: false, error: 'Failed to distribute certificates.' }
+    return { success: false, error: 'Failed to update certificate link.' }
   }
 
   revalidatePath('/officer-certificates')
+  revalidatePath('/certificates') // also revalidate member side
   return { success: true }
+}
+
+export async function getEventFeedbacks(eventId: string) {
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Unauthorized' }
+
+  const { data, error } = await supabase
+    .from('event_feedbacks')
+    .select(`
+      user_id,
+      rating,
+      comment,
+      additional_responses,
+      created_at,
+      users!event_feedbacks_user_id_fkey (
+        full_name,
+        student_no,
+        member_id
+      )
+    `)
+    .eq('event_id', eventId)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching feedbacks:', error)
+    return { success: false, error: 'Failed to fetch feedbacks' }
+  }
+
+  return { success: true, data }
 }

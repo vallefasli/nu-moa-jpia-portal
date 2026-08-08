@@ -21,11 +21,13 @@ export default async function ScannerPage() {
     redirect('/dashboard')
   }
 
-  // 2. Fetch Active Events (ongoing or upcoming)
+  // 2. Fetch Active Events (ongoing or upcoming, or happening today/future)
+  const todayStr = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0];
+  
   const { data: activeEvents } = await supabase
     .from('events')
-    .select('id, title')
-    .in('status', ['ongoing', 'upcoming'])
+    .select('id, title, status, date')
+    .or(`status.in.(ongoing,upcoming),date.gte.${todayStr}`)
     .order('date', { ascending: true })
 
   // 3. Fetch Recent Attendance Feed (last 50 scans)
