@@ -33,10 +33,27 @@ export async function updateSession(request: NextRequest) {
 
   const path = request.nextUrl.pathname
 
-  const isAuthRoute = path === '/' || path.startsWith('/register') || path.startsWith('/verify') || path.startsWith('/admin-login')
-  const isPublicRoute = path.startsWith('/auth/confirm') || path.startsWith('/confirmed')
+  const isAuthRoute = path === '/' || path.startsWith('/admin-login')
+  const isPublicRoute = path.startsWith('/auth/callback') || path.startsWith('/confirmed') || path === '/terms' || path === '/privacy'
 
-  // Auth routes should redirect to dashboard if already logged in
+  // If the user is logged in, check if their profile is complete
+  if (user) {
+    // Only check the database if they are trying to access a protected route or auth route
+    // to avoid unnecessary DB calls on public routes
+    if (!isPublicRoute && !path.startsWith('/complete-profile')) {
+      const { data: profile } = await supabase
+        .from('users')
+        .select('student_no, role')
+        .eq('id', user.id)
+        .single()
+
+      if (profile?.role === 'member' && !profile?.student_no) {
+        return NextResponse.redirect(new URL('/complete-profile', request.url))
+      }
+    }
+  }
+
+  // Auth routes should redirect to dashboard if already logged in (and profile is complete)
   if (isAuthRoute) {
     if (user) {
       return NextResponse.redirect(new URL('/dashboard', request.url))
@@ -45,7 +62,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // If no user and not an auth route or public route, redirect to login
-  if (!user && !isAuthRoute && !isPublicRoute) {
+  if (!user && !isAuthRoute && !isPublicRoute && !path.startsWith('/complete-profile')) {
     if (path.startsWith('/admin')) {
       return NextResponse.redirect(new URL('/admin-login', request.url))
     }
