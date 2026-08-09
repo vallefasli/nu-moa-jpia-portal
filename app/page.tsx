@@ -123,6 +123,12 @@ export default function LoginPage() {
           )}
         </CardFooter>
       </Card>
+      
+      <div className="mt-8 text-center text-xs text-gray-400 space-x-4">
+        <Link href="/privacy" className="hover:text-gray-600 hover:underline transition-colors">Privacy Policy</Link>
+        <span>&middot;</span>
+        <Link href="/terms" className="hover:text-gray-600 hover:underline transition-colors">Terms and Conditions</Link>
+      </div>
     </div>
   )
 }

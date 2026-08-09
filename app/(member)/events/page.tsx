@@ -9,11 +9,18 @@ export default async function EventsPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  // Fetch all events, ordered by date
   const { data: events } = await supabase
     .from('events')
     .select('*')
     .order('date', { ascending: true })
+
+  // Fetch the current user's RSVPs
+  const { data: rsvps } = await supabase
+    .from('event_rsvps')
+    .select('event_id')
+    .eq('user_id', user.id)
+
+  const userRsvpEventIds = new Set(rsvps?.map(r => r.event_id) || [])
 
   const now = new Date()
 
@@ -57,7 +64,7 @@ export default async function EventsPage() {
           </h2>
           <div className="grid gap-6 md:grid-cols-2">
             {ongoingEvents.map((event) => (
-              <EventCard key={event.id} event={event} isOngoing />
+              <EventCard key={event.id} event={event} isOngoing isRSVPd={userRsvpEventIds.has(event.id)} />
             ))}
           </div>
         </div>
@@ -82,7 +89,7 @@ export default async function EventsPage() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2">
             {upcomingEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
+              <EventCard key={event.id} event={event} isRSVPd={userRsvpEventIds.has(event.id)} />
             ))}
           </div>
         )}
@@ -98,7 +105,7 @@ export default async function EventsPage() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 opacity-70 hover:opacity-100 transition-opacity duration-500 grayscale-[40%] hover:grayscale-0">
             {pastEvents.map((event) => (
-              <EventCard key={event.id} event={event} isPast />
+              <EventCard key={event.id} event={event} isPast isRSVPd={userRsvpEventIds.has(event.id)} />
             ))}
           </div>
         )}
@@ -107,7 +114,9 @@ export default async function EventsPage() {
   )
 }
 
-function EventCard({ event, isPast = false, isOngoing = false }: { event: any, isPast?: boolean, isOngoing?: boolean }) {
+import { RSVPButton } from './RSVPButton'
+
+function EventCard({ event, isPast = false, isOngoing = false, isRSVPd = false }: { event: any, isPast?: boolean, isOngoing?: boolean, isRSVPd?: boolean }) {
   const eventDate = new Date(event.date).toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric' })
   const startTime = new Date(`1970-01-01T${event.time_start}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
   const endTime = new Date(`1970-01-01T${event.time_end}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
@@ -163,12 +172,17 @@ function EventCard({ event, isPast = false, isOngoing = false }: { event: any, i
           <Trophy className="w-4 h-4 text-yellow-500" />
           +{event.points_awarded || 0} pts
         </div>
-        {event.capacity && (
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-400 bg-white px-3 py-1.5 rounded-full border border-gray-100 shadow-sm">
-            <Users className="w-3.5 h-3.5" />
-            {event.capacity} Max
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          {event.capacity && (
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-400 bg-white px-3 py-1.5 rounded-full border border-gray-100 shadow-sm">
+              <Users className="w-3.5 h-3.5" />
+              {event.capacity} Max
+            </div>
+          )}
+          {!isPast && (
+            <RSVPButton eventId={event.id} initialIsRSVPd={isRSVPd} />
+          )}
+        </div>
       </CardFooter>
     </Card>
   )

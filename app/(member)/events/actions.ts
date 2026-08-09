@@ -31,3 +31,36 @@ export async function submitEventFeedback(eventId: string, rating: number, comme
   revalidatePath('/officer-certificates')
   return { success: true }
 }
+
+export async function toggleRSVP(eventId: string, isCurrentlyRSVPd: boolean) {
+  const supabase = await createClient()
+  
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Unauthorized' }
+
+  if (isCurrentlyRSVPd) {
+    // Cancel RSVP
+    const { error } = await supabase
+      .from('event_rsvps')
+      .delete()
+      .eq('event_id', eventId)
+      .eq('user_id', user.id)
+
+    if (error) return { success: false, error: 'Failed to cancel RSVP' }
+  } else {
+    // Add RSVP
+    const { error } = await supabase
+      .from('event_rsvps')
+      .insert({
+        event_id: eventId,
+        user_id: user.id
+      })
+
+    if (error && error.code !== '23505') { // ignore duplicate insert error
+      return { success: false, error: 'Failed to RSVP' }
+    }
+  }
+
+  revalidatePath('/events')
+  return { success: true, isRSVPd: !isCurrentlyRSVPd }
+}

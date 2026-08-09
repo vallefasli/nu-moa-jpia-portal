@@ -16,6 +16,7 @@ export default function RegisterPage() {
   const [isSuccess, setIsSuccess] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [hasConsented, setHasConsented] = useState(false)
   const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -29,6 +30,12 @@ export default function RegisterPage() {
 
     if (password !== confirmPassword) {
       setError("Passwords do not match")
+      setIsPending(false)
+      return
+    }
+
+    if (!hasConsented) {
+      setError("You must agree to the Terms and Conditions and Privacy Policy.")
       setIsPending(false)
       return
     }
@@ -222,7 +229,31 @@ export default function RegisterPage() {
               </div>
             </div>
             
-            <Button className="w-full mt-4 bg-[#35408e] hover:bg-[#28306e]" type="submit" disabled={isPending}>
+            <div className="pt-2">
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <div className="flex items-center h-5">
+                  <input
+                    type="checkbox"
+                    checked={hasConsented}
+                    onChange={(e) => setHasConsented(e.target.checked)}
+                    required
+                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 transition-all text-[#35408e]"
+                  />
+                </div>
+                <div className="text-sm text-gray-600 leading-tight">
+                  I have read and agree to the{' '}
+                  <Link href="/terms" target="_blank" className="text-[#35408e] font-semibold hover:underline">
+                    Terms and Conditions
+                  </Link>{' '}
+                  and the{' '}
+                  <Link href="/privacy" target="_blank" className="text-[#35408e] font-semibold hover:underline">
+                    Privacy Policy
+                  </Link>.
+                </div>
+              </label>
+            </div>
+
+            <Button className="w-full mt-4 bg-[#35408e] hover:bg-[#28306e]" type="submit" disabled={isPending || !hasConsented}>
               {isPending ? 'Signing up...' : 'Sign Up'}
             </Button>
           </form>

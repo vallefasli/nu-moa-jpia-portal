@@ -13,7 +13,7 @@ export default async function EventsPage() {
 
   const { data: events } = await supabase
     .from('events')
-    .select('*')
+    .select('*, event_rsvps(count)')
     .order('date', { ascending: false })
 
   return (
