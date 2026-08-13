@@ -124,6 +124,9 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                     <Users className="w-4 h-4" />
                     <span>{ev.capacity ? `${ev.capacity} slots` : 'Unlimited'}</span>
                   </div>
+                  <div className="flex items-center gap-1.5 text-[#35408e] font-semibold text-sm bg-[#35408e]/10 px-2 py-1 rounded-md">
+                    People going: {ev.event_rsvps?.[0]?.count || 0}
+                  </div>
                   <div className="flex items-center gap-1.5 font-bold text-gray-900">
                     <Award className="w-4 h-4 text-[#fbb03b]" />
                     <span>{ev.points_awarded || 0} pts</span>
