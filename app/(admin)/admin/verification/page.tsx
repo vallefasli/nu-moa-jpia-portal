@@ -6,6 +6,7 @@ import { ActionButtons } from './ActionButtons'
 
 import { Button } from '@/components/ui/button'
 import { logout } from '@/app/(auth)/actions'
+import { LogoutDialog } from '@/components/LogoutDialog'
 
 export default async function VerificationQueuePage() {
   const supabase = await createClient()
@@ -33,11 +34,11 @@ export default async function VerificationQueuePage() {
           <Badge variant="secondary" className="text-sm px-3 py-1">
             {users?.length || 0} Pending
           </Badge>
-          <form action={logout}>
-            <Button variant="outline" size="sm" type="submit">
+          <LogoutDialog>
+            <Button variant="outline" size="sm">
               Log Out
             </Button>
-          </form>
+          </LogoutDialog>
         </div>
       </div>
 

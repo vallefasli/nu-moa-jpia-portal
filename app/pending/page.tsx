@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { logout } from '@/app/(auth)/actions'
+import { LogoutDialog } from '@/components/LogoutDialog'
 
 export default function PendingVerificationPage() {
   return (
@@ -24,11 +25,11 @@ export default function PendingVerificationPage() {
             You will be able to log in normally once your account is activated by an officer.
           </p>
           
-          <form action={logout}>
-            <Button variant="outline" type="submit">
+          <LogoutDialog>
+            <Button variant="outline">
               Log Out
             </Button>
-          </form>
+          </LogoutDialog>
         </CardContent>
       </Card>
     </div>

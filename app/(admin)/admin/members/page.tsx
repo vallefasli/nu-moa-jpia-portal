@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { Badge } from '@/components/ui/badge'
 import { logout } from '@/app/(auth)/actions'
 import { Button } from '@/components/ui/button'
+import { LogoutDialog } from '@/components/LogoutDialog'
 import MembersClient from './MembersClient'
 import { redirect } from 'next/navigation'
 
@@ -38,11 +39,11 @@ export default async function MembersPage() {
           <Badge variant="secondary" className="text-sm px-3 py-1">
             {users?.length || 0} Active Members
           </Badge>
-          <form action={logout}>
-            <Button variant="outline" size="sm" type="submit">
+          <LogoutDialog>
+            <Button variant="outline" size="sm">
               Log Out
             </Button>
-          </form>
+          </LogoutDialog>
         </div>
       </div>
 

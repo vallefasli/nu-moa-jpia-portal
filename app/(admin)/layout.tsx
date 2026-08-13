@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { Users, LogOut, Calendar, ClipboardList, BarChart3, Download, UserCog, ScanLine, FileBadge } from 'lucide-react'
 import { logout } from '@/app/(auth)/actions'
 import { cn } from '@/lib/utils'
+import { LogoutDialog } from '@/components/LogoutDialog'
 import { AutoLogout } from '@/components/AutoLogout'
 
 export default async function AdminLayout({
@@ -134,9 +135,8 @@ export default async function AdminLayout({
         
         {/* Desktop Sidebar Logout */}
         <div className="p-6 border-t border-gray-100 bg-gray-50">
-          <form action={logout}>
+          <LogoutDialog>
             <button 
-              type="submit"
               className="flex w-full items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors"
             >
               <div className="p-2 bg-gray-100 rounded-lg">
@@ -144,7 +144,7 @@ export default async function AdminLayout({
               </div>
               Log Out
             </button>
-          </form>
+          </LogoutDialog>
         </div>
       </aside>
 
@@ -159,11 +159,11 @@ export default async function AdminLayout({
                {role}
             </div>
           </div>
-          <form action={logout}>
-            <button type="submit" className="text-gray-400 p-2 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors active:scale-95">
+          <LogoutDialog>
+            <button className="text-gray-400 p-2 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors active:scale-95">
               <LogOut className="w-5 h-5" />
             </button>
-          </form>
+          </LogoutDialog>
         </div>
 
         <div className="h-full">

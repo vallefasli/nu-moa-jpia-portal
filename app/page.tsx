@@ -10,12 +10,15 @@ import { useActionState, useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { toast } from 'sonner'
+import { Eye, EyeOff } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 
 function LoginForm({ role }: { role: string }) {
   const [mode, setMode] = useState<'login' | 'signup'>('login')
   const [loginState, loginAction, isLoginPending] = useActionState(login, null)
   const [signupState, signupAction, isSignupPending] = useActionState(signup, null)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   
   const isSignupMode = role === 'member' && mode === 'signup'
   
@@ -67,13 +70,41 @@ function LoginForm({ role }: { role: string }) {
         </div>
         <div className="space-y-2">
           <Label htmlFor={`password-${role}`}>Password</Label>
-          <Input id={`password-${role}`} name="password" type="password" required />
+          <div className="relative">
+            <Input 
+              id={`password-${role}`} 
+              name="password" 
+              type={showPassword ? "text" : "password"} 
+              required 
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
         </div>
         
         {isSignupMode && (
           <div className="space-y-2">
             <Label htmlFor={`confirm-password-${role}`}>Confirm Password</Label>
-            <Input id={`confirm-password-${role}`} name="confirm_password" type="password" required />
+            <div className="relative">
+              <Input 
+                id={`confirm-password-${role}`} 
+                name="confirm_password" 
+                type={showConfirmPassword ? "text" : "password"} 
+                required 
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+              >
+                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
         )}
 
