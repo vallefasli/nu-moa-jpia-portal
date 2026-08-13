@@ -10,8 +10,26 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 export default function CompleteProfilePage() {
   const [state, formAction, isPending] = useActionState(completeProfile, null)
-  const [initialFirstName, setInitialFirstName] = useState('')
-  const [initialLastName, setInitialLastName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [middleName, setMiddleName] = useState('')
+  const [studentNo, setStudentNo] = useState('')
+  const [studentEmail, setStudentEmail] = useState('')
+  const [program, setProgram] = useState('')
+  const [yearLevel, setYearLevel] = useState('')
+  const [committee, setCommittee] = useState('None')
+
+  useEffect(() => {
+    if (state?.error) {
+      const err = state.error.toLowerCase()
+      if (err.includes('student email')) {
+        setStudentEmail('')
+      }
+      if (err.includes('student number')) {
+        setStudentNo('')
+      }
+    }
+  }, [state])
 
   useEffect(() => {
     async function fetchName() {
@@ -24,13 +42,13 @@ export default function CompleteProfilePage() {
           .eq('id', user.id)
           .single()
         
-        if (profile?.full_name) {
+        if (profile?.full_name && profile.full_name !== 'System Account') {
           const parts = profile.full_name.trim().split(' ')
           if (parts.length > 1) {
-            setInitialLastName(parts.pop() || '')
-            setInitialFirstName(parts.join(' '))
+            setLastName(parts.pop() || '')
+            setFirstName(parts.join(' '))
           } else {
-            setInitialFirstName(profile.full_name)
+            setFirstName(profile.full_name)
           }
         }
       }
@@ -63,17 +81,17 @@ export default function CompleteProfilePage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
                   <Label htmlFor="first_name">First Name <span className="text-red-500">*</span></Label>
-                  <Input id="first_name" name="first_name" placeholder="e.g. Juan" required defaultValue={initialFirstName} className="bg-white" />
+                  <Input id="first_name" name="first_name" placeholder="e.g. Juan" required value={firstName} onChange={e => setFirstName(e.target.value)} className="bg-white" />
                 </div>
                 
                 <div className="space-y-2">
                   <Label htmlFor="last_name">Last Name <span className="text-red-500">*</span></Label>
-                  <Input id="last_name" name="last_name" placeholder="e.g. Dela Cruz" required defaultValue={initialLastName} className="bg-white" />
+                  <Input id="last_name" name="last_name" placeholder="e.g. Dela Cruz" required value={lastName} onChange={e => setLastName(e.target.value)} className="bg-white" />
                 </div>
                 
                 <div className="space-y-2">
                   <Label htmlFor="middle_name">Middle Name <span className="text-gray-400 font-normal">(Optional)</span></Label>
-                  <Input id="middle_name" name="middle_name" placeholder="e.g. Santos" className="bg-white" />
+                  <Input id="middle_name" name="middle_name" placeholder="e.g. Santos" value={middleName} onChange={e => setMiddleName(e.target.value)} className="bg-white" />
                 </div>
                 
                 <div className="space-y-2">
@@ -83,8 +101,26 @@ export default function CompleteProfilePage() {
                     name="student_no" 
                     placeholder="e.g. 2024-123456" 
                     required 
+                    value={studentNo}
+                    onChange={e => setStudentNo(e.target.value)}
                     pattern="^\d{4}-\d{6}$"
                     title="Format: 202X-XXXXXX"
+                    className="bg-white"
+                  />
+                </div>
+                
+                <div className="space-y-2 sm:col-span-2">
+                  <Label htmlFor="student_email">Student Email <span className="text-red-500">*</span></Label>
+                  <Input 
+                    id="student_email" 
+                    name="student_email" 
+                    type="email"
+                    placeholder="e.g. juan@students.nu-moa.edu.ph" 
+                    required 
+                    value={studentEmail}
+                    onChange={e => setStudentEmail(e.target.value)}
+                    pattern="^[a-zA-Z0-9._%+-]+@students\.nu-moa\.edu\.ph$"
+                    title="Must be a valid @students.nu-moa.edu.ph email address"
                     className="bg-white"
                   />
                 </div>
@@ -101,7 +137,8 @@ export default function CompleteProfilePage() {
                   id="program" 
                   name="program" 
                   required 
-                  defaultValue=""
+                  value={program}
+                  onChange={e => setProgram(e.target.value)}
                   className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <option value="" disabled>Select your Program</option>
@@ -118,7 +155,8 @@ export default function CompleteProfilePage() {
                     id="year_level" 
                     name="year_level" 
                     required 
-                    defaultValue=""
+                    value={yearLevel}
+                    onChange={e => setYearLevel(e.target.value)}
                     className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <option value="" disabled>Select Year</option>
@@ -136,7 +174,8 @@ export default function CompleteProfilePage() {
                     id="committee" 
                     name="committee" 
                     required 
-                    defaultValue="None"
+                    value={committee}
+                    onChange={e => setCommittee(e.target.value)}
                     className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <option value="None">None (General Member)</option>

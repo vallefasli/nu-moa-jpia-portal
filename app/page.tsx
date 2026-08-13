@@ -1,6 +1,6 @@
 'use client'
 
-import { login } from '@/app/(auth)/actions'
+import { login, signup } from '@/app/(auth)/actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,7 +12,15 @@ import { toast } from 'sonner'
 import { createClient } from '@/utils/supabase/client'
 
 function LoginForm({ role }: { role: string }) {
-  const [state, formAction, isPending] = useActionState(login, null)
+  const [mode, setMode] = useState<'login' | 'signup'>('login')
+  const [loginState, loginAction, isLoginPending] = useActionState(login, null)
+  const [signupState, signupAction, isSignupPending] = useActionState(signup, null)
+  
+  const isSignupMode = role === 'member' && mode === 'signup'
+  
+  const state = isSignupMode ? signupState : loginState
+  const formAction = isSignupMode ? signupAction : loginAction
+  const isPending = isSignupMode ? isSignupPending : isLoginPending
   
   const handleGoogleLogin = async () => {
     const supabase = createClient()
@@ -23,33 +31,16 @@ function LoginForm({ role }: { role: string }) {
       },
     })
   }
-  
-  if (role === 'member') {
-    return (
-      <div className="space-y-4 mt-4">
-        <Button variant="outline" type="button" className="w-full" onClick={handleGoogleLogin}>
-          <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
-            <path
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-              fill="#4285F4"
-            />
-            <path
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-              fill="#34A853"
-            />
-            <path
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-              fill="#FBBC05"
-            />
-            <path
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-              fill="#EA4335"
-            />
-          </svg>
-          Sign in with Google
-        </Button>
-      </div>
-    )
+
+  const handleMicrosoftLogin = async () => {
+    const supabase = createClient()
+    await supabase.auth.signInWithOAuth({
+      provider: 'azure',
+      options: {
+        scopes: 'email',
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
   }
 
   return (
@@ -62,19 +53,92 @@ function LoginForm({ role }: { role: string }) {
             {state.error}
           </div>
         )}
+        
+        {state?.success && (
+          <div className="bg-green-50 text-green-600 p-3 rounded-md text-sm mb-4">
+            {state.success}
+          </div>
+        )}
 
         <div className="space-y-2">
           <Label htmlFor={`email-${role}`}>Email</Label>
-          <Input id={`email-${role}`} name="email" type="email" placeholder="officer@national-u.edu.ph" required />
+          <Input id={`email-${role}`} name="email" type="email" placeholder={role === 'officer' ? "officer@national-u.edu.ph" : "personal@gmail.com"} required />
         </div>
         <div className="space-y-2">
           <Label htmlFor={`password-${role}`}>Password</Label>
           <Input id={`password-${role}`} name="password" type="password" required />
         </div>
+        
+        {isSignupMode && (
+          <div className="space-y-2">
+            <Label htmlFor={`confirm-password-${role}`}>Confirm Password</Label>
+            <Input id={`confirm-password-${role}`} name="confirm_password" type="password" required />
+          </div>
+        )}
+
         <Button className="w-full bg-[#35408e] hover:bg-[#28306e]" type="submit" disabled={isPending}>
-          {isPending ? 'Signing In...' : `Sign In as ${role.charAt(0).toUpperCase() + role.slice(1)}`}
+          {isPending 
+            ? (!isSignupMode ? 'Signing In...' : 'Signing Up...') 
+            : (!isSignupMode ? `Sign In as ${role.charAt(0).toUpperCase() + role.slice(1)}` : 'Sign Up')}
         </Button>
       </form>
+      
+      {role === 'member' && (
+        <>
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-gray-500">Or continue with</span>
+            </div>
+          </div>
+          
+          <div className="flex flex-col space-y-2">
+            <Button variant="outline" type="button" className="w-full" onClick={handleGoogleLogin}>
+              <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+                <path
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  fill="#4285F4"
+                />
+                <path
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  fill="#34A853"
+                />
+                <path
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                  fill="#FBBC05"
+                />
+                <path
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  fill="#EA4335"
+                />
+              </svg>
+              Google
+            </Button>
+            <Button variant="outline" type="button" className="w-full" onClick={handleMicrosoftLogin}>
+              <svg className="mr-2 h-4 w-4" viewBox="0 0 21 21">
+                <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+                <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+                <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+                <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+              </svg>
+              Microsoft
+            </Button>
+          </div>
+          
+          <div className="text-center text-sm mt-4 text-gray-500">
+            {mode === 'login' ? "Don't have an account? " : "Already have an account? "}
+            <button 
+              type="button" 
+              onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
+              className="font-medium text-[#35408e] hover:underline"
+            >
+              {mode === 'login' ? 'Sign up' : 'Sign in'}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   )
 }
@@ -151,7 +215,7 @@ export default function LoginPage() {
         <CardFooter className="flex flex-col space-y-2">
           {activeRole === 'member' ? (
             <div className="text-sm text-gray-500 text-center w-full">
-              Sign in securely using your Google account.
+              Sign in or sign up securely using your personal Google or Microsoft account.
             </div>
           ) : (
             <div className="text-xs text-gray-500 text-center w-full bg-gray-100 p-2.5 rounded-md border border-gray-200">

@@ -26,6 +26,11 @@ export async function completeProfile(prevState: unknown, formData: FormData) {
   const program = formData.get('program') as string
   const year_level = formData.get('year_level') as string
   const committee = formData.get('committee') as string
+  const student_email = formData.get('student_email') as string
+
+  if (!student_email.endsWith('@students.nu-moa.edu.ph')) {
+    return { error: 'Student Email must end with @students.nu-moa.edu.ph' }
+  }
 
   // Update public.users table
   const { error } = await supabase
@@ -33,6 +38,7 @@ export async function completeProfile(prevState: unknown, formData: FormData) {
     .update({
       full_name,
       student_no,
+      student_email,
       program,
       year_level,
       committee
@@ -40,9 +46,16 @@ export async function completeProfile(prevState: unknown, formData: FormData) {
     .eq('id', user.id)
 
   if (error) {
-    if (error.message.includes('unique constraint') || error.message.includes('student_no')) {
-      return { error: 'This Student Number is already in use.' }
+    const errorString = (error.message || error.details || '').toLowerCase()
+    
+    if (errorString.includes('student_email')) {
+      return { error: 'This Student Email is already registered to another account.' }
     }
+    
+    if (errorString.includes('student_no')) {
+      return { error: 'This Student Number is already registered to another account.' }
+    }
+    
     return { error: error.message }
   }
 
