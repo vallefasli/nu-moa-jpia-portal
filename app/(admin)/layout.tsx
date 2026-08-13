@@ -120,7 +120,7 @@ export default async function AdminLayout({
 
           {role === 'admin' && (
             <Link
-              href="/scanner"
+              href="/admin/scanner"
               className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
             >
               <div className="p-2 rounded-lg bg-gray-100">
@@ -259,7 +259,7 @@ export default async function AdminLayout({
 
           {role === 'admin' && (
             <Link
-              href="/scanner"
+              href="/admin/scanner"
               className="relative flex flex-col items-center justify-center p-2 rounded-2xl min-w-[60px] text-gray-400 hover:text-gray-600"
             >
               <div className="p-2 rounded-xl mb-1 bg-transparent">

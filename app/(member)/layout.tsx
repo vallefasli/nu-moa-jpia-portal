@@ -16,9 +16,15 @@ export default async function MemberLayout({
 
   const { data: profile } = await supabase
     .from('users')
-    .select('account_status')
+    .select('account_status, role')
     .eq('id', user.id)
     .single()
+
+  if (profile?.role === 'admin') {
+    redirect('/admin/verification')
+  } else if (profile?.role === 'officer') {
+    redirect('/scanner')
+  }
 
   if (profile?.account_status !== 'active') {
     redirect('/pending')

@@ -36,6 +36,7 @@ export async function updateSession(request: NextRequest) {
   const isAuthRoute = path === '/' || path.startsWith('/admin-login')
   const isPublicRoute = path.startsWith('/auth/callback') || path.startsWith('/confirmed') || path.startsWith('/privacy') || path.startsWith('/terms')
 
+  let profileRole = null;
   // If the user is logged in, check if their profile is complete
   if (user) {
     // Only check the database if they are trying to access a protected route or auth route
@@ -47,15 +48,22 @@ export async function updateSession(request: NextRequest) {
         .eq('id', user.id)
         .single()
 
+      profileRole = profile?.role;
+
       if (profile?.role === 'member' && !profile?.student_no) {
         return NextResponse.redirect(new URL('/complete-profile', request.url))
       }
     }
   }
 
-  // Auth routes should redirect to dashboard if already logged in (and profile is complete)
+  // Auth routes should redirect to the correct portal if already logged in
   if (isAuthRoute) {
     if (user) {
+      if (profileRole === 'admin') {
+        return NextResponse.redirect(new URL('/admin/verification', request.url))
+      } else if (profileRole === 'officer') {
+        return NextResponse.redirect(new URL('/scanner', request.url))
+      }
       return NextResponse.redirect(new URL('/dashboard', request.url))
     }
     return supabaseResponse
