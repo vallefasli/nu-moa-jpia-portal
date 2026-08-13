@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 
 import { useActionState, useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import { toast } from 'sonner'
 import { createClient } from '@/utils/supabase/client'
 
