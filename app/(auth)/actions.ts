@@ -5,7 +5,12 @@ import { redirect } from 'next/navigation'
 import { headers } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
 
-export async function login(prevState: any, formData: FormData) {
+export type AuthState = {
+  error?: string
+  success?: string
+} | null
+
+export async function login(prevState: any, formData: FormData): Promise<AuthState> {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
   const requestedRole = formData.get('login_role') as string || 'member'
@@ -61,7 +66,7 @@ export async function logout() {
   redirect('/')
 }
 
-export async function signup(prevState: any, formData: FormData) {
+export async function signup(prevState: any, formData: FormData): Promise<AuthState> {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
   const confirmPassword = formData.get('confirm_password') as string
