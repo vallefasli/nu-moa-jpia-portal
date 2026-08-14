@@ -10,22 +10,41 @@ export function AuthSync() {
   useEffect(() => {
     const supabase = createClient()
     
+    // Create a BroadcastChannel to communicate across tabs
+    const channel = new BroadcastChannel('auth-sync-channel')
+
+    // Listen for auth changes triggered from other tabs
+    channel.onmessage = (event) => {
+      if (event.data.type === 'AUTH_CHANGE') {
+        router.refresh()
+        if (event.data.event === 'SIGNED_OUT') {
+          setTimeout(() => {
+            window.location.href = '/'
+          }, 100)
+        }
+      }
+    }
+    
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      // If the auth state changes (e.g. from another tab), we need to refresh the router
-      // so that Server Components can read the new cookies and re-render or redirect.
-      if (event === 'SIGNED_OUT') {
-        router.refresh()
-        // Wait a small tick before redirecting to allow refresh to process
-        setTimeout(() => {
-          window.location.href = '/'
-        }, 100)
-      } else if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
-        router.refresh()
+      if (event === 'SIGNED_OUT' || event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+        // Broadcast the event to other tabs
+        channel.postMessage({ type: 'AUTH_CHANGE', event })
+
+        // Handle it locally as well
+        if (event === 'SIGNED_OUT') {
+          router.refresh()
+          setTimeout(() => {
+            window.location.href = '/'
+          }, 100)
+        } else {
+          router.refresh()
+        }
       }
     })
 
     return () => {
       subscription.unsubscribe()
+      channel.close()
     }
   }, [router])
 
