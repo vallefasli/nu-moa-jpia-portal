@@ -206,6 +206,12 @@ function AuthStateSync({ setActiveRole }: { setActiveRole: (role: string) => voi
 export default function LoginPage() {
   const [activeRole, setActiveRole] = useState('member')
 
+  useEffect(() => {
+    // Clear any lingering inactivity timestamps from previous sessions
+    // This prevents the AutoLogout component from immediately firing upon successful login
+    localStorage.removeItem('nu_moa_last_activity')
+  }, [])
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">
       <Suspense fallback={null}>
