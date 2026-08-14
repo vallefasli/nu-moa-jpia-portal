@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Search, Loader2, CalendarDays, Activity, User, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { manualCheckIn, searchMembers, deleteOfficerAttendance } from './actions'
+import { createClient } from '@/utils/supabase/client'
 
 export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[], initialFeed: any[] }) {
   const router = useRouter()
@@ -17,6 +18,34 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const supabase = createClient()
+
+  // Real-time subscription for live feed updates
+  useEffect(() => {
+    const channel = supabase
+      .channel('attendance_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to INSERT, UPDATE, and DELETE
+          schema: 'public',
+          table: 'attendance',
+        },
+        () => {
+          // Whenever a change happens in the database, refresh the current route
+          // to fetch the latest initialFeed from the server.
+          startTransition(() => {
+            router.refresh()
+          })
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [router, supabase])
+
   useEffect(() => {
     const todayStr = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0]
     const now = new Date()
