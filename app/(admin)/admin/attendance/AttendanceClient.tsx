@@ -142,17 +142,19 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
                         <span className="text-gray-300">-</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-right space-x-1 whitespace-nowrap">
-                       {log.time_in_id && (
-                         <button onClick={() => handleDelete(log.time_in_id, 'Time In')} disabled={isPending} title="Delete Time In" className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
-                           <Trash2 className="w-4 h-4" />
-                         </button>
-                       )}
-                       {log.time_out_id && (
-                         <button onClick={() => handleDelete(log.time_out_id, 'Time Out')} disabled={isPending} title="Delete Time Out" className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
-                           <Trash2 className="w-4 h-4" />
-                         </button>
-                       )}
+                    <td className="px-4 py-3 text-right">
+                       <div className="flex flex-col items-end gap-1">
+                         {log.time_in_id && (
+                           <button onClick={() => handleDelete(log.time_in_id, 'Time In')} disabled={isPending} className="flex items-center gap-1.5 text-[10px] uppercase font-bold text-gray-400 hover:text-red-600 px-2 py-1 rounded-md hover:bg-red-50 transition-colors">
+                             <Trash2 className="w-3 h-3" /> Time In
+                           </button>
+                         )}
+                         {log.time_out_id && (
+                           <button onClick={() => handleDelete(log.time_out_id, 'Time Out')} disabled={isPending} className="flex items-center gap-1.5 text-[10px] uppercase font-bold text-gray-400 hover:text-red-600 px-2 py-1 rounded-md hover:bg-red-50 transition-colors">
+                             <Trash2 className="w-3 h-3" /> Time Out
+                           </button>
+                         )}
+                       </div>
                     </td>
                   </tr>
                 ))}
