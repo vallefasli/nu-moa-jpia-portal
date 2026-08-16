@@ -38,11 +38,11 @@ export async function login(prevState: any, formData: FormData): Promise<AuthSta
   const actualRole = profile?.role || 'member'
   const status = profile?.account_status || 'pending'
 
-  // Verify the requested role strictly matches their actual role
-  if (requestedRole !== actualRole) {
+  // Verify role permissions
+  if (requestedRole === 'officer' && actualRole !== 'officer' && actualRole !== 'admin') {
     await supabase.auth.signOut()
     return { 
-      error: `Invalid login credentials for the ${requestedRole} portal.` 
+      error: `You do not have officer privileges.` 
     }
   }
 
@@ -52,7 +52,7 @@ export async function login(prevState: any, formData: FormData): Promise<AuthSta
     redirect('/pending')
   } else if (actualRole === 'admin') {
     redirect('/admin/verification')
-  } else if (actualRole === 'officer') {
+  } else if (requestedRole === 'officer') {
     redirect('/scanner')
   } else {
     redirect('/dashboard')

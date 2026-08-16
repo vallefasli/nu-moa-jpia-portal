@@ -24,6 +24,7 @@ type User = {
   program: string
   year_level: string
   committee: string
+  role: string
 }
 
 export function EditMemberDialog({ user }: { user: User }) {
@@ -39,6 +40,7 @@ export function EditMemberDialog({ user }: { user: User }) {
       program: formData.get('program') as string,
       year_level: formData.get('year_level') as string,
       committee: formData.get('committee') as string,
+      role: formData.get('role') as string,
     }
 
     startTransition(async () => {
@@ -127,6 +129,19 @@ export function EditMemberDialog({ user }: { user: User }) {
                 <option value="Communications">Communications</option>
                 <option value="Creatives">Creatives</option>
                 <option value="Logistics">Logistics</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="role">Role</Label>
+              <select 
+                id="role" 
+                name="role" 
+                defaultValue={user.role || 'member'}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="member">Member</option>
+                <option value="officer">Officer</option>
               </select>
             </div>
           </div>

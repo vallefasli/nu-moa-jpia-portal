@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { ScanLine, LogOut, FileBadge } from 'lucide-react'
+import { ScanLine, LogOut, FileBadge, User } from 'lucide-react'
 import { logout } from '@/app/(auth)/actions'
 import { LogoutDialog } from '@/components/LogoutDialog'
 import { AutoLogout } from '@/components/AutoLogout'
@@ -62,8 +62,17 @@ export default async function OfficerLayout({
           </Link>
         </nav>
 
-        {/* Desktop Sidebar Logout */}
-        <div className="p-6 border-t border-gray-100 bg-gray-50">
+        {/* Desktop Sidebar Bottom Actions */}
+        <div className="p-6 border-t border-gray-100 bg-gray-50 space-y-2">
+          <Link
+            href="/dashboard"
+            className="flex w-full items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-200 hover:text-gray-900 transition-colors"
+          >
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <User className="w-5 h-5" />
+            </div>
+            Member Portal
+          </Link>
           <LogoutDialog>
             <button
               className="flex w-full items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors"
@@ -88,11 +97,16 @@ export default async function OfficerLayout({
               {role}
             </div>
           </div>
-          <LogoutDialog>
-            <button className="text-gray-400 p-2 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors active:scale-95">
-              <LogOut className="w-5 h-5" />
-            </button>
-          </LogoutDialog>
+          <div className="flex items-center gap-1">
+            <Link href="/dashboard" className="text-gray-400 p-2 hover:bg-gray-100 hover:text-gray-900 rounded-full transition-colors active:scale-95">
+              <User className="w-5 h-5" />
+            </Link>
+            <LogoutDialog>
+              <button className="text-gray-400 p-2 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors active:scale-95">
+                <LogOut className="w-5 h-5" />
+              </button>
+            </LogoutDialog>
+          </div>
         </div>
 
         <div className="h-full">

@@ -11,6 +11,7 @@ import { Trash2, Search } from 'lucide-react'
 import { removeMember } from '@/app/(admin)/actions'
 import { toast } from 'sonner'
 import { useTransition } from 'react'
+import { Badge } from '@/components/ui/badge'
 
 type User = {
   id: string
@@ -23,6 +24,7 @@ type User = {
   email: string
   created_at: string
   account_status: string
+  role: string
 }
 
 export default function MembersClient({ initialUsers }: { initialUsers: User[] }) {
@@ -105,7 +107,16 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                       ) : (
                         yearUsers.map((user) => (
                           <TableRow key={user.id}>
-                            <TableCell className="font-medium">{user.full_name}</TableCell>
+                            <TableCell className="font-medium">
+                              <div className="flex items-center gap-2">
+                                {user.full_name}
+                                {user.role === 'officer' && (
+                                  <Badge variant="secondary" className="text-[10px] uppercase bg-blue-100 text-blue-800 hover:bg-blue-200">
+                                    Officer
+                                  </Badge>
+                                )}
+                              </div>
+                            </TableCell>
                             <TableCell>{user.student_no}</TableCell>
                             <TableCell>{user.program}</TableCell>
                             <TableCell>{user.committee || 'None'}</TableCell>
