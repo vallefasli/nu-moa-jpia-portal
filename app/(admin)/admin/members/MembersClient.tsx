@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Inbox, ChevronRight, Search, Edit, Trash2, ShieldAlert, QrCode } from 'lucide-react'
 import QRCode from 'react-qr-code'
+import DigitalIdCard from '@/app/(member)/id/DigitalIdCard'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -296,102 +297,108 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                  <DialogHeader><DialogTitle>{selectedUser.full_name}</DialogTitle></DialogHeader>
               </div>
 
-              <div className="bg-gradient-to-br from-[#35408e] to-[#28306e] p-6 text-white flex flex-col items-center text-center relative rounded-t-2xl">
-                {selectedUser.role === 'officer' && (
-                  <div className="absolute top-4 left-4 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider flex items-center gap-1 shadow-sm">
-                    <ShieldAlert className="w-3 h-3" /> Officer
+              {!showQR && (
+                <div className="bg-gradient-to-br from-[#35408e] to-[#28306e] p-6 text-white flex flex-col items-center text-center relative rounded-t-2xl animate-in fade-in slide-in-from-top-4 duration-300">
+                  {selectedUser.role === 'officer' && (
+                    <div className="absolute top-4 left-4 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                      <ShieldAlert className="w-3 h-3" /> Officer
+                    </div>
+                  )}
+                  <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center font-bold text-3xl text-white mb-3 backdrop-blur-sm border-2 border-white/30 shadow-inner">
+                    {getInitials(selectedUser.full_name)}
+                  </div>
+                  <h2 className="text-2xl font-bold text-white mb-1 leading-tight">
+                    {selectedUser.full_name}
+                  </h2>
+                  <DialogDescription className="text-blue-200 m-0 text-sm">
+                    {selectedUser.email}
+                  </DialogDescription>
+                </div>
+              )}
+
+              <div className={`p-6 space-y-4 ${showQR ? 'pt-8' : ''}`}>
+                {!showQR ? (
+                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
+                        <div className="text-xs text-gray-500 font-medium mb-1">Student No.</div>
+                        <div className="font-semibold text-gray-900">{selectedUser.student_no}</div>
+                      </div>
+                      <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
+                        <div className="text-xs text-gray-500 font-medium mb-1">Member ID</div>
+                        <div className="font-semibold text-gray-900">{selectedUser.member_id}</div>
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-xl p-4 space-y-3 border border-gray-100">
+                      <div>
+                        <div className="text-xs text-gray-500 font-medium mb-1">Program & Year</div>
+                        <div className="font-medium text-gray-900">{selectedUser.program} • {selectedUser.year_level}</div>
+                      </div>
+                      {selectedUser.committee && selectedUser.committee !== 'None' && (
+                        <div>
+                          <div className="text-xs text-gray-500 font-medium mb-1">Committee</div>
+                          <div className="font-medium text-gray-900">{selectedUser.committee}</div>
+                        </div>
+                      )}
+                      {selectedUser.student_email && (
+                        <div>
+                          <div className="text-xs text-gray-500 font-medium mb-1">Student Email</div>
+                          <div className="font-medium text-gray-900">{selectedUser.student_email}</div>
+                        </div>
+                      )}
+                      <div>
+                        <div className="text-xs text-gray-500 font-medium mb-1">Joined</div>
+                        <div className="font-medium text-gray-900">{new Date(selectedUser.created_at).toLocaleDateString()}</div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="animate-in fade-in zoom-in-95 duration-200 flex justify-center pb-2">
+                    <div className="w-full max-w-[340px]">
+                      <DigitalIdCard 
+                        profile={{
+                          full_name: selectedUser.full_name,
+                          student_no: selectedUser.student_no,
+                          member_id: selectedUser.member_id,
+                          program: selectedUser.program,
+                          year_level: selectedUser.year_level,
+                          qr_token: selectedUser.qr_token
+                        }}
+                        initials={getInitials(selectedUser.full_name)}
+                      />
+                    </div>
                   </div>
                 )}
-                <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center font-bold text-3xl text-white mb-3 backdrop-blur-sm border-2 border-white/30 shadow-inner">
-                  {getInitials(selectedUser.full_name)}
-                </div>
-                <h2 className="text-2xl font-bold text-white mb-1 leading-tight">
-                  {selectedUser.full_name}
-                </h2>
-                <DialogDescription className="text-blue-200 m-0 text-sm">
-                  {selectedUser.email}
-                </DialogDescription>
-              </div>
 
-              <div className="p-6 space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
-                    <div className="text-xs text-gray-500 font-medium mb-1">Student No.</div>
-                    <div className="font-semibold text-gray-900">{selectedUser.student_no}</div>
-                  </div>
-                  <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
-                    <div className="text-xs text-gray-500 font-medium mb-1">Member ID</div>
-                    <div className="font-semibold text-gray-900">{selectedUser.member_id}</div>
-                  </div>
-                </div>
-
-                <div className="bg-gray-50 rounded-xl p-4 space-y-3 border border-gray-100">
-                  <div>
-                    <div className="text-xs text-gray-500 font-medium mb-1">Program & Year</div>
-                    <div className="font-medium text-gray-900">{selectedUser.program} • {selectedUser.year_level}</div>
-                  </div>
-                  {selectedUser.committee && selectedUser.committee !== 'None' && (
-                    <div>
-                      <div className="text-xs text-gray-500 font-medium mb-1">Committee</div>
-                      <div className="font-medium text-gray-900">{selectedUser.committee}</div>
-                    </div>
-                  )}
-                  {selectedUser.student_email && (
-                    <div>
-                      <div className="text-xs text-gray-500 font-medium mb-1">Student Email</div>
-                      <div className="font-medium text-gray-900">{selectedUser.student_email}</div>
-                    </div>
-                  )}
-                  <div>
-                    <div className="text-xs text-gray-500 font-medium mb-1">Joined</div>
-                    <div className="font-medium text-gray-900">{new Date(selectedUser.created_at).toLocaleDateString()}</div>
-                  </div>
-                </div>
-
-                <div className="pt-2 flex flex-wrap gap-2">
+                <div className="pt-4 flex flex-wrap gap-2 border-t border-gray-100 mt-2">
                   <Button 
                     variant="outline" 
                     className="flex-1 bg-white border-gray-200"
                     onClick={() => setShowQR(!showQR)}
                   >
-                    <QrCode className="w-4 h-4 mr-2" /> {showQR ? 'Hide QR' : 'View QR'}
+                    <QrCode className="w-4 h-4 mr-2" /> {showQR ? 'Back to Profile' : 'View Event Pass'}
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    className="flex-1"
-                    onClick={() => setIsEditMode(true)}
-                  >
-                    <Edit className="w-4 h-4 mr-2" /> Edit
-                  </Button>
-                  <Button 
-                    variant="destructive" 
-                    className="flex-1"
-                    onClick={() => handleSingleRemove(selectedUser.id, selectedUser.full_name)}
-                    disabled={isPending}
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" /> Remove
-                  </Button>
+                  {!showQR && (
+                    <>
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => setIsEditMode(true)}
+                      >
+                        <Edit className="w-4 h-4 mr-2" /> Edit
+                      </Button>
+                      <Button 
+                        variant="destructive" 
+                        className="flex-1"
+                        onClick={() => handleSingleRemove(selectedUser.id, selectedUser.full_name)}
+                        disabled={isPending}
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" /> Remove
+                      </Button>
+                    </>
+                  )}
                 </div>
-
-                {showQR && selectedUser.qr_token && (
-                  <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100 flex flex-col items-center animate-in fade-in zoom-in-95 duration-200">
-                    <div className="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm mb-3 relative group overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-r from-[#35408e]/5 to-[#2a3370]/5 rounded-2xl -z-10" />
-                      <QRCode
-                        value={selectedUser.qr_token}
-                        size={120}
-                        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                        viewBox={`0 0 256 256`}
-                        level="H"
-                        fgColor="#111827"
-                        bgColor="transparent"
-                      />
-                    </div>
-                    <p className="text-[10px] text-gray-500 font-mono tracking-widest uppercase bg-white px-3 py-1 rounded-full border border-gray-100 shadow-sm">
-                      {selectedUser.qr_token.split('-')[0]}
-                    </p>
-                  </div>
-                )}
               </div>
             </>
           )}
