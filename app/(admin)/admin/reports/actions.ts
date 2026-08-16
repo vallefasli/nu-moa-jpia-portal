@@ -16,7 +16,7 @@ export async function exportConsolidatedAttendance(eventId: string) {
     .from('event_rsvps')
     .select(`
       user_id,
-      users ( id, full_name, student_no, program, member_id )
+      users ( id, first_name, middle_name, last_name, full_name, student_no, program, member_id )
     `)
     .eq('event_id', eventId)
 
@@ -25,7 +25,7 @@ export async function exportConsolidatedAttendance(eventId: string) {
     .from('attendance')
     .select(`
       id, user_id, type, timestamp,
-      users!attendance_user_id_fkey ( id, full_name, student_no, program, member_id ),
+      users!attendance_user_id_fkey ( id, first_name, middle_name, last_name, full_name, student_no, program, member_id ),
       officer:users!attendance_officer_id_fkey ( full_name )
     `)
     .eq('event_id', eventId)
@@ -48,6 +48,9 @@ export async function exportConsolidatedAttendance(eventId: string) {
     participantsMap.set(u.id, {
       user_id: u.id,
       member_id: u.member_id,
+      first_name: u.first_name,
+      middle_name: u.middle_name,
+      last_name: u.last_name,
       full_name: u.full_name,
       student_no: u.student_no,
       program: u.program,
@@ -68,6 +71,9 @@ export async function exportConsolidatedAttendance(eventId: string) {
       participantsMap.set(u.id, {
         user_id: u.id,
         member_id: u.member_id,
+        first_name: u.first_name,
+        middle_name: u.middle_name,
+        last_name: u.last_name,
         full_name: u.full_name,
         student_no: u.student_no,
         program: u.program,

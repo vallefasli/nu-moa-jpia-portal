@@ -32,10 +32,13 @@ export function ReportsClient({
   }
 
   const exportRoster = () => {
-    const headers = ['Member ID', 'Student No', 'Full Name', 'Email', 'Program', 'Year Level', 'Committee', 'Role', 'Status']
+    const headers = ['Member ID', 'Student No', 'First Name', 'Middle Name', 'Last Name', 'Full Name', 'Email', 'Program', 'Year Level', 'Committee', 'Role', 'Status']
     const rows = users.map(u => [
       u.member_id,
       u.student_no,
+      u.first_name || '',
+      u.middle_name || '',
+      u.last_name || '',
       u.full_name,
       u.email,
       u.program,
@@ -63,10 +66,13 @@ export function ReportsClient({
         return
       }
 
-      const headers = ['Member ID', 'Student No', 'Full Name', 'Program', 'Registration Status', 'Time In', 'Time In Recorded By', 'Time Out', 'Time Out Recorded By']
+      const headers = ['Member ID', 'Student No', 'First Name', 'Middle Name', 'Last Name', 'Full Name', 'Program', 'Registration Status', 'Time In', 'Time In Recorded By', 'Time Out', 'Time Out Recorded By']
       const rows = res.records.map((log: any) => [
         log.member_id || '',
         log.student_no || '',
+        log.first_name || '',
+        log.middle_name || '',
+        log.last_name || '',
         log.full_name || '',
         log.program || '',
         log.is_registered ? 'RSVP\'d' : 'Walk-in',

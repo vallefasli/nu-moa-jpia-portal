@@ -16,7 +16,7 @@ export default async function ReportsPage() {
   // Fetch all users for roster
   const { data: users } = await supabase
     .from('users')
-    .select('member_id, student_no, full_name, email, program, year_level, committee, role, account_status')
+    .select('member_id, student_no, first_name, middle_name, last_name, full_name, email, program, year_level, committee, role, account_status')
     .order('full_name', { ascending: true })
     .limit(100000)
 
