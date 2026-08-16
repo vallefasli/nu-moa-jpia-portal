@@ -31,7 +31,7 @@ function LoginForm({ role }: { role: string }) {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?login_role=${role}`,
       },
     })
   }
@@ -42,7 +42,7 @@ function LoginForm({ role }: { role: string }) {
       provider: 'azure',
       options: {
         scopes: 'email',
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?login_role=${role}`,
       },
     })
   }
@@ -190,6 +190,13 @@ function AuthStateSync({ setActiveRole }: { setActiveRole: (role: string) => voi
         description: 'The confirmation link is invalid or was opened in a different browser. Please try signing up again if your account is not verified.'
       })
       window.history.replaceState({}, '', '/')
+    }
+
+    if (searchParams.get('error') === 'not_officer') {
+      toast.error('Access Denied', {
+        description: 'You do not have officer privileges.'
+      })
+      window.history.replaceState({}, '', '/?tab=officer')
     }
 
     const tab = searchParams.get('tab')

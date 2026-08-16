@@ -5,6 +5,7 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/dashboard'
+  const loginRole = searchParams.get('login_role')
 
   if (code) {
     const supabase = await createClient()
@@ -34,6 +35,12 @@ export async function GET(request: Request) {
       }
 
       console.log('Profile complete, redirecting to app')
+      
+      // Verify role permissions if they requested to log in as an officer
+      if (loginRole === 'officer' && profile.role !== 'officer' && profile.role !== 'admin') {
+        await supabase.auth.signOut()
+        return NextResponse.redirect(`${origin}/?error=not_officer&tab=officer`)
+      }
       
       let redirectPath = next
       if (profile.account_status === 'pending') redirectPath = '/pending'
