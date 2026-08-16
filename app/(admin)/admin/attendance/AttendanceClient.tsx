@@ -167,8 +167,8 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
                   </th>
                   <th className="px-4 py-3">Student</th>
                   <th className="px-4 py-3 text-center">Status</th>
-                  <th className="px-4 py-3 text-center">Time In</th>
-                  <th className="px-4 py-3 text-center">Time Out</th>
+                  <th className="px-4 py-3 text-center min-w-[140px]">Time In</th>
+                  <th className="px-4 py-3 text-center min-w-[140px]">Time Out</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -205,7 +205,7 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
                               </div>
                             </div>
                             {log.time_in_id && (
-                              <button onClick={() => handleDelete(log.time_in_id, 'Time In')} disabled={isPending} className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-600 transition-opacity bg-white hover:bg-red-50 rounded-md shadow-sm border border-gray-100" title="Delete Time In">
+                              <button onClick={() => handleDelete(log.time_in_id, 'Time In')} disabled={isPending} className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-600 transition-opacity bg-white hover:bg-red-50 rounded-md shadow-sm border border-gray-100" title="Delete Time In">
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
                             )}
@@ -226,7 +226,7 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
                               </div>
                             </div>
                             {log.time_out_id && (
-                              <button onClick={() => handleDelete(log.time_out_id, 'Time Out')} disabled={isPending} className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-600 transition-opacity bg-white hover:bg-red-50 rounded-md shadow-sm border border-gray-100" title="Delete Time Out">
+                              <button onClick={() => handleDelete(log.time_out_id, 'Time Out')} disabled={isPending} className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-600 transition-opacity bg-white hover:bg-red-50 rounded-md shadow-sm border border-gray-100" title="Delete Time Out">
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
                             )}
