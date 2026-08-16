@@ -2,7 +2,8 @@
 
 import { useState, useTransition } from 'react'
 import { Badge } from '@/components/ui/badge'
-import { Inbox, ChevronRight, Search, Edit, Trash2, ShieldAlert } from 'lucide-react'
+import { Inbox, ChevronRight, Search, Edit, Trash2, ShieldAlert, QrCode } from 'lucide-react'
+import QRCode from 'react-qr-code'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -27,11 +28,14 @@ type User = {
   created_at: string
   account_status: string
   role: string
+  qr_token: string
 }
 
 export default function MembersClient({ initialUsers }: { initialUsers: User[] }) {
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
+  const [showQR, setShowQR] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTab, setActiveTab] = useState('All')
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
@@ -89,7 +93,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
         if (res.error) toast.error(res.error)
         else {
           toast.success(`${name} has been removed.`)
-          setSelectedUser(null)
+          setIsDialogOpen(false)
           if (selectedIds.has(userId)) toggleSelection(userId, false)
         }
       })
@@ -127,8 +131,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
       if (res.error) toast.error(res.error)
       else {
         toast.success('Profile updated successfully.')
-        setIsEditMode(false)
-        setSelectedUser(null) // Close modal to refresh or just rely on server state
+        setIsDialogOpen(false)
       }
     })
   }
@@ -225,7 +228,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                     </div>
                     <div 
                       className="flex items-center gap-4 min-w-0 flex-1 cursor-pointer"
-                      onClick={() => { setSelectedUser(user); setIsEditMode(false); }}
+                      onClick={() => { setSelectedUser(user); setIsEditMode(false); setShowQR(false); setIsDialogOpen(true); }}
                     >
                       <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-sm md:text-lg flex-shrink-0 group-hover:bg-indigo-100 transition-colors">
                         {getInitials(user.full_name)}
@@ -250,7 +253,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
 
                   <div 
                     className="flex items-center gap-4 flex-shrink-0 ml-4 cursor-pointer"
-                    onClick={() => { setSelectedUser(user); setIsEditMode(false); }}
+                    onClick={() => { setSelectedUser(user); setIsEditMode(false); setShowQR(false); setIsDialogOpen(true); }}
                   >
                     <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
                       <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-indigo-600" />
@@ -285,8 +288,8 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
       )}
 
       {/* Interactive Modal (View/Edit) */}
-      <Dialog open={!!selectedUser} onOpenChange={(open) => !open && setSelectedUser(null)}>
-        <DialogContent className={`p-0 overflow-hidden rounded-2xl transition-all duration-300 ${isEditMode ? 'sm:max-w-[600px]' : 'sm:max-w-[425px]'}`}>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className={`p-0 overflow-hidden rounded-2xl transition-[max-width] ${isEditMode ? 'sm:max-w-[600px]' : 'sm:max-w-[425px]'}`}>
           {selectedUser && !isEditMode && (
             <>
               <div className="sr-only">
@@ -345,13 +348,20 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                   </div>
                 </div>
 
-                <div className="pt-2 flex gap-2">
+                <div className="pt-2 flex flex-wrap gap-2">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1 bg-white border-gray-200"
+                    onClick={() => setShowQR(!showQR)}
+                  >
+                    <QrCode className="w-4 h-4 mr-2" /> {showQR ? 'Hide QR' : 'View QR'}
+                  </Button>
                   <Button 
                     variant="outline" 
                     className="flex-1"
                     onClick={() => setIsEditMode(true)}
                   >
-                    <Edit className="w-4 h-4 mr-2" /> Edit Profile
+                    <Edit className="w-4 h-4 mr-2" /> Edit
                   </Button>
                   <Button 
                     variant="destructive" 
@@ -362,6 +372,26 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                     <Trash2 className="w-4 h-4 mr-2" /> Remove
                   </Button>
                 </div>
+
+                {showQR && selectedUser.qr_token && (
+                  <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100 flex flex-col items-center animate-in fade-in zoom-in-95 duration-200">
+                    <div className="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm mb-3 relative group overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-r from-[#35408e]/5 to-[#2a3370]/5 rounded-2xl -z-10" />
+                      <QRCode
+                        value={selectedUser.qr_token}
+                        size={120}
+                        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                        viewBox={`0 0 256 256`}
+                        level="H"
+                        fgColor="#111827"
+                        bgColor="transparent"
+                      />
+                    </div>
+                    <p className="text-[10px] text-gray-500 font-mono tracking-widest uppercase bg-white px-3 py-1 rounded-full border border-gray-100 shadow-sm">
+                      {selectedUser.qr_token.split('-')[0]}
+                    </p>
+                  </div>
+                )}
               </div>
             </>
           )}
