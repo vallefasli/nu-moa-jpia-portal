@@ -193,10 +193,10 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
                           {log.is_registered ? 'RSVP\'d' : 'Walk-in'}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-center">
+                      <td className="px-4 py-3 text-center relative group">
                         {log.time_in ? (
-                          <div className="group flex items-center justify-center gap-2">
-                            <div className="text-left">
+                          <>
+                            <div className="flex flex-col items-center justify-center">
                               <div className="font-medium text-green-700">
                                 {new Date(log.time_in).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </div>
@@ -205,19 +205,19 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
                               </div>
                             </div>
                             {log.time_in_id && (
-                              <button onClick={() => handleDelete(log.time_in_id, 'Time In')} disabled={isPending} className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-600 transition-opacity bg-gray-100 hover:bg-red-50 rounded-md shrink-0" title="Delete Time In">
+                              <button onClick={() => handleDelete(log.time_in_id, 'Time In')} disabled={isPending} className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-600 transition-opacity bg-white hover:bg-red-50 rounded-md shadow-sm border border-gray-100" title="Delete Time In">
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
                             )}
-                          </div>
+                          </>
                         ) : (
                           <span className="text-gray-300">-</span>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-center">
+                      <td className="px-4 py-3 text-center relative group">
                         {log.time_out ? (
-                          <div className="group flex items-center justify-center gap-2">
-                            <div className="text-left">
+                          <>
+                            <div className="flex flex-col items-center justify-center">
                               <div className="font-medium text-orange-700">
                                 {new Date(log.time_out).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </div>
@@ -226,11 +226,11 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
                               </div>
                             </div>
                             {log.time_out_id && (
-                              <button onClick={() => handleDelete(log.time_out_id, 'Time Out')} disabled={isPending} className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-600 transition-opacity bg-gray-100 hover:bg-red-50 rounded-md shrink-0" title="Delete Time Out">
+                              <button onClick={() => handleDelete(log.time_out_id, 'Time Out')} disabled={isPending} className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-600 transition-opacity bg-white hover:bg-red-50 rounded-md shadow-sm border border-gray-100" title="Delete Time Out">
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
                             )}
-                          </div>
+                          </>
                         ) : (
                           <span className="text-gray-300">-</span>
                         )}
