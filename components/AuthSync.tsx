@@ -19,7 +19,13 @@ export function AuthSync() {
         router.refresh()
         if (event.data.event === 'SIGNED_OUT') {
           setTimeout(() => {
-            window.location.href = '/'
+            const isExpired = localStorage.getItem('nu_moa_expired') === 'true'
+            if (isExpired) {
+              localStorage.removeItem('nu_moa_expired')
+              window.location.href = '/?expired=true'
+            } else {
+              window.location.href = '/'
+            }
           }, 100)
         }
       }
@@ -34,7 +40,13 @@ export function AuthSync() {
         if (event === 'SIGNED_OUT') {
           router.refresh()
           setTimeout(() => {
-            window.location.href = '/'
+            const isExpired = localStorage.getItem('nu_moa_expired') === 'true'
+            if (isExpired) {
+              localStorage.removeItem('nu_moa_expired')
+              window.location.href = '/?expired=true'
+            } else {
+              window.location.href = '/'
+            }
           }, 100)
         } else {
           router.refresh()

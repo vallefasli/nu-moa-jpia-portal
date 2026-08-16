@@ -32,6 +32,9 @@ function LoginForm({ role }: { role: string }) {
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/auth/callback?login_role=${role}`,
+        queryParams: {
+          prompt: 'select_account',
+        },
       },
     })
   }
@@ -43,6 +46,9 @@ function LoginForm({ role }: { role: string }) {
       options: {
         scopes: 'email',
         redirectTo: `${window.location.origin}/auth/callback?login_role=${role}`,
+        queryParams: {
+          prompt: 'select_account',
+        },
       },
     })
   }

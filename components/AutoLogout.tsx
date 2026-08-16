@@ -12,13 +12,12 @@ export function AutoLogout() {
   const performLogout = useCallback(async () => {
     // Clear storage to prevent loops
     localStorage.removeItem(STORAGE_KEY)
+    // Set a flag so AuthSync knows to append ?expired=true when handling the SIGNED_OUT event
+    localStorage.setItem('nu_moa_expired', 'true')
     
-    // Using window.location.href ensures a hard refresh to clear all client state
     const supabase = createClient()
     await supabase.auth.signOut()
-    
-    // We don't use router.push here because we want to completely flush the React state
-    window.location.href = '/?expired=true'
+    // We don't manually redirect here because AuthSync will catch the SIGNED_OUT event and handle the redirect
   }, [])
 
   const resetTimer = useCallback(() => {
