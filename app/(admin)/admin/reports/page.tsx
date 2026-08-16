@@ -26,23 +26,6 @@ export default async function ReportsPage() {
     .select('id, title, date')
     .order('date', { ascending: false })
 
-  // Fetch all attendance logs
-  const { data: attendance } = await supabase
-    .from('attendance')
-    .select(`
-      event_id,
-      type,
-      timestamp,
-      officer_id,
-      users!attendance_user_id_fkey (
-        student_no,
-        member_id,
-        full_name
-      )
-    `)
-    .order('timestamp', { ascending: false })
-    .limit(100000)
-
   return (
     <div className="p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
@@ -53,7 +36,6 @@ export default async function ReportsPage() {
 
         <ReportsClient 
           users={users || []} 
-          attendance={attendance || []} 
           events={events || []} 
         />
       </div>

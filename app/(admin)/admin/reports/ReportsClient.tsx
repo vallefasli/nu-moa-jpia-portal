@@ -3,14 +3,14 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Download, Users, ClipboardList } from 'lucide-react'
+import { toast } from 'sonner'
+import { exportConsolidatedAttendance } from './actions'
 
 export function ReportsClient({ 
   users, 
-  attendance, 
   events 
 }: { 
   users: any[], 
-  attendance: any[], 
   events: any[] 
 }) {
 
@@ -26,12 +26,17 @@ export function ReportsClient({
     document.body.removeChild(link)
   }
 
+  const escapeCsv = (val: any) => {
+    if (val === null || val === undefined) return '""'
+    return `"${String(val).replace(/"/g, '""')}"`
+  }
+
   const exportRoster = () => {
     const headers = ['Member ID', 'Student No', 'Full Name', 'Email', 'Program', 'Year Level', 'Committee', 'Role', 'Status']
     const rows = users.map(u => [
       u.member_id,
       u.student_no,
-      `"${u.full_name}"`, // Quote strings to handle commas
+      u.full_name,
       u.email,
       u.program,
       u.year_level,
@@ -40,25 +45,47 @@ export function ReportsClient({
       u.account_status
     ])
     
-    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n')
+    const csvContent = [
+      headers.map(escapeCsv).join(','), 
+      ...rows.map(r => r.map(escapeCsv).join(','))
+    ].join('\n')
+    
     downloadCSV(csvContent, `JPIA_Master_Roster_${new Date().toISOString().split('T')[0]}.csv`)
   }
 
-  const exportAttendance = (eventId: string, eventTitle: string) => {
-    const eventLogs = attendance.filter(a => a.event_id === eventId)
-    
-    const headers = ['Member ID', 'Student No', 'Full Name', 'Type', 'Timestamp', 'Recorded By']
-    const rows = eventLogs.map(log => [
-      log.users?.member_id || 'Unknown',
-      log.users?.student_no || 'Unknown',
-      `"${log.users?.full_name || 'Unknown'}"`,
-      log.type === 'time_in' ? 'TIME IN' : 'TIME OUT',
-      new Date(log.timestamp).toLocaleString(),
-      log.officer_id || 'System'
-    ])
-    
-    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n')
-    downloadCSV(csvContent, `Attendance_${eventTitle.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`)
+  const exportAttendance = async (eventId: string, eventTitle: string) => {
+    const toastId = toast.loading('Generating consolidated report...')
+    try {
+      const res = await exportConsolidatedAttendance(eventId)
+      
+      if (res.error || !res.records) {
+        toast.error(res.error || 'Failed to generate report', { id: toastId })
+        return
+      }
+
+      const headers = ['Member ID', 'Student No', 'Full Name', 'Program', 'Registration Status', 'Time In', 'Time In Recorded By', 'Time Out', 'Time Out Recorded By']
+      const rows = res.records.map((log: any) => [
+        log.member_id || '',
+        log.student_no || '',
+        log.full_name || '',
+        log.program || '',
+        log.is_registered ? 'RSVP\'d' : 'Walk-in',
+        log.time_in ? new Date(log.time_in).toLocaleString() : '',
+        log.time_in_officer || '',
+        log.time_out ? new Date(log.time_out).toLocaleString() : '',
+        log.time_out_officer || ''
+      ])
+      
+      const csvContent = [
+        headers.map(escapeCsv).join(','), 
+        ...rows.map(r => r.map(escapeCsv).join(','))
+      ].join('\n')
+      
+      downloadCSV(csvContent, `Attendance_${eventTitle.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`)
+      toast.success('Report downloaded successfully', { id: toastId })
+    } catch (error) {
+      toast.error('An error occurred during generation', { id: toastId })
+    }
   }
 
   return (
@@ -88,7 +115,7 @@ export function ReportsClient({
             <ClipboardList className="w-5 h-5 text-yellow-600" />
           </div>
           <CardTitle>Event Attendance</CardTitle>
-          <CardDescription>Download the raw attendance logs for a specific event.</CardDescription>
+          <CardDescription>Download the consolidated attendance logs for a specific event.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="max-h-[300px] overflow-y-auto space-y-2 pr-2">

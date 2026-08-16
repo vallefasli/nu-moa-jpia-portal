@@ -267,7 +267,15 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
                     <div className="mt-2 flex justify-between items-end">
                       <div className="text-[10px] text-gray-400 font-medium uppercase tracking-wider flex gap-4">
                         <span>{new Date(entry.timestamp).toLocaleTimeString()}</span>
-                        <span>Recorded by: {entry.officer?.full_name || 'System Admin'}</span>
+                        <span title={`Recorded by: ${entry.officer?.full_name || 'System Admin'}`}>
+                          Recorded by: {(() => {
+                            const name = entry.officer?.full_name
+                            if (!name || name === 'System Admin') return 'System Admin'
+                            const parts = name.trim().split(' ')
+                            if (parts.length === 1) return parts[0]
+                            return `${parts[0]} ${parts[parts.length - 1][0]}.`
+                          })()}
+                        </span>
                       </div>
                       <Button 
                         variant="ghost" 
