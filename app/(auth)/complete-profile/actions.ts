@@ -37,6 +37,9 @@ export async function completeProfile(prevState: unknown, formData: FormData) {
     .from('users')
     .update({
       full_name,
+      first_name,
+      middle_name,
+      last_name,
       student_no,
       student_email,
       program,
