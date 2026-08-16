@@ -20,12 +20,12 @@ export default async function MembersPage() {
     redirect('/admin/scanner') // Redirect non-admins away
   }
 
-  // Fetch active users (only members, not officers/admins)
+  // Fetch active users (members and officers, not admins)
   const { data: users, error } = await supabase
     .from('users')
-    .select('id, full_name, student_no, member_id, program, year_level, committee, email, created_at, account_status')
+    .select('id, full_name, student_no, member_id, program, year_level, committee, email, created_at, account_status, role')
     .eq('account_status', 'active')
-    .eq('role', 'member')
+    .in('role', ['member', 'officer'])
     .order('created_at', { ascending: false })
 
   return (

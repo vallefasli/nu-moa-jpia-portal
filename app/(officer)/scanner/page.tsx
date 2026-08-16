@@ -42,6 +42,10 @@ export default async function ScannerPage() {
       users!attendance_user_id_fkey (
         full_name,
         student_no
+      ),
+      officer:users!attendance_officer_id_fkey (
+        full_name,
+        student_no
       )
     `)
     .order('timestamp', { ascending: false })

@@ -115,16 +115,14 @@ function LoginForm({ role }: { role: string }) {
         </Button>
       </form>
       
-      {role === 'member' && (
-        <>
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-300" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-gray-500">Or continue with</span>
-            </div>
-          </div>
+      <div className="relative my-4">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-gray-300" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-white px-2 text-gray-500">Or continue with</span>
+        </div>
+      </div>
           
           <div className="flex flex-col space-y-2">
             <Button variant="outline" type="button" className="w-full" onClick={handleGoogleLogin}>
@@ -159,17 +157,17 @@ function LoginForm({ role }: { role: string }) {
             </Button>
           </div>
           
-          <div className="text-center text-sm mt-4 text-gray-500">
-            {mode === 'login' ? "Don't have an account? " : "Already have an account? "}
-            <button 
-              type="button" 
-              onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-              className="font-medium text-[#35408e] hover:underline"
-            >
-              {mode === 'login' ? 'Sign up' : 'Sign in'}
-            </button>
-          </div>
-        </>
+      {role === 'member' && (
+        <div className="text-center text-sm mt-4 text-gray-500">
+          {mode === 'login' ? "Don't have an account? " : "Already have an account? "}
+          <button 
+            type="button" 
+            onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
+            className="font-medium text-[#35408e] hover:underline"
+          >
+            {mode === 'login' ? 'Sign up' : 'Sign in'}
+          </button>
+        </div>
       )}
     </div>
   )

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,33 +9,36 @@ import { addAttendanceOverride, deleteAttendanceLog } from './actions'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
-export function AttendanceClient({ events, initialLogs }: { events: any[], initialLogs: any[] }) {
+export function AttendanceClient({ events, initialLogs, activeEventId }: { events: any[], initialLogs: any[], activeEventId: string }) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedEventId, setSelectedEventId] = useState<string>('all')
 
   // Override Form State
-  const [overrideEventId, setOverrideEventId] = useState<string>('')
+  const [overrideEventId, setOverrideEventId] = useState<string>(activeEventId)
   const [overrideStudentNo, setOverrideStudentNo] = useState<string>('')
   const [overrideType, setOverrideType] = useState<'time_in' | 'time_out'>('time_in')
 
+  // Sync override event id if active event changes
+  useEffect(() => {
+    setOverrideEventId(activeEventId)
+  }, [activeEventId])
+
   const filteredLogs = initialLogs.filter(log => {
-    const matchesEvent = selectedEventId === 'all' || log.event_id === selectedEventId
     const matchesSearch = !searchQuery || 
-      log.user_name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      log.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
       log.student_no?.includes(searchQuery)
-    return matchesEvent && matchesSearch
+    return matchesSearch
   })
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Delete this attendance record? This cannot be undone.')) return
+  const handleDelete = async (id: string, type: string) => {
+    if (!confirm(`Delete this ${type} attendance record? This cannot be undone.`)) return
     startTransition(async () => {
       const res = await deleteAttendanceLog(id)
       if (res.error) toast.error(res.error)
       else {
-        toast.success('Log deleted')
+        toast.success(`${type} record deleted`)
         router.refresh()
       }
     })
@@ -50,7 +53,7 @@ export function AttendanceClient({ events, initialLogs }: { events: any[], initi
       const res = await addAttendanceOverride(overrideEventId, overrideStudentNo, overrideType)
       if (res.error) toast.error(res.error)
       else {
-        toast.success(`Successfully recorded ${overrideType} for ${res.studentName}`)
+        toast.success(`Successfully recorded ${overrideType.replace('_', ' ')} for ${res.studentName}`)
         setOverrideStudentNo('')
         router.refresh()
       }
@@ -77,10 +80,12 @@ export function AttendanceClient({ events, initialLogs }: { events: any[], initi
             <Filter className="absolute left-3 top-2.5 w-4 h-4 text-gray-400 pointer-events-none" />
             <select 
               className="w-full h-10 pl-9 pr-3 bg-transparent text-sm focus:outline-none appearance-none"
-              value={selectedEventId}
-              onChange={(e) => setSelectedEventId(e.target.value)}
+              value={activeEventId}
+              onChange={(e) => {
+                router.push(`?eventId=${e.target.value}`)
+              }}
             >
-              <option value="all">All Events</option>
+              <option value="" disabled>Select an Event</option>
               {events.map(ev => (
                 <option key={ev.id} value={ev.id}>{ev.title}</option>
               ))}
@@ -95,42 +100,66 @@ export function AttendanceClient({ events, initialLogs }: { events: any[], initi
               <thead className="bg-gray-50 text-gray-500 font-bold uppercase text-[10px] tracking-wider">
                 <tr>
                   <th className="px-4 py-3">Student</th>
-                  <th className="px-4 py-3">Type</th>
-                  <th className="px-4 py-3">Time</th>
-                  <th className="px-4 py-3">Recorded By</th>
+                  <th className="px-4 py-3 text-center">Status</th>
+                  <th className="px-4 py-3 text-center">Time In</th>
+                  <th className="px-4 py-3 text-center">Time Out</th>
                   <th className="px-4 py-3 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {filteredLogs.map(log => (
-                  <tr key={log.id} className="bg-white hover:bg-gray-50 transition-colors">
+                  <tr key={log.user_id} className="bg-white hover:bg-gray-50 transition-colors">
                     <td className="px-4 py-3">
-                      <div className="font-bold text-gray-900">{log.user_name}</div>
+                      <div className="font-bold text-gray-900">{log.full_name}</div>
                       <div className="text-xs text-gray-500 font-mono">{log.student_no}</div>
                     </td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wider ${log.type === 'time_in' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
-                        {log.type.replace('_', ' ')}
+                    <td className="px-4 py-3 text-center">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${log.is_registered ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'}`}>
+                        {log.is_registered ? 'RSVP\'d' : 'Walk-in'}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
-                      {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                      <div className="text-xs text-gray-400">{new Date(log.timestamp).toLocaleDateString()}</div>
+                    <td className="px-4 py-3 text-center">
+                      {log.time_in ? (
+                        <div>
+                          <div className="font-medium text-green-700">
+                            {new Date(log.time_in).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </div>
+                          <div className="text-[10px] text-gray-400 mt-0.5">by {log.time_in_officer}</div>
+                        </div>
+                      ) : (
+                        <span className="text-gray-300">-</span>
+                      )}
                     </td>
-                    <td className="px-4 py-3 text-gray-500">
-                      {log.officer_name}
+                    <td className="px-4 py-3 text-center">
+                      {log.time_out ? (
+                        <div>
+                          <div className="font-medium text-orange-700">
+                            {new Date(log.time_out).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </div>
+                          <div className="text-[10px] text-gray-400 mt-0.5">by {log.time_out_officer}</div>
+                        </div>
+                      ) : (
+                        <span className="text-gray-300">-</span>
+                      )}
                     </td>
-                    <td className="px-4 py-3 text-right">
-                      <button onClick={() => handleDelete(log.id)} disabled={isPending} className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                    <td className="px-4 py-3 text-right space-x-1 whitespace-nowrap">
+                       {log.time_in_id && (
+                         <button onClick={() => handleDelete(log.time_in_id, 'Time In')} disabled={isPending} title="Delete Time In" className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                           <Trash2 className="w-4 h-4" />
+                         </button>
+                       )}
+                       {log.time_out_id && (
+                         <button onClick={() => handleDelete(log.time_out_id, 'Time Out')} disabled={isPending} title="Delete Time Out" className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                           <Trash2 className="w-4 h-4" />
+                         </button>
+                       )}
                     </td>
                   </tr>
                 ))}
                 {filteredLogs.length === 0 && (
                   <tr>
                     <td colSpan={5} className="px-4 py-12 text-center text-gray-500">
-                      No attendance records found.
+                      No participation records found for this event.
                     </td>
                   </tr>
                 )}

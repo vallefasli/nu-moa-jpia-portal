@@ -267,7 +267,7 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
                     <div className="mt-2 flex justify-between items-end">
                       <div className="text-[10px] text-gray-400 font-medium uppercase tracking-wider flex gap-4">
                         <span>{new Date(entry.timestamp).toLocaleTimeString()}</span>
-                        <span>Officer ID: {entry.officer_id.split('-')[0]}</span>
+                        <span>Recorded by: {entry.officer?.full_name || 'System Admin'}</span>
                       </div>
                       <Button 
                         variant="ghost" 

@@ -22,8 +22,6 @@ export default async function MemberLayout({
 
   if (profile?.role === 'admin') {
     redirect('/admin/verification')
-  } else if (profile?.role === 'officer') {
-    redirect('/scanner')
   }
 
   if (profile?.account_status !== 'active') {
@@ -33,7 +31,7 @@ export default async function MemberLayout({
   return (
     <div className="flex h-[100dvh] bg-gray-50 flex-col md:flex-row overflow-hidden font-sans">
       <AutoLogout />
-      <MemberSidebar />
+      <MemberSidebar role={profile?.role} />
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto pb-24 md:pb-0 relative w-full h-full bg-[#f8f9fc]">

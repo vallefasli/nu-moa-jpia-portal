@@ -2,11 +2,11 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Calendar, QrCode, User, LogOut, Award } from 'lucide-react'
+import { Home, Calendar, QrCode, User, LogOut, Award, Shield } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { LogoutDialog } from '@/components/LogoutDialog'
 
-export function MemberSidebar() {
+export function MemberSidebar({ role }: { role?: string }) {
   const pathname = usePathname()
 
   const navItems = [
@@ -54,8 +54,19 @@ export function MemberSidebar() {
           })}
         </nav>
         
-        {/* Desktop Sidebar Logout */}
-        <div className="p-6 border-t border-gray-100/80 bg-gray-50/50">
+        {/* Desktop Sidebar Bottom Actions */}
+        <div className="p-6 border-t border-gray-100/80 bg-gray-50/50 space-y-2">
+          {role === 'officer' && (
+            <Link 
+              href="/scanner"
+              className="flex w-full items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-500 hover:bg-[#35408e]/10 hover:text-[#35408e] transition-all duration-200 group"
+            >
+              <div className="p-2 bg-gray-100 rounded-lg group-hover:bg-[#35408e]/20 transition-colors">
+                <Shield className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              </div>
+              Officer Portal
+            </Link>
+          )}
           <LogoutDialog>
             <button 
               className="flex w-full items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200 group"
@@ -75,11 +86,18 @@ export function MemberSidebar() {
           <h2 className="font-bold text-[#35408e] text-lg tracking-tight">NU MOA JPIA</h2>
           <div className="w-2 h-2 rounded-full bg-[#fbb03b]" />
         </div>
-        <LogoutDialog>
-          <button className="text-gray-400 p-2 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors active:scale-95">
-            <LogOut className="w-5 h-5" />
-          </button>
-        </LogoutDialog>
+        <div className="flex items-center gap-1">
+          {role === 'officer' && (
+            <Link href="/scanner" className="text-gray-400 p-2 hover:bg-[#35408e]/10 hover:text-[#35408e] rounded-full transition-colors active:scale-95">
+              <Shield className="w-5 h-5" />
+            </Link>
+          )}
+          <LogoutDialog>
+            <button className="text-gray-400 p-2 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors active:scale-95">
+              <LogOut className="w-5 h-5" />
+            </button>
+          </LogoutDialog>
+        </div>
       </div>
 
       {/* Mobile Bottom Navigation - Glassmorphism */}

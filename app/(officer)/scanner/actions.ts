@@ -3,7 +3,11 @@
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 
-export async function processScan(qrToken: string, eventId: string) {
+export type ScanResult = 
+  | { success: true; type?: string; student: { full_name?: string; student_no?: string } }
+  | { success: false; error: string }
+
+export async function processScan(qrToken: string, eventId: string): Promise<ScanResult> {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
@@ -45,7 +49,7 @@ export async function processScan(qrToken: string, eventId: string) {
   }
 }
 
-export async function manualCheckIn(query: string, eventId: string) {
+export async function manualCheckIn(query: string, eventId: string): Promise<ScanResult> {
   const supabase = await createClient()
 
   // STRICT SECURITY ENFORCEMENT
