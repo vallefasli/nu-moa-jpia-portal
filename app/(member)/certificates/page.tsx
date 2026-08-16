@@ -47,9 +47,9 @@ export default async function CertificatesPage() {
     if (log.type === 'time_out') status.hasTimeOut = true
   })
   
-  // An event is only "earned" if the user has BOTH time_in and time_out
+  // An event is "earned" if the user has a time_out (covers normal flow and forced time_out overrides)
   const earnedEvents = Array.from(eventStatus.values())
-    .filter(status => status.hasTimeIn && status.hasTimeOut)
+    .filter(status => status.hasTimeOut)
     .map(status => status.event)
 
   return (
