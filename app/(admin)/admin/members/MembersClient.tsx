@@ -12,6 +12,16 @@ import { removeMember, removeMembers, updateMemberProfile } from '@/app/(admin)/
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 type User = {
   id: string
@@ -41,6 +51,9 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
   const [activeTab, setActiveTab] = useState('All')
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [isPending, startTransition] = useTransition()
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [userToDelete, setUserToDelete] = useState<{ id: string, name: string } | null>(null)
+  const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false)
 
   const yearLevels = ['All', '1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year', 'Irregular']
 
@@ -73,32 +86,41 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
     else setSelectedIds(new Set())
   }
 
-  const handleBulkRemove = () => {
+  const handleBulkRemoveClick = () => {
     if (selectedIds.size === 0) return
-    if (confirm(`Are you sure you want to completely remove ${selectedIds.size} members? They will lose access.`)) {
-      startTransition(async () => {
-        const res = await removeMembers(Array.from(selectedIds))
-        if (res.error) toast.error(res.error)
-        else {
-          toast.success(`Removed ${selectedIds.size} members successfully.`)
-          setSelectedIds(new Set())
-        }
-      })
-    }
+    setBulkDeleteDialogOpen(true)
   }
 
-  const handleSingleRemove = (userId: string, name: string) => {
-    if (confirm(`Are you sure you want to remove ${name}?`)) {
-      startTransition(async () => {
-        const res = await removeMember(userId)
-        if (res.error) toast.error(res.error)
-        else {
-          toast.success(`${name} has been removed.`)
-          setIsDialogOpen(false)
-          if (selectedIds.has(userId)) toggleSelection(userId, false)
-        }
-      })
-    }
+  const executeBulkRemove = () => {
+    startTransition(async () => {
+      const res = await removeMembers(Array.from(selectedIds))
+      if (res.error) toast.error(res.error)
+      else {
+        toast.success(`Removed ${selectedIds.size} members successfully.`)
+        setSelectedIds(new Set())
+      }
+      setBulkDeleteDialogOpen(false)
+    })
+  }
+
+  const handleSingleRemoveClick = (userId: string, name: string) => {
+    setUserToDelete({ id: userId, name })
+    setDeleteDialogOpen(true)
+  }
+
+  const executeSingleRemove = () => {
+    if (!userToDelete) return
+    startTransition(async () => {
+      const res = await removeMember(userToDelete.id)
+      if (res.error) toast.error(res.error)
+      else {
+        toast.success(`${userToDelete.name} has been removed.`)
+        setIsDialogOpen(false)
+        if (selectedIds.has(userToDelete.id)) toggleSelection(userToDelete.id, false)
+      }
+      setDeleteDialogOpen(false)
+      setUserToDelete(null)
+    })
   }
 
   const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -280,7 +302,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
               variant="destructive"
               className="h-8 px-4 border-0"
               disabled={isPending}
-              onClick={handleBulkRemove}
+              onClick={handleBulkRemoveClick}
             >
               <Trash2 className="w-4 h-4 mr-2" /> Remove Selected
             </Button>
@@ -391,7 +413,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                       <Button 
                         variant="destructive" 
                         className="flex-1"
-                        onClick={() => handleSingleRemove(selectedUser.id, selectedUser.full_name)}
+                        onClick={() => handleSingleRemoveClick(selectedUser.id, selectedUser.full_name)}
                         disabled={isPending}
                       >
                         <Trash2 className="w-4 h-4 mr-2" /> Remove
@@ -530,6 +552,58 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
           })()}
         </DialogContent>
       </Dialog>
+
+      {/* Alert Dialog for Single User Deletion */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent className="rounded-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Member</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to remove <span className="font-semibold text-gray-900">{userToDelete?.name}</span>? 
+              This action cannot be undone and they will lose access to the portal.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={(e) => {
+                e.preventDefault()
+                executeSingleRemove()
+              }}
+              disabled={isPending}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {isPending ? 'Removing...' : 'Remove'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Alert Dialog for Bulk User Deletion */}
+      <AlertDialog open={bulkDeleteDialogOpen} onOpenChange={setBulkDeleteDialogOpen}>
+        <AlertDialogContent className="rounded-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Multiple Members</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to completely remove <span className="font-semibold text-gray-900">{selectedIds.size} members</span>? 
+              This action cannot be undone and they will lose access to the portal immediately.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={(e) => {
+                e.preventDefault()
+                executeBulkRemove()
+              }}
+              disabled={isPending}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {isPending ? 'Removing...' : 'Remove Selected'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

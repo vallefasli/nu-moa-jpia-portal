@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
+import { cookies } from 'next/headers'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -43,9 +44,19 @@ export async function GET(request: Request) {
       }
       
       let redirectPath = next
-      if (profile.account_status === 'pending') redirectPath = '/pending'
-      else if (profile.role === 'admin') redirectPath = '/admin/verification'
-      else if (profile.role === 'officer') redirectPath = '/scanner'
+      if (profile.account_status === 'pending') {
+        redirectPath = '/pending'
+      } else if (profile.role === 'admin') {
+        redirectPath = '/admin/verification'
+      } else if (profile.role === 'officer' && loginRole === 'officer') {
+        redirectPath = '/scanner'
+      } else {
+        redirectPath = '/dashboard'
+      }
+
+      if (loginRole) {
+        ;(await cookies()).set('active_role', loginRole, { path: '/' })
+      }
 
       const forwardedHost = request.headers.get('x-forwarded-host') 
       const isLocalhost = process.env.NODE_ENV === 'development'

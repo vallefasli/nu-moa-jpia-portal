@@ -59,9 +59,10 @@ export async function updateSession(request: NextRequest) {
   // Auth routes should redirect to the correct portal if already logged in
   if (isAuthRoute) {
     if (user) {
+      const activeRole = request.cookies.get('active_role')?.value;
       if (profileRole === 'admin') {
         return NextResponse.redirect(new URL('/admin/verification', request.url))
-      } else if (profileRole === 'officer') {
+      } else if (profileRole === 'officer' && activeRole !== 'member') {
         return NextResponse.redirect(new URL('/scanner', request.url))
       }
       return NextResponse.redirect(new URL('/dashboard', request.url))

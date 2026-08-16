@@ -1,8 +1,7 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { headers } from 'next/headers'
+import { headers, cookies } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
 
 export type AuthState = {
@@ -46,7 +45,9 @@ export async function login(prevState: any, formData: FormData): Promise<AuthSta
     }
   }
 
-  revalidatePath('/', 'layout')
+
+
+  (await cookies()).set('active_role', requestedRole, { path: '/' })
 
   if (status === 'pending') {
     redirect('/pending')
@@ -62,7 +63,6 @@ export async function login(prevState: any, formData: FormData): Promise<AuthSta
 export async function logout() {
   const supabase = await createClient()
   await supabase.auth.signOut()
-  revalidatePath('/', 'layout')
   redirect('/')
 }
 
@@ -101,6 +101,6 @@ export async function signup(prevState: any, formData: FormData): Promise<AuthSt
     return { success: 'Registration successful! Please check your email and click the confirmation link to complete your setup.' }
   }
 
-  revalidatePath('/', 'layout')
   redirect('/pending')
 }
+// trigger rebuild

@@ -1,8 +1,17 @@
 'use server'
 
 import { createClient } from '@/utils/supabase/server'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
 import { sendWelcomeEmail, sendRejectionEmail } from '@/lib/email'
+
+const getAdminClient = () => {
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
+  if (serviceKey) {
+    return createSupabaseClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceKey);
+  }
+  return null;
+}
 
 export async function approveUser(userId: string) {
   const supabase = await createClient()
@@ -114,29 +123,35 @@ export async function rejectUsers(userIds: string[]) {
 }
 
 export async function removeMember(userId: string) {
-  const supabase = await createClient()
-  
-  const { error } = await supabase.rpc('delete_user_by_admin', { target_user_id: userId })
+  const adminClient = getAdminClient()
 
-  if (error) {
-    return { error: error.message }
+  if (!adminClient) {
+    return { error: 'SUPABASE_SERVICE_ROLE_KEY is missing in your .env.local file. This key is required to completely delete users from the database.' }
   }
+
+  const { error: authError } = await adminClient.auth.admin.deleteUser(userId)
+  if (authError) return { error: authError.message }
+
+  // We should also delete from the users table just in case ON DELETE CASCADE is missing
+  await adminClient.from('users').delete().eq('id', userId)
 
   revalidatePath('/admin/members')
   return { success: true }
 }
 
 export async function removeMembers(userIds: string[]) {
-  const supabase = await createClient()
+  const adminClient = getAdminClient()
   
-  const results = await Promise.all(
-    userIds.map(id => supabase.rpc('delete_user_by_admin', { target_user_id: id }))
-  )
-
-  const errors = results.filter(r => r.error)
-  if (errors.length > 0) {
-    return { error: `Failed to remove ${errors.length} members. ${errors[0].error?.message}` }
+  if (!adminClient) {
+    return { error: 'SUPABASE_SERVICE_ROLE_KEY is missing in your .env.local file. This key is required to completely delete users from the database.' }
   }
+
+  const results = await Promise.all(userIds.map(id => adminClient.auth.admin.deleteUser(id)))
+  const errors = results.filter(r => r.error)
+  if (errors.length > 0) return { error: `Failed to remove ${errors.length} members. ${errors[0].error?.message}` }
+
+  // Fallback cleanup
+  await adminClient.from('users').delete().in('id', userIds)
 
   revalidatePath('/admin/members')
   return { success: true }
