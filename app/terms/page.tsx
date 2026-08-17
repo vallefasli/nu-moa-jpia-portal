@@ -1,5 +1,4 @@
-import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import BackButton from '@/components/BackButton'
 import { Card, CardContent } from '@/components/ui/card'
 
 export const metadata = {
@@ -12,10 +11,7 @@ export default function TermsAndConditionsPage() {
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto space-y-8">
         <div>
-          <Link href="/" className="inline-flex items-center text-sm font-medium text-[#35408e] hover:underline mb-6">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
-          </Link>
+          <BackButton />
           <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">
             Terms and Conditions
           </h1>
