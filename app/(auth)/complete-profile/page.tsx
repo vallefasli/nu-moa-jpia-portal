@@ -1,6 +1,7 @@
 'use client'
 
-import { useActionState, useEffect, useState } from 'react'
+import { useActionState, useEffect, useState, useRef } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/utils/supabase/client'
 import { completeProfile } from './actions'
 import { Button } from '@/components/ui/button'
@@ -18,6 +19,7 @@ export default function CompleteProfilePage() {
   const [program, setProgram] = useState('')
   const [yearLevel, setYearLevel] = useState('')
   const [committee, setCommittee] = useState('None')
+  const isHydrated = useRef(false)
 
   useEffect(() => {
     if (state?.error) {
@@ -53,8 +55,34 @@ export default function CompleteProfilePage() {
         }
       }
     }
-    fetchName()
+    
+    const stored = sessionStorage.getItem('cp_formState')
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        if (parsed.firstName) setFirstName(parsed.firstName)
+        if (parsed.lastName) setLastName(parsed.lastName)
+        if (parsed.middleName) setMiddleName(parsed.middleName)
+        if (parsed.studentNo) setStudentNo(parsed.studentNo)
+        if (parsed.studentEmail) setStudentEmail(parsed.studentEmail)
+        if (parsed.program) setProgram(parsed.program)
+        if (parsed.yearLevel) setYearLevel(parsed.yearLevel)
+        if (parsed.committee) setCommittee(parsed.committee)
+      } catch (e) {}
+    } else {
+      fetchName()
+    }
+    
+    isHydrated.current = true
   }, [])
+
+  useEffect(() => {
+    if (isHydrated.current) {
+      sessionStorage.setItem('cp_formState', JSON.stringify({
+        firstName, lastName, middleName, studentNo, studentEmail, program, yearLevel, committee
+      }))
+    }
+  }, [firstName, lastName, middleName, studentNo, studentEmail, program, yearLevel, committee])
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4 sm:p-8">
@@ -203,13 +231,13 @@ export default function CompleteProfilePage() {
                 />
                 <Label htmlFor="terms" className="block text-sm text-gray-600 font-normal cursor-pointer leading-snug">
                   I agree to the{' '}
-                  <a href="/terms" target="_blank" className="text-[#35408e] font-medium hover:underline">
+                  <Link href="/terms" className="text-[#35408e] font-medium hover:underline">
                     Terms and Conditions
-                  </a>{' '}
+                  </Link>{' '}
                   and{' '}
-                  <a href="/privacy" target="_blank" className="text-[#35408e] font-medium hover:underline">
+                  <Link href="/privacy" className="text-[#35408e] font-medium hover:underline">
                     Privacy Policy
-                  </a>. I understand that my information will be used for organizational purposes only.
+                  </Link>. I understand that my information will be used for organizational purposes only.
                 </Label>
               </div>
             </div>
