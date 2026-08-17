@@ -19,6 +19,31 @@ export async function processScan(qrToken: string, eventId: string): Promise<Sca
     return { success: false, error: 'Unauthorized: Only officers and admins can scan QR codes' }
   }
 
+  // Pre-flight checks before RPC
+  const { data: scannedUser } = await supabase.from('users').select('id').eq('qr_token', qrToken).single()
+  
+  if (scannedUser) {
+    // 1. Prevent officers from scanning themselves (Admins can bypass)
+    if (scannedUser.id === user.id && profile?.role !== 'admin') {
+      return { success: false, error: 'Officers cannot scan themselves.' }
+    }
+
+    // 2. Prevent scanning again after they have already timed out (Admins can bypass)
+    if (profile?.role !== 'admin') {
+      const { data: lastScan } = await supabase.from('attendance')
+        .select('type')
+        .eq('event_id', eventId)
+        .eq('user_id', scannedUser.id)
+        .order('timestamp', { ascending: false })
+        .limit(1)
+        .single()
+
+      if (lastScan && lastScan.type === 'time_out') {
+        return { success: false, error: 'Attendance complete. Already timed out.' }
+      }
+    }
+  }
+
   // Execute the RPC to record attendance safely
   const { data, error } = await supabase.rpc('process_optimistic_scan', {
     p_event_id: eventId,

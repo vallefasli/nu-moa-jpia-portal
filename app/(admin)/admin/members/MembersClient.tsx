@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { Badge } from '@/components/ui/badge'
-import { Inbox, ChevronRight, Search, Edit, Trash2, ShieldAlert, QrCode } from 'lucide-react'
+import { Inbox, ChevronRight, Search, Edit, Trash2, ShieldAlert, QrCode, Filter, SlidersHorizontal } from 'lucide-react'
 import QRCode from 'react-qr-code'
 import DigitalIdCard from '@/app/(member)/id/DigitalIdCard'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
@@ -48,7 +48,34 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
   const [isEditMode, setIsEditMode] = useState(false)
   const [showQR, setShowQR] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [activeTab, setActiveTab] = useState('All')
+  const [filters, setFilters] = useState({
+    program: 'All',
+    year_level: 'All',
+    committee: 'All',
+    role: 'All',
+    dateJoined: 'All'
+  })
+  const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false)
+
+  const getActiveFilterCount = () => {
+    let count = 0;
+    if (filters.program !== 'All') count++;
+    if (filters.year_level !== 'All') count++;
+    if (filters.committee !== 'All') count++;
+    if (filters.role !== 'All') count++;
+    if (filters.dateJoined !== 'All') count++;
+    return count;
+  }
+  
+  const resetFilters = () => {
+    setFilters({
+      program: 'All',
+      year_level: 'All',
+      committee: 'All',
+      role: 'All',
+      dateJoined: 'All'
+    })
+  }
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [isPending, startTransition] = useTransition()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -68,10 +95,29 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
       (u.student_no || '').includes(searchQuery) ||
       (u.program?.toLowerCase() || '').includes(searchQuery.toLowerCase());
       
-    const matchesTab = activeTab === 'All' || 
-      (activeTab === 'Irregular' ? !yearLevels.slice(1, 6).includes(u.year_level) : u.year_level === activeTab);
+    const matchesYear = filters.year_level === 'All' || 
+      (filters.year_level === 'Irregular' ? !yearLevels.slice(1, 6).includes(u.year_level) : u.year_level === filters.year_level);
+
+    const matchesProgram = filters.program === 'All' || u.program === filters.program;
+    const matchesCommittee = filters.committee === 'All' || (u.committee || 'None') === filters.committee;
+    const matchesRole = filters.role === 'All' || u.role === filters.role;
+    
+    let matchesDate = true;
+    if (filters.dateJoined !== 'All') {
+       const userDate = new Date(u.created_at);
+       const now = new Date();
+       if (filters.dateJoined === 'Last 7 Days') {
+         const sevenDaysAgo = new Date(now.setDate(now.getDate() - 7));
+         matchesDate = userDate >= sevenDaysAgo;
+       } else if (filters.dateJoined === 'Last 30 Days') {
+         const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
+         matchesDate = userDate >= thirtyDaysAgo;
+       } else if (filters.dateJoined === 'This Year') {
+         matchesDate = userDate.getFullYear() === new Date().getFullYear();
+       }
+    }
       
-    return matchesSearch && matchesTab;
+    return matchesSearch && matchesYear && matchesProgram && matchesCommittee && matchesRole && matchesDate;
   })
 
   const toggleSelection = (id: string, checked: boolean) => {
@@ -174,33 +220,32 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
           </div>
         </div>
 
-        {/* Sleek Pill Filters */}
-        <div className="flex overflow-x-auto pb-4 mb-2 gap-2 hide-scrollbar">
-          {yearLevels.map((year) => (
-            <button
-              key={year}
-              onClick={() => setActiveTab(year)}
-              className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                activeTab === year 
-                  ? 'bg-[#35408e] text-white shadow-md' 
-                  : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-              }`}
-            >
-              {year}
-            </button>
-          ))}
-        </div>
-
-        {/* Search & Bulk Select Bar */}
+        {/* Search & Advanced Filter Bar */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6 items-center">
-          <div className="relative flex-1 w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <Input 
-              placeholder="Search by name, student no, or program..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-white border-gray-200 shadow-sm rounded-xl h-10 w-full md:max-w-md"
-            />
+          <div className="relative flex-1 w-full flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input 
+                placeholder="Search by name, student no, or program..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 bg-white border-gray-200 shadow-sm rounded-xl h-10 w-full"
+              />
+            </div>
+            
+            <Button 
+              variant="outline" 
+              className="h-10 px-4 rounded-xl border-gray-200 shadow-sm hover:bg-gray-50 flex items-center gap-2 text-gray-700 w-full sm:w-auto shrink-0 transition-colors bg-white"
+              onClick={() => setIsFilterDialogOpen(true)}
+            >
+              <SlidersHorizontal className="w-4 h-4 text-gray-500" />
+              <span className="font-medium">Filters</span>
+              {getActiveFilterCount() > 0 && (
+                <span className="bg-[#35408e] text-white text-xs font-bold px-2 py-0.5 rounded-full ml-1">
+                  {getActiveFilterCount()}
+                </span>
+              )}
+            </Button>
           </div>
           {filteredUsers.length > 0 && (
             <div className="flex items-center gap-2 self-start sm:self-auto bg-white border border-gray-200 px-4 h-10 rounded-xl shadow-sm w-full sm:w-auto">
@@ -239,7 +284,8 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
               return (
                 <div 
                   key={user.id} 
-                  className={`bg-white border rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between group ${isSelected ? 'border-indigo-400 bg-indigo-50/30' : 'border-gray-100 hover:border-indigo-100'}`}
+                  className={`bg-white border rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between group cursor-pointer ${isSelected ? 'border-indigo-400 bg-indigo-50/30' : 'border-gray-100 hover:border-indigo-100'}`}
+                  onClick={() => { setSelectedUser(user); setIsEditMode(false); setShowQR(false); setIsDialogOpen(true); }}
                 >
                   <div className="flex items-center gap-4 min-w-0">
                     <div className="flex items-center h-full mr-1" onClick={(e) => e.stopPropagation()}>
@@ -249,10 +295,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                         className="data-checked:bg-[#35408e] data-checked:border-[#35408e]"
                       />
                     </div>
-                    <div 
-                      className="flex items-center gap-4 min-w-0 flex-1 cursor-pointer"
-                      onClick={() => { setSelectedUser(user); setIsEditMode(false); setShowQR(false); setIsDialogOpen(true); }}
-                    >
+                    <div className="flex items-center gap-4 min-w-0 flex-1">
                       <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-sm md:text-lg flex-shrink-0 group-hover:bg-indigo-100 transition-colors">
                         {getInitials(user.full_name)}
                       </div>
@@ -274,10 +317,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                     </div>
                   </div>
 
-                  <div 
-                    className="flex items-center gap-4 flex-shrink-0 ml-4 cursor-pointer"
-                    onClick={() => { setSelectedUser(user); setIsEditMode(false); setShowQR(false); setIsDialogOpen(true); }}
-                  >
+                  <div className="flex items-center gap-4 flex-shrink-0 ml-4">
                     <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
                       <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-indigo-600" />
                     </div>
@@ -550,6 +590,113 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
             </form>
             );
           })()}
+        </DialogContent>
+      </Dialog>
+
+      {/* Advanced Filter Dialog */}
+      <Dialog open={isFilterDialogOpen} onOpenChange={setIsFilterDialogOpen}>
+        <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden rounded-2xl w-[95vw] max-h-[80vh] flex flex-col">
+          <DialogHeader className="p-4 sm:p-6 sm:pb-4 border-b flex-shrink-0">
+            <DialogTitle className="text-xl flex items-center gap-2">
+              <Filter className="w-5 h-5 text-[#35408e]" /> Filter Members
+            </DialogTitle>
+            <DialogDescription>
+              Narrow down the member list using the criteria below.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="p-4 sm:p-6 space-y-5 sm:space-y-6 flex-1 overflow-y-auto">
+            <div className="space-y-3">
+              <Label className="text-sm font-semibold text-gray-900">Program</Label>
+              <div className="flex flex-wrap gap-2">
+                {['All', 'BS Accountancy', 'BS Management Accounting', 'BS Business Administration'].map(prog => (
+                  <button
+                    key={prog}
+                    onClick={() => setFilters(f => ({ ...f, program: prog }))}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.program === prog ? 'bg-[#35408e] text-white border-[#35408e]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#35408e]/50'}`}
+                  >
+                    {prog}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Label className="text-sm font-semibold text-gray-900">Year Level</Label>
+              <div className="flex flex-wrap gap-2">
+                {yearLevels.map(year => (
+                  <button
+                    key={year}
+                    onClick={() => setFilters(f => ({ ...f, year_level: year }))}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.year_level === year ? 'bg-[#35408e] text-white border-[#35408e]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#35408e]/50'}`}
+                  >
+                    {year}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Label className="text-sm font-semibold text-gray-900">Committee</Label>
+              <div className="flex flex-wrap gap-2">
+                {['All', 'None', 'Academics', 'Non-Academics', 'Membership', 'Finance', 'Audit', 'Communications', 'Creatives', 'Logistics'].map(com => (
+                  <button
+                    key={com}
+                    onClick={() => setFilters(f => ({ ...f, committee: com }))}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.committee === com ? 'bg-[#35408e] text-white border-[#35408e]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#35408e]/50'}`}
+                  >
+                    {com}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+              <div className="space-y-3">
+                <Label className="text-sm font-semibold text-gray-900">Role</Label>
+                <div className="flex flex-col gap-2">
+                  {['All', 'member', 'officer'].map(role => (
+                    <label key={role} className="flex items-center gap-2 cursor-pointer group">
+                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${filters.role === role ? 'border-[#35408e] bg-[#35408e]' : 'border-gray-300 bg-white group-hover:border-[#35408e]/50'}`}>
+                        {filters.role === role && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                      </div>
+                      <span className="text-sm text-gray-700 capitalize">{role === 'All' ? 'Any Role' : role}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <Label className="text-sm font-semibold text-gray-900">Date Joined</Label>
+                <div className="flex flex-col gap-2">
+                  {['All', 'Last 7 Days', 'Last 30 Days', 'This Year'].map(date => (
+                    <label key={date} className="flex items-center gap-2 cursor-pointer group">
+                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${filters.dateJoined === date ? 'border-[#35408e] bg-[#35408e]' : 'border-gray-300 bg-white group-hover:border-[#35408e]/50'}`}>
+                        {filters.dateJoined === date && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                      </div>
+                      <span className="text-sm text-gray-700">{date === 'All' ? 'Any Time' : date}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="p-4 border-t bg-gray-50 flex items-center justify-between rounded-b-2xl flex-shrink-0">
+            <Button 
+              variant="ghost" 
+              className="text-gray-500 hover:text-gray-900 px-4"
+              onClick={resetFilters}
+            >
+              Reset All
+            </Button>
+            <Button 
+              className="bg-[#35408e] hover:bg-[#28306e] text-white px-6"
+              onClick={() => setIsFilterDialogOpen(false)}
+            >
+              Show Results
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 

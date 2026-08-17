@@ -22,7 +22,7 @@ export default async function MembersPage() {
     .select('id, first_name, middle_name, last_name, full_name, student_no, member_id, program, year_level, committee, email, student_email, created_at, account_status, role, qr_token')
     .eq('account_status', 'active')
     .in('role', ['member', 'officer'])
-    .order('created_at', { ascending: false })
+    .order('full_name', { ascending: true })
 
   return (
     <MembersClient initialUsers={users || []} />

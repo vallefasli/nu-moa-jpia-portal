@@ -145,7 +145,14 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
         
         if (devices && devices.length) {
           setCameras(devices)
-          startScanning(html5Qrcode, devices[0].id)
+          let defaultIdx = devices.findIndex(d => 
+            d.label.toLowerCase().includes('back') || 
+            d.label.toLowerCase().includes('rear') ||
+            d.label.toLowerCase().includes('environment')
+          )
+          if (defaultIdx === -1) defaultIdx = devices.length > 1 ? 1 : 0 // Fallback to 1 if multiple cameras and none match, otherwise 0
+          setCurrentCameraIdx(defaultIdx)
+          startScanning(html5Qrcode, devices[defaultIdx].id)
         } else {
           setCameraError("No cameras found on this device.")
         }

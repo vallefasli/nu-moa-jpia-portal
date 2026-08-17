@@ -15,6 +15,16 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import Image from 'next/image'
 import { EventCardClient } from '../../../(member)/events/EventCardClient'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 export function EventManagementClient({ events, isAdmin }: { events: any[], isAdmin: boolean }) {
   const router = useRouter()
@@ -26,6 +36,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingEvent, setEditingEvent] = useState<any | null>(null)
   const [customQuestions, setCustomQuestions] = useState<any[]>([])
+  const [eventToDelete, setEventToDelete] = useState<string | null>(null)
   
   // Custom Themes State
   const [themes, setThemes] = useState<string[]>([])
@@ -156,10 +167,16 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
     })
   }
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => {
     if (!isAdmin) return toast.error("Only Admins can delete events")
-    if (!confirm('Are you sure you want to delete this event? This will also delete all attendance records for it.')) return
-    
+    setEventToDelete(id)
+  }
+
+  const confirmDelete = async () => {
+    if (!eventToDelete) return
+    const id = eventToDelete
+    setEventToDelete(null)
+
     startTransition(async () => {
       const res = await deleteEvent(id)
       if (res.error) toast.error(res.error)
@@ -591,6 +608,23 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
           </div>
         </div>
       )}
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!eventToDelete} onOpenChange={(open) => !open && setEventToDelete(null)}>
+        <AlertDialogContent className="bg-white rounded-2xl p-6 border-0 shadow-2xl max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-black text-gray-900">Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-500 font-medium">
+              This action cannot be undone. This will permanently delete the event and all associated attendance records.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-6 gap-3 sm:gap-0">
+            <AlertDialogCancel className="rounded-full font-bold border-gray-200">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-red-600 hover:bg-red-700 text-white rounded-full font-bold shadow-md">
+              Delete Event
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
