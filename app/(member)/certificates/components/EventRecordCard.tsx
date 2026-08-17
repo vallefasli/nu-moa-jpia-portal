@@ -1,8 +1,8 @@
 'use client'
 
-import { Card, CardContent } from '@/components/ui/card'
-import { Calendar, Award, ExternalLink, Clock } from 'lucide-react'
+import { Calendar, Award, ExternalLink, Clock, CheckCircle2 } from 'lucide-react'
 import { FeedbackModal } from './FeedbackModal'
+import Image from 'next/image'
 
 interface EventRecordCardProps {
   event: {
@@ -12,6 +12,7 @@ interface EventRecordCardProps {
     points_awarded: number
     certificate_link?: string
     custom_feedback_questions?: any[]
+    poster_url?: string
   }
   feedbackSubmitted: boolean
   feedbackData?: any
@@ -24,60 +25,74 @@ export function EventRecordCard({ event, feedbackSubmitted, feedbackData }: Even
   const isCertificateReady = feedbackSubmitted && !!certificateLink
 
   return (
-    <Card className="overflow-hidden border-gray-200 shadow-sm hover:shadow-md transition-shadow group relative">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#35408e]/5 to-transparent pointer-events-none" />
-      <CardContent className="p-5 flex flex-col h-full relative">
-        <div className="flex items-start justify-between mb-6">
-          <div className="p-3 bg-blue-50 rounded-xl text-[#35408e]">
-            <Award className="w-6 h-6" />
-          </div>
-          <div className="px-2.5 py-1 bg-[#fbb03b]/20 text-[#fbb03b] text-xs font-bold rounded-full">
-            {event.points_awarded || 0} Points
-          </div>
+    <div className="group bg-white border border-gray-100 rounded-2xl p-4 sm:p-5 hover:border-[#35408e]/30 hover:shadow-xl hover:shadow-[#35408e]/5 transition-all flex flex-col md:flex-row md:items-center gap-5 relative overflow-hidden">
+      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#35408e] to-[#fbb03b] opacity-0 group-hover:opacity-100 transition-opacity" />
+      
+      {/* Event Details (Left Side) */}
+      <div className="flex-1 flex items-start md:items-center gap-4 pl-1 sm:pl-0">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors relative overflow-hidden bg-gray-50 border border-gray-100 group-hover:border-[#35408e]/20 group-hover:bg-[#35408e]/5">
+          {event.poster_url ? (
+            <Image 
+              src={event.poster_url} 
+              alt={event.title} 
+              fill 
+              sizes="64px"
+              className="object-cover" 
+            />
+          ) : (
+            <Award className="w-7 h-7 text-gray-400 group-hover:text-[#35408e] transition-colors" />
+          )}
         </div>
         
-        <h3 className="font-bold text-lg text-gray-900 leading-tight mb-2 line-clamp-2">
-          {event.title}
-        </h3>
-        
-        <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-          <Calendar className="w-4 h-4" />
-          <span>{new Date(event.date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+        <div>
+          <h3 className="font-bold text-gray-900 text-lg sm:text-xl group-hover:text-[#35408e] transition-colors leading-tight mb-1.5">{event.title}</h3>
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500">
+            <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-gray-400" /> {new Date(event.date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            <span className="flex items-center gap-1.5 font-bold text-[#fbb03b] bg-[#fbb03b]/10 px-2.5 py-0.5 rounded-full"><Award className="w-3.5 h-3.5" /> {event.points_awarded || 0} Points</span>
+          </div>
         </div>
+      </div>
 
-        <div className="mt-auto pt-4 border-t border-gray-100">
-          {isPendingFeedback && (
-            <div className="space-y-2">
-              <p className="text-xs text-gray-500 font-medium mb-2">Submit feedback to unlock your certificate.</p>
-              <FeedbackModal 
-                eventId={event.id} 
-                eventTitle={event.title} 
-                customQuestions={event.custom_feedback_questions || []}
-              />
+      {/* Action / Status (Right Side) */}
+      <div className="md:w-64 flex-shrink-0 border-t md:border-t-0 border-gray-100 pt-4 md:pt-0 pl-1 sm:pl-0">
+        {isPendingFeedback && (
+          <div className="space-y-2.5">
+            <p className="text-[11px] text-gray-500 font-bold uppercase tracking-wider hidden md:block">Action Required</p>
+            <FeedbackModal 
+              eventId={event.id} 
+              eventTitle={event.title} 
+              customQuestions={event.custom_feedback_questions || []}
+            />
+          </div>
+        )}
+
+        {isPendingDistribution && (
+          <div className="flex items-center gap-3 bg-gray-50/80 p-3 rounded-xl border border-gray-100">
+            <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0 text-gray-400">
+              <Clock className="w-4 h-4" />
             </div>
-          )}
-
-          {isPendingDistribution && (
-            <div className="flex flex-col items-center justify-center p-3 bg-gray-50 rounded-lg border border-gray-100 text-center space-y-1">
-              <Clock className="w-5 h-5 text-gray-400 mb-1" />
-              <p className="text-sm font-semibold text-gray-700">Pending Distribution</p>
-              <p className="text-xs text-gray-500">Feedback received! Officers will distribute the certificate link soon.</p>
+            <div>
+              <p className="text-sm font-bold text-gray-700 leading-tight">Pending Distribution</p>
+              <p className="text-[10px] text-gray-500 font-medium mt-0.5">Officers will provide the link soon.</p>
             </div>
-          )}
+          </div>
+        )}
 
-          {isCertificateReady && (
+        {isCertificateReady && (
+          <div className="space-y-2.5">
+            <p className="text-[11px] text-emerald-600 font-bold uppercase tracking-wider flex items-center gap-1 hidden md:flex"><CheckCircle2 className="w-3.5 h-3.5" /> Certificate Ready</p>
             <a 
               href={certificateLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex w-full items-center justify-center gap-2 h-10 bg-[#35408e] hover:bg-[#252d69] text-white rounded-lg font-semibold transition-colors shadow-md"
+              className="flex w-full items-center justify-center gap-2 h-11 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl font-bold transition-colors shadow-sm group/btn"
             >
-              <ExternalLink className="w-4 h-4" />
+              <ExternalLink className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
               Access Certificate
             </a>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }

@@ -164,8 +164,8 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
       <div className="p-4 md:p-8 max-w-7xl mx-auto pb-32 md:pb-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-[#35408e]">Manage Members</h1>
-            <p className="text-sm md:text-base text-gray-500 mt-1">View and edit active JPIA members by year level.</p>
+            <h1 className="text-3xl font-black text-gray-900 tracking-tight">Manage Members</h1>
+            <p className="text-gray-500 mt-1">View and edit active JPIA members by year level.</p>
           </div>
           <div>
             <Badge variant="secondary" className="text-sm px-3 py-1 font-semibold bg-white border border-gray-200 text-gray-700 shadow-sm">

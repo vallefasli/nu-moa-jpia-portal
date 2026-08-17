@@ -46,8 +46,8 @@ export default async function CertificateViewPage({ params }: { params: { id: st
           <ArrowLeft className="w-5 h-5 text-gray-600" />
         </Link>
         <div>
-          <h1 className="text-2xl font-black text-gray-900 tracking-tight">Certificate of Completion</h1>
-          <p className="text-gray-500 text-sm mt-0.5">{event.title}</p>
+          <h1 className="text-3xl font-black text-gray-900 tracking-tight">Certificate of Completion</h1>
+          <p className="text-gray-500 mt-1">{event.title}</p>
         </div>
       </div>
 

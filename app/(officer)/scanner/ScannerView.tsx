@@ -151,7 +151,13 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
   }, 0)
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4 md:p-8 grid lg:grid-cols-12 gap-8">
+    <div className="w-full max-w-6xl mx-auto p-4 md:p-8 space-y-6">
+      <div>
+        <h1 className="text-3xl font-black text-gray-900 tracking-tight">Attendance Scanner</h1>
+        <p className="text-gray-500 mt-1">Record member attendance for ongoing and upcoming events.</p>
+      </div>
+      
+      <div className="grid lg:grid-cols-12 gap-8">
       {/* Scanner & Controls (Left Column) */}
       <div className="lg:col-span-7 space-y-6">
         
@@ -293,6 +299,7 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
             </div>
           </CardContent>
         </Card>
+      </div>
       </div>
     </div>
   )

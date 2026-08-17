@@ -1,8 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
-import { Card, CardContent } from '@/components/ui/card'
-import { Award } from 'lucide-react'
-import { EventRecordCard } from './components/EventRecordCard'
+import { CertificatesListClient } from './components/CertificatesListClient'
 
 export default async function CertificatesPage() {
   const supabase = await createClient()
@@ -18,7 +16,7 @@ export default async function CertificatesPage() {
         event_id,
         type,
         timestamp,
-        events ( id, title, date, points_awarded, certificate_link, custom_feedback_questions )
+        events ( id, title, date, points_awarded, certificate_link, custom_feedback_questions, poster_url )
       `)
       .eq('user_id', user.id)
       .order('timestamp', { ascending: false }),
@@ -52,6 +50,12 @@ export default async function CertificatesPage() {
     .filter(status => status.hasTimeOut)
     .map(status => status.event)
 
+  // Convert Map to a plain object for the client component
+  const feedbackObject: Record<string, any> = {}
+  feedbackDataMap.forEach((val, key) => {
+    feedbackObject[key] = val
+  })
+
   return (
     <div className="p-6 md:p-8 max-w-4xl mx-auto space-y-6">
       <div>
@@ -59,28 +63,10 @@ export default async function CertificatesPage() {
         <p className="text-gray-500 mt-1">Review your attended events, submit feedback, and access certificates.</p>
       </div>
 
-      {earnedEvents.length === 0 ? (
-        <Card className="border-gray-200 shadow-sm bg-white/50 backdrop-blur-sm">
-          <CardContent className="p-12 text-center flex flex-col items-center">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-              <Award className="w-8 h-8 text-gray-400" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-900">No events attended yet</h3>
-            <p className="text-gray-500 max-w-sm mt-1">Attend JPIA events and make sure to scan your QR code to earn records and certificates.</p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2">
-          {earnedEvents.map(ev => (
-            <EventRecordCard 
-              key={ev.id} 
-              event={ev} 
-              feedbackSubmitted={feedbackDataMap.has(ev.id)}
-              feedbackData={feedbackDataMap.get(ev.id)}
-            />
-          ))}
-        </div>
-      )}
+      <CertificatesListClient 
+        earnedEvents={earnedEvents}
+        feedbackMap={feedbackObject}
+      />
     </div>
   )
 }

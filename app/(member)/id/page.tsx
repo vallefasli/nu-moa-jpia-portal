@@ -23,8 +23,8 @@ export default async function DigitalIdPage() {
       <div className="absolute inset-0 bg-gradient-to-b from-[#35408e]/5 to-transparent -z-10" />
       
       <div className="text-center mb-6 animate-in fade-in slide-in-from-top-4 duration-500">
-        <h1 className="text-2xl font-extrabold tracking-tight text-[#35408e]">My Digital ID</h1>
-        <p className="text-gray-500 mt-1.5 text-xs font-medium px-2">Present this QR code at JPIA events to log your attendance and earn points.</p>
+        <h1 className="text-3xl font-black text-gray-900 tracking-tight">My Digital ID</h1>
+        <p className="text-gray-500 mt-1 text-sm">Present this QR code at JPIA events to log your attendance and earn points.</p>
       </div>
 
       <DigitalIdCard profile={profile} initials={initials} />

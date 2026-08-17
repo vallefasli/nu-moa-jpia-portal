@@ -20,6 +20,9 @@ export async function createEvent(formData: FormData) {
   const time_end = formData.get('time_end') as string
   const points_awarded = parseInt(formData.get('points_awarded') as string) || 0
   const capacity = parseInt(formData.get('capacity') as string) || null
+  const poster_url = formData.get('poster_url') as string | null
+  const banner_url = formData.get('banner_url') as string | null
+  const themes = JSON.parse((formData.get('themes') as string) || '[]')
   const custom_feedback_questions = JSON.parse((formData.get('custom_feedback_questions') as string) || '[]')
 
   // Validation
@@ -37,6 +40,9 @@ export async function createEvent(formData: FormData) {
     time_end,
     points_awarded,
     capacity,
+    poster_url,
+    banner_url,
+    themes,
     status: 'upcoming',
     custom_feedback_questions
   })
@@ -63,7 +69,10 @@ export async function updateEvent(id: string, formData: FormData) {
   const time_end = formData.get('time_end') as string
   const points_awarded = parseInt(formData.get('points_awarded') as string) || 0
   const capacity = parseInt(formData.get('capacity') as string) || null
+  const poster_url = formData.get('poster_url') as string | null
+  const banner_url = formData.get('banner_url') as string | null
   const status = formData.get('status') as string
+  const themes = JSON.parse((formData.get('themes') as string) || '[]')
   const custom_feedback_questions = JSON.parse((formData.get('custom_feedback_questions') as string) || '[]')
 
   // Validation
@@ -81,6 +90,9 @@ export async function updateEvent(id: string, formData: FormData) {
     time_end,
     points_awarded,
     capacity,
+    poster_url,
+    banner_url,
+    themes,
     status,
     custom_feedback_questions,
     updated_at: new Date().toISOString()
