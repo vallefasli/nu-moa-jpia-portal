@@ -61,6 +61,12 @@ export async function rejectUser(userId: string) {
     await sendRejectionEmail(user.email, user.full_name)
   }
 
+  const adminClient = getAdminClient()
+  if (adminClient) {
+    await adminClient.auth.admin.deleteUser(userId)
+    await adminClient.from('users').delete().eq('id', userId)
+  }
+
   revalidatePath('/admin/verification')
   return { success: true }
 }
@@ -116,6 +122,12 @@ export async function rejectUsers(userIds: string[]) {
     await Promise.allSettled(
       users.map(u => sendRejectionEmail(u.email, u.full_name))
     )
+    
+    const adminClient = getAdminClient()
+    if (adminClient) {
+      await Promise.allSettled(userIds.map(id => adminClient.auth.admin.deleteUser(id)))
+      await adminClient.from('users').delete().in('id', userIds)
+    }
   }
 
   revalidatePath('/admin/verification')

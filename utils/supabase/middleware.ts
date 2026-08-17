@@ -34,7 +34,7 @@ export async function updateSession(request: NextRequest) {
   const path = request.nextUrl.pathname
 
   const isAuthRoute = path === '/' || path.startsWith('/admin-login')
-  const isPublicRoute = path.startsWith('/auth/callback') || path.startsWith('/confirmed') || path.startsWith('/privacy') || path.startsWith('/terms')
+  const isPublicRoute = path.startsWith('/auth/callback') || path.startsWith('/confirmed') || path.startsWith('/privacy') || path.startsWith('/terms') || path.startsWith('/rejected')
 
   let profileRole = null;
   // If the user is logged in, check if their profile is complete

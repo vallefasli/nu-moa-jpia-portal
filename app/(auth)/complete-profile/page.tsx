@@ -21,6 +21,8 @@ export default function CompleteProfilePage() {
   const [committee, setCommittee] = useState('None')
   const isHydrated = useRef(false)
 
+  const [userId, setUserId] = useState<string | null>(null)
+
   useEffect(() => {
     if (state?.error) {
       const err = state.error.toLowerCase()
@@ -34,10 +36,29 @@ export default function CompleteProfilePage() {
   }, [state])
 
   useEffect(() => {
-    async function fetchName() {
+    async function init() {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
+      if (!user) return
+      
+      setUserId(user.id)
+      
+      const storageKey = `cp_formState_${user.id}`
+      const stored = sessionStorage.getItem(storageKey)
+      
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored)
+          if (parsed.firstName) setFirstName(parsed.firstName)
+          if (parsed.lastName) setLastName(parsed.lastName)
+          if (parsed.middleName) setMiddleName(parsed.middleName)
+          if (parsed.studentNo) setStudentNo(parsed.studentNo)
+          if (parsed.studentEmail) setStudentEmail(parsed.studentEmail)
+          if (parsed.program) setProgram(parsed.program)
+          if (parsed.yearLevel) setYearLevel(parsed.yearLevel)
+          if (parsed.committee) setCommittee(parsed.committee)
+        } catch (e) {}
+      } else {
         const { data: profile } = await supabase
           .from('users')
           .select('full_name')
@@ -54,35 +75,19 @@ export default function CompleteProfilePage() {
           }
         }
       }
+      isHydrated.current = true
     }
     
-    const stored = sessionStorage.getItem('cp_formState')
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored)
-        if (parsed.firstName) setFirstName(parsed.firstName)
-        if (parsed.lastName) setLastName(parsed.lastName)
-        if (parsed.middleName) setMiddleName(parsed.middleName)
-        if (parsed.studentNo) setStudentNo(parsed.studentNo)
-        if (parsed.studentEmail) setStudentEmail(parsed.studentEmail)
-        if (parsed.program) setProgram(parsed.program)
-        if (parsed.yearLevel) setYearLevel(parsed.yearLevel)
-        if (parsed.committee) setCommittee(parsed.committee)
-      } catch (e) {}
-    } else {
-      fetchName()
-    }
-    
-    isHydrated.current = true
+    init()
   }, [])
 
   useEffect(() => {
-    if (isHydrated.current) {
-      sessionStorage.setItem('cp_formState', JSON.stringify({
+    if (isHydrated.current && userId) {
+      sessionStorage.setItem(`cp_formState_${userId}`, JSON.stringify({
         firstName, lastName, middleName, studentNo, studentEmail, program, yearLevel, committee
       }))
     }
-  }, [firstName, lastName, middleName, studentNo, studentEmail, program, yearLevel, committee])
+  }, [firstName, lastName, middleName, studentNo, studentEmail, program, yearLevel, committee, userId])
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4 sm:p-8">

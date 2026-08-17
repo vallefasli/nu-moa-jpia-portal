@@ -19,12 +19,22 @@ export function AuthSync() {
         router.refresh()
         if (event.data.event === 'SIGNED_OUT') {
           setTimeout(() => {
+            const skipSync = localStorage.getItem('skip_auth_sync') === 'true'
+            if (skipSync) {
+              localStorage.removeItem('skip_auth_sync')
+              return
+            }
+            if (window.location.pathname === '/pending') {
+              return
+            }
             const isExpired = localStorage.getItem('nu_moa_expired') === 'true'
             if (isExpired) {
               localStorage.removeItem('nu_moa_expired')
               window.location.href = '/?expired=true'
             } else {
-              window.location.href = '/'
+              if (window.location.pathname !== '/rejected') {
+                window.location.href = '/'
+              }
             }
           }, 100)
         }
@@ -40,12 +50,22 @@ export function AuthSync() {
         if (event === 'SIGNED_OUT') {
           router.refresh()
           setTimeout(() => {
+            const skipSync = localStorage.getItem('skip_auth_sync') === 'true'
+            if (skipSync) {
+              localStorage.removeItem('skip_auth_sync')
+              return
+            }
+            if (window.location.pathname === '/pending') {
+              return
+            }
             const isExpired = localStorage.getItem('nu_moa_expired') === 'true'
             if (isExpired) {
               localStorage.removeItem('nu_moa_expired')
               window.location.href = '/?expired=true'
             } else {
-              window.location.href = '/'
+              if (window.location.pathname !== '/rejected') {
+                window.location.href = '/'
+              }
             }
           }, 100)
         } else {
