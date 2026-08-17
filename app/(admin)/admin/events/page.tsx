@@ -15,6 +15,7 @@ export default async function EventsPage() {
     .from('events')
     .select('*, event_rsvps(count)')
     .order('date', { ascending: false })
+    .order('time_start', { ascending: false })
 
   return (
     <div className="p-4 md:p-8">

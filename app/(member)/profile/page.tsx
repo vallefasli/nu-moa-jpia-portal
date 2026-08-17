@@ -31,7 +31,7 @@ export default async function MemberProfilePage() {
           </div>
           <div className="absolute -bottom-2 -right-2 bg-green-500 w-6 h-6 rounded-full border-4 border-white shadow-sm z-20" />
         </div>
-        <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mt-6 tracking-tight">{profile.full_name}</h1>
+        <h1 className="text-3xl font-black text-gray-900 tracking-tight mt-6">{profile.full_name}</h1>
         <p className="text-gray-500 font-mono text-base mt-1">{profile.student_no}</p>
         
         <div className="flex gap-2 mt-4 justify-center flex-wrap">

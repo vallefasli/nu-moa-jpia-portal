@@ -33,10 +33,12 @@ export default async function CertificatesPage() {
       time_end,
       certificate_link,
       custom_feedback_questions,
+      poster_url,
       event_feedbacks (count)
     `)
     .in('status', ['ongoing', 'completed', 'upcoming']) // mostly interested in ones that could have feedback
     .order('date', { ascending: false })
+    .order('time_start', { ascending: false })
   
   if (error) {
     console.error("Error fetching events:", error)
@@ -67,6 +69,7 @@ export default async function CertificatesPage() {
       time_end: event.time_end,
       certificate_link: event.certificate_link,
       custom_feedback_questions: event.custom_feedback_questions || [],
+      poster_url: event.poster_url,
       feedbackCount
     }
   })
@@ -75,8 +78,8 @@ export default async function CertificatesPage() {
     <div className="min-h-full pb-20 p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Event Certificates</h1>
-          <p className="text-gray-500 mt-1 text-sm">Select an event below to distribute certificates to members who submitted feedback.</p>
+          <h1 className="text-3xl font-black text-gray-900 tracking-tight">Event Certificates</h1>
+          <p className="text-gray-500 mt-1">Select an event below to distribute certificates to members who submitted feedback.</p>
         </div>
 
         <CertificatesClient events={formattedEvents} />
