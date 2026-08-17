@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { distributeCertificates, getEventFeedbacks } from './actions'
+import { saveCertificateDistribution, getEventFeedbacks, revokeCertificates } from './actions'
 import { getEventStatus } from '@/lib/utils'
 import { toast } from 'sonner'
 import { Search, Link as LinkIcon, User, Calendar, Award, CheckCircle2, ChevronRight, Loader2 } from 'lucide-react'
@@ -29,6 +29,8 @@ export function CertificatesClient({
   const [isLoadingFeedbacks, setIsLoadingFeedbacks] = useState(false)
   
   const [templateUrl, setTemplateUrl] = useState('')
+  const [isAutoEnabled, setIsAutoEnabled] = useState(false)
+  const [isLinkEnabled, setIsLinkEnabled] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [eventSearchQuery, setEventSearchQuery] = useState('')
@@ -41,6 +43,8 @@ export function CertificatesClient({
   const handleCardClick = async (event: any) => {
     setSelectedEventId(event.id)
     setTemplateUrl(event.certificate_link || '')
+    setIsAutoEnabled(false)
+    setIsLinkEnabled(false)
     setIsModalOpen(true)
     setIsLoadingFeedbacks(true)
     setFeedbacks([])
@@ -50,6 +54,10 @@ export function CertificatesClient({
     const res = await getEventFeedbacks(event.id)
     if (res.success && res.data) {
       setFeedbacks(res.data)
+      
+      // Start with empty selection so the checkboxes act purely as tools for the next action.
+      // The status pills handle showing who already received what.
+      setSelectedUsers(new Set())
     } else {
       toast.error('Failed to load feedback submissions.')
     }
@@ -61,30 +69,85 @@ export function CertificatesClient({
     f.users.student_no?.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const handleSubmit = async () => {
+  const handleDistribute = async () => {
     if (!selectedEventId) return
-    if (!templateUrl || !templateUrl.startsWith('http')) {
-      toast.error('Please provide a valid Google Drive URL starting with http.')
+
+    if (!isAutoEnabled && !isLinkEnabled) {
+      toast.error('Please select at least one certificate type to distribute.')
+      return
+    }
+
+    if (isLinkEnabled && !templateUrl) {
+      toast.error('Please provide a Certificate Link or uncheck it.')
       return
     }
 
     setIsSubmitting(true)
-    const isAll = selectedUsers.size === 0 || selectedUsers.size === feedbacks.length
-    const userIds = isAll ? undefined : Array.from(selectedUsers)
-    const res = await distributeCertificates(selectedEventId, templateUrl, userIds)
-    setIsSubmitting(false)
+    const userIds = Array.from(selectedUsers)
+    
+    // Call unified backend action to override exactly what is selected
+    const res = await saveCertificateDistribution(
+      selectedEventId,
+      userIds,
+      isAutoEnabled,
+      isLinkEnabled ? templateUrl : null
+    )
 
     if (res.success) {
-      toast.success('Successfully distributed the certificate link!')
-      // Update local state so it reflects without page refresh
-      const eventIndex = events.findIndex(e => e.id === selectedEventId)
-      if (eventIndex !== -1) {
-        events[eventIndex].certificate_link = templateUrl
-      }
-      setIsModalOpen(false)
+      toast.success('Certificate settings saved successfully!')
+      
+      // Update local state to show badges without full refresh
+      const updatedFeedbacks = feedbacks.map(f => {
+        const isSelected = selectedUsers.has(f.user_id)
+        if (isSelected) {
+          return {
+            ...f,
+            additional_responses: {
+              ...(f.additional_responses || {}),
+              auto_certificate: isAutoEnabled ? true : undefined,
+              certificate_link: isLinkEnabled ? templateUrl : undefined
+            }
+          }
+        }
+        return f
+      })
+      setFeedbacks(updatedFeedbacks)
+      setSelectedUsers(new Set())
     } else {
-      toast.error(res.error || 'Failed to distribute certificates')
+      toast.error('Failed to save certificate distribution.')
     }
+    
+    setIsSubmitting(false)
+  }
+
+  const handleRevoke = async () => {
+    if (!selectedEventId || selectedUsers.size === 0) return
+    setIsSubmitting(true)
+    const userIds = Array.from(selectedUsers)
+    
+    const res = await revokeCertificates(selectedEventId, userIds)
+
+    if (res.success) {
+      toast.success('Revoked certificates for selected members.')
+      
+      const updatedFeedbacks = feedbacks.map(f => {
+        if (selectedUsers.has(f.user_id)) {
+          const newResp = { ...(f.additional_responses || {}) }
+          delete newResp.auto_certificate
+          delete newResp.certificate_link
+          return { ...f, additional_responses: newResp }
+        }
+        return f
+      })
+      setFeedbacks(updatedFeedbacks)
+      
+      // Auto-deselect the users we just revoked from
+      setSelectedUsers(new Set())
+    } else {
+      toast.error('Failed to revoke certificates.')
+    }
+    
+    setIsSubmitting(false)
   }
 
   return (
@@ -106,7 +169,6 @@ export function CertificatesClient({
       ) : (
         <div className="flex flex-col gap-3">
           {filteredEvents.map((event) => {
-            const hasLink = !!event.certificate_link
             const effectiveStatus = getEventStatus(event)
             const eventDate = new Date(event.date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
             
@@ -121,8 +183,7 @@ export function CertificatesClient({
                 {/* Icon & Details */}
                 <div className="flex-1 flex items-start md:items-center gap-4 pl-1 sm:pl-0">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors relative overflow-hidden ${
-                    event.poster_url ? 'bg-gray-100' :
-                    hasLink ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-50 text-gray-400 group-hover:bg-[#35408e]/5 group-hover:text-[#35408e]'
+                    event.poster_url ? 'bg-gray-100' : 'bg-gray-50 text-gray-400 group-hover:bg-[#35408e]/5 group-hover:text-[#35408e]'
                   }`}>
                     {event.poster_url ? (
                       <Image 
@@ -132,8 +193,6 @@ export function CertificatesClient({
                         sizes="48px"
                         className="object-cover" 
                       />
-                    ) : hasLink ? (
-                      <CheckCircle2 className="w-6 h-6" />
                     ) : (
                       <Award className="w-6 h-6" />
                     )}
@@ -158,15 +217,9 @@ export function CertificatesClient({
                   >
                     {effectiveStatus.toUpperCase()}
                   </Badge>
-                  {hasLink ? (
-                    <Badge variant="outline" className="border-emerald-200 text-emerald-700 bg-emerald-50 gap-1.5 px-3 py-1 shadow-sm">
-                      <LinkIcon className="w-3.5 h-3.5" /> Link Distributed
-                    </Badge>
-                  ) : (
-                    <Badge variant="outline" className="border-gray-200 text-gray-500 gap-1.5 px-3 py-1 group-hover:border-[#fbb03b] group-hover:text-[#fbb03b] group-hover:bg-[#fbb03b]/5 transition-colors shadow-sm">
-                      <Award className="w-3.5 h-3.5" /> Needs Certificate
-                    </Badge>
-                  )}
+                  <Badge variant="outline" className="border-gray-200 text-gray-500 gap-1.5 px-3 py-1 group-hover:border-[#35408e] group-hover:text-[#35408e] group-hover:bg-[#35408e]/5 transition-colors shadow-sm cursor-pointer">
+                    <Award className="w-3.5 h-3.5" /> Manage Certificates
+                  </Badge>
                   <div className="w-8 h-8 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 group-hover:bg-[#35408e] group-hover:text-white group-hover:border-[#35408e] transition-colors ml-1 hidden sm:flex">
                     <ChevronRight className="w-4 h-4 ml-0.5" />
                   </div>
@@ -183,7 +236,7 @@ export function CertificatesClient({
           <DialogHeader className="p-6 pb-4 border-b border-gray-100 bg-gray-50/50">
             <DialogTitle className="text-xl">{selectedEvent?.title}</DialogTitle>
             <DialogDescription>
-              Review feedback and distribute the Google Drive certificate link.
+              Review feedback and distribute certificates.
             </DialogDescription>
           </DialogHeader>
 
@@ -245,7 +298,16 @@ export function CertificatesClient({
                             <div className="flex-1 space-y-4">
                               <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
                                 <div>
-                                  <div className="font-bold text-lg text-gray-900 group-hover:text-[#35408e] transition-colors">{feedback.users.full_name}</div>
+                                  <div className="flex items-center gap-2">
+                                    <div className="font-bold text-lg text-gray-900 group-hover:text-[#35408e] transition-colors">{feedback.users.full_name}</div>
+                                    {feedback.additional_responses?.auto_certificate && feedback.additional_responses?.certificate_link ? (
+                                      <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[9px] px-1.5 py-0.5 uppercase">Both</Badge>
+                                    ) : feedback.additional_responses?.auto_certificate ? (
+                                      <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-[9px] px-1.5 py-0.5 uppercase">Auto-Cert</Badge>
+                                    ) : feedback.additional_responses?.certificate_link ? (
+                                      <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 text-[9px] px-1.5 py-0.5 uppercase">Link</Badge>
+                                    ) : null}
+                                  </div>
                                   <div className="text-sm text-gray-500 font-mono">{feedback.users.student_no}</div>
                                 </div>
                                 <div className="flex items-center gap-1 bg-white p-1.5 rounded-full border border-gray-100 shadow-sm">
@@ -309,34 +371,89 @@ export function CertificatesClient({
               
               <div className="h-px w-full bg-gray-200" />
 
-              <div className="space-y-3">
-                <div className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                  <LinkIcon className="w-3.5 h-3.5" />
-                  Drive Link
+              <div className="space-y-4">
+                <div className="p-4 bg-white border border-gray-200 rounded-xl shadow-sm space-y-4">
+                  <label className="flex items-start gap-3 cursor-pointer group">
+                    <div className="mt-0.5">
+                      <input 
+                        type="checkbox"
+                        checked={isAutoEnabled}
+                        onChange={(e) => setIsAutoEnabled(e.target.checked)}
+                        className="rounded border-gray-300 w-4 h-4 text-[#35408e] focus:ring-[#35408e]"
+                      />
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-gray-900 group-hover:text-[#35408e] transition-colors">Auto-Certificate</div>
+                      <div className="text-[10px] text-gray-500 mt-0.5 leading-tight">Automatically generate a certificate for each member with their name on it.</div>
+                    </div>
+                  </label>
+
+                  <div className="h-px bg-gray-100" />
+
+                  <div>
+                    <label className="flex items-start gap-3 cursor-pointer group mb-2">
+                      <div className="mt-0.5">
+                        <input 
+                          type="checkbox"
+                          checked={isLinkEnabled}
+                          onChange={(e) => setIsLinkEnabled(e.target.checked)}
+                          className="rounded border-gray-300 w-4 h-4 text-[#35408e] focus:ring-[#35408e]"
+                        />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-gray-900 group-hover:text-[#35408e] transition-colors flex items-center gap-1.5">
+                          <LinkIcon className="w-3.5 h-3.5" />
+                          Certificate Link
+                        </div>
+                        <div className="text-[10px] text-gray-500 mt-0.5 leading-tight">
+                          Provide a link to distribute external or manual certificates.
+                        </div>
+                      </div>
+                    </label>
+                    
+                    {isLinkEnabled && (
+                      <div className="pl-7 mt-2">
+                        <Input 
+                          placeholder="https://drive.google.com/..."
+                          value={templateUrl}
+                          onChange={(e) => setTemplateUrl(e.target.value)}
+                          className="text-sm bg-gray-50 border-gray-200"
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <Input 
-                  placeholder="https://drive.google.com/..."
-                  value={templateUrl}
-                  onChange={(e) => setTemplateUrl(e.target.value)}
-                  className="text-sm bg-white border-gray-300"
-                />
-                <p className="text-[10px] text-gray-500 leading-tight">
-                  Paste the Google Drive folder link containing the certificates.
-                </p>
-                {selectedUsers.size > 0 && selectedUsers.size < feedbacks.length && (
+
+                {selectedUsers.size === 0 ? (
+                  <p className="text-[10px] text-red-600 font-medium bg-red-50 p-2 rounded border border-red-100">
+                    No members selected. Please select members to distribute.
+                  </p>
+                ) : selectedUsers.size === feedbacks.length ? (
+                  <p className="text-[10px] text-gray-600 font-medium bg-gray-100 p-2 rounded border border-gray-200">
+                    Distributing to all {feedbacks.length} {feedbacks.length === 1 ? 'member' : 'members'}.
+                  </p>
+                ) : (
                   <p className="text-[10px] text-blue-600 font-medium bg-blue-50 p-2 rounded border border-blue-100">
-                    Distributing to {selectedUsers.size} selected members only.
+                    Distributing to {selectedUsers.size} selected {selectedUsers.size === 1 ? 'member' : 'members'} only.
                   </p>
                 )}
               </div>
 
-              <div className="mt-auto pt-4">
+              <div className="mt-auto pt-4 flex flex-col gap-2.5">
                 <Button 
-                  onClick={handleSubmit} 
-                  disabled={isSubmitting || isLoadingFeedbacks}
-                  className="w-full bg-[#35408e] hover:bg-[#2a3370] text-white font-bold h-11"
+                  onClick={handleDistribute} 
+                  disabled={isSubmitting || isLoadingFeedbacks || selectedUsers.size === 0}
+                  className="w-full bg-[#35408e] hover:bg-[#28316d] text-white font-bold h-11 shadow-md disabled:bg-gray-300"
                 >
-                  {isSubmitting ? 'Saving...' : 'Distribute Link'}
+                  {isSubmitting ? 'Processing...' : 'Distribute Certificates'}
+                </Button>
+                <Button 
+                  onClick={handleRevoke} 
+                  disabled={isSubmitting || isLoadingFeedbacks || selectedUsers.size === 0}
+                  variant="outline"
+                  className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 font-bold h-11 shadow-sm disabled:opacity-50"
+                >
+                  Revoke Certificates
                 </Button>
               </div>
             </div>

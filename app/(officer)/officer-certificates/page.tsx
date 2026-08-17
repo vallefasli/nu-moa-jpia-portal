@@ -32,6 +32,7 @@ export default async function CertificatesPage() {
       time_start,
       time_end,
       certificate_link,
+      auto_certificate_enabled,
       custom_feedback_questions,
       poster_url,
       event_feedbacks (count)
@@ -68,6 +69,7 @@ export default async function CertificatesPage() {
       time_start: event.time_start,
       time_end: event.time_end,
       certificate_link: event.certificate_link,
+      auto_certificate_enabled: event.auto_certificate_enabled,
       custom_feedback_questions: event.custom_feedback_questions || [],
       poster_url: event.poster_url,
       feedbackCount

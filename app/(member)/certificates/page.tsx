@@ -16,7 +16,7 @@ export default async function CertificatesPage() {
         event_id,
         type,
         timestamp,
-        events ( id, title, date, points_awarded, certificate_link, custom_feedback_questions, poster_url )
+        events ( id, title, date, points_awarded, certificate_link, auto_certificate_enabled, custom_feedback_questions, poster_url )
       `)
       .eq('user_id', user.id)
       .order('timestamp', { ascending: false }),
