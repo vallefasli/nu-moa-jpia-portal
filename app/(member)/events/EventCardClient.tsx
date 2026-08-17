@@ -61,13 +61,13 @@ export function EventCardClient({
       </div>
 
       {/* Large Circular Poster */}
-      <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden relative shadow-lg mb-6 flex-shrink-0 group-hover:scale-105 group-hover:shadow-2xl transition-all duration-500 bg-gray-100 flex items-center justify-center">
+      <div className="w-36 h-36 md:w-48 md:h-48 rounded-full overflow-hidden relative shadow-lg mb-4 flex-shrink-0 group-hover:scale-105 group-hover:shadow-2xl transition-all duration-500 bg-gray-100 flex items-center justify-center">
         {event.poster_url ? (
           <Image 
             src={event.poster_url} 
             alt={event.title} 
             fill 
-            sizes="(max-width: 768px) 250px, 300px"
+            sizes="(max-width: 768px) 144px, 192px"
             className="object-cover" 
           />
         ) : (
@@ -76,22 +76,22 @@ export function EventCardClient({
       </div>
 
       {/* Date */}
-      <p className="text-gray-500 text-lg md:text-xl font-medium mb-2 md:mb-3">
+      <p className="text-gray-500 text-base md:text-lg font-medium mb-1.5 md:mb-2">
         {eventDate}
       </p>
 
       {/* Points / Registration */}
-      <p className="text-gray-900 text-lg md:text-xl font-extrabold mb-2 md:mb-3">
+      <p className="text-gray-900 text-base md:text-lg font-extrabold mb-1.5 md:mb-2">
         Earn {event.points_awarded || 0} Points
       </p>
 
       {/* Title */}
-      <h3 className="text-[#35408e] text-2xl md:text-3xl font-medium mb-2 md:mb-3 line-clamp-2 px-4">
+      <h3 className="text-[#35408e] text-xl md:text-2xl font-medium mb-1.5 md:mb-2 line-clamp-2 px-3">
         {event.title}
       </h3>
 
       {/* Main Category */}
-      <p className="text-gray-400 text-sm md:text-base font-bold">
+      <p className="text-gray-400 text-xs md:text-sm font-bold">
         {event.event_type || 'General'}
       </p>
     </>
@@ -101,7 +101,7 @@ export function EventCardClient({
     return (
       <Card 
         onClick={onCardClickOverride}
-        className={`overflow-visible text-center transition-all duration-500 bg-transparent border-0 shadow-none hover:-translate-y-1.5 cursor-pointer group relative flex flex-col items-center p-4 md:p-8`}
+        className={`overflow-visible text-center transition-all duration-500 bg-transparent border-0 shadow-none hover:-translate-y-1.5 cursor-pointer group relative flex flex-col items-center p-3 md:p-6`}
       >
         {CardInner}
       </Card>
@@ -113,7 +113,7 @@ export function EventCardClient({
       <DialogTrigger 
         nativeButton={false}
         render={
-          <Card className={`overflow-visible text-center transition-all duration-500 bg-transparent border-0 shadow-none hover:-translate-y-1.5 cursor-pointer group relative flex flex-col items-center p-4 md:p-8`} />
+          <Card className={`overflow-visible text-center transition-all duration-500 bg-transparent border-0 shadow-none hover:-translate-y-1.5 cursor-pointer group relative flex flex-col items-center p-3 md:p-6`} />
         }
       >
         {CardInner}
