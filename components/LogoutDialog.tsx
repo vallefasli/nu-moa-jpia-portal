@@ -34,7 +34,8 @@ export function LogoutDialog({ children }: { children: React.ReactNode }) {
             onClick={(e) => {
               e.preventDefault();
               startTransition(async () => {
-                await logout();
+                const isAdmin = typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
+                await logout(isAdmin ? '/admin-login' : '/');
               });
             }} 
             disabled={isPending}

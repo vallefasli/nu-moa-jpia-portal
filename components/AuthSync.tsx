@@ -27,13 +27,14 @@ export function AuthSync() {
             if (window.location.pathname === '/pending') {
               return
             }
+            const isAdmin = window.location.pathname.startsWith('/admin')
             const isExpired = localStorage.getItem('nu_moa_expired') === 'true'
             if (isExpired) {
               localStorage.removeItem('nu_moa_expired')
-              window.location.href = '/?expired=true'
+              window.location.href = isAdmin ? '/admin-login?expired=true' : '/?expired=true'
             } else {
               if (window.location.pathname !== '/rejected') {
-                window.location.href = '/'
+                window.location.href = isAdmin ? '/admin-login' : '/'
               }
             }
           }, 100)
@@ -58,13 +59,14 @@ export function AuthSync() {
             if (window.location.pathname === '/pending') {
               return
             }
+            const isAdmin = window.location.pathname.startsWith('/admin')
             const isExpired = localStorage.getItem('nu_moa_expired') === 'true'
             if (isExpired) {
               localStorage.removeItem('nu_moa_expired')
-              window.location.href = '/?expired=true'
+              window.location.href = isAdmin ? '/admin-login?expired=true' : '/?expired=true'
             } else {
               if (window.location.pathname !== '/rejected') {
-                window.location.href = '/'
+                window.location.href = isAdmin ? '/admin-login' : '/'
               }
             }
           }, 100)

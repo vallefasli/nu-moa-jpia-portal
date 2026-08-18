@@ -12,12 +12,19 @@ export function AutoLogout() {
   const performLogout = useCallback(async () => {
     // Clear storage to prevent loops
     localStorage.removeItem(STORAGE_KEY)
-    // Set a flag so AuthSync knows to append ?expired=true when handling the SIGNED_OUT event
     localStorage.setItem('nu_moa_expired', 'true')
     
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    // We don't manually redirect here because AuthSync will catch the SIGNED_OUT event and handle the redirect
+    const isAdmin = typeof window !== 'undefined' && window.location.pathname.startsWith('/admin')
+    const redirectUrl = isAdmin ? '/admin-login?expired=true' : '/?expired=true'
+    
+    try {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+    } catch (err) {
+      console.error('AutoLogout signout error:', err)
+    } finally {
+      window.location.href = redirectUrl
+    }
   }, [])
 
   const resetTimer = useCallback(() => {
