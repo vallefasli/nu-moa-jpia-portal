@@ -6,6 +6,16 @@ import { QrScanner } from '@/components/scanner/QrScanner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Search, Loader2, CalendarDays, Activity, User, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { manualCheckIn, searchMembers, deleteOfficerAttendance } from './actions'
@@ -17,6 +27,7 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
   const [manualQuery, setManualQuery] = useState('')
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [isSearching, setIsSearching] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string, name: string } | null>(null)
   const [isPending, startTransition] = useTransition()
   const supabase = createClient()
 
@@ -130,18 +141,17 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
     }
   }
 
-  const handleDeleteScan = (id: string, name: string) => {
-    if (confirm(`Are you sure you want to remove ${name}'s attendance record?`)) {
-      startTransition(async () => {
-        const res = await deleteOfficerAttendance(id)
-        if (res.success) {
-          toast.success("Attendance record removed")
-          handleScanComplete()
-        } else {
-          toast.error(res.error)
-        }
-      })
-    }
+  const handleConfirmDelete = (id: string) => {
+    startTransition(async () => {
+      const res = await deleteOfficerAttendance(id)
+      if (res.success) {
+        toast.success("Attendance record removed")
+        setDeleteTarget(null)
+        handleScanComplete()
+      } else {
+        toast.error(res.error)
+      }
+    })
   }
 
   const filteredFeed = initialFeed.filter((entry: any) => entry.event_id === selectedEvent)
@@ -288,8 +298,8 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
                       <Button 
                         variant="ghost" 
                         size="icon" 
-                        className="h-7 w-7 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
-                        onClick={() => handleDeleteScan(entry.id, entry.users?.full_name)}
+                        className="h-7 w-7 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        onClick={() => setDeleteTarget({ id: entry.id, name: entry.users?.full_name || 'this member' })}
                         disabled={isPending}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -303,6 +313,40 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
         </Card>
       </div>
       </div>
+
+      {/* Modern Confirmation Dialog for Deleting Attendance */}
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent className="rounded-2xl border-gray-100 shadow-2xl p-6 bg-white max-w-sm">
+          <AlertDialogHeader className="space-y-2">
+            <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mb-1 border border-red-100">
+              <Trash2 className="w-6 h-6" />
+            </div>
+            <AlertDialogTitle className="text-lg font-bold text-gray-900">Remove Attendance Record?</AlertDialogTitle>
+            <AlertDialogDescription className="text-sm text-gray-500">
+              Are you sure you want to remove the attendance record for <span className="font-semibold text-gray-800">{deleteTarget?.name}</span>? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-6 flex items-center gap-2 sm:justify-end">
+            <AlertDialogCancel 
+              disabled={isPending}
+              className="rounded-xl border-gray-200 text-gray-700 hover:bg-gray-100 px-4 py-2 text-xs font-semibold"
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              disabled={isPending}
+              onClick={(e) => {
+                e.preventDefault()
+                if (!deleteTarget) return
+                handleConfirmDelete(deleteTarget.id)
+              }}
+              className="rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 text-xs shadow-sm transition-all border-0"
+            >
+              {isPending ? "Removing..." : "Remove Record"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

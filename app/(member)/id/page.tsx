@@ -12,12 +12,12 @@ export default async function DigitalIdPage() {
   const initials = profile.full_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase()
 
   return (
-    <div className="w-full max-w-sm mx-auto p-4 flex flex-col items-center justify-center min-h-[calc(100vh-80px)] relative">
+    <div className="w-full max-w-sm mx-auto p-4 py-6 sm:py-8 flex flex-col items-center justify-center min-h-[calc(100dvh-12rem)] md:min-h-[calc(100vh-80px)] relative">
       <div className="absolute inset-0 bg-gradient-to-b from-[#35408e]/5 to-transparent -z-10" />
       
-      <div className="text-center mb-6 animate-in fade-in slide-in-from-top-4 duration-500">
-        <h1 className="text-3xl font-black text-gray-900 tracking-tight">My Digital ID</h1>
-        <p className="text-gray-500 mt-1 text-sm">Present this QR code at JPIA events to log your attendance and earn points.</p>
+      <div className="text-center mb-4 sm:mb-6 animate-in fade-in slide-in-from-top-4 duration-500">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 tracking-tight leading-tight">My Digital ID</h1>
+        <p className="text-gray-500 mt-1 text-xs sm:text-sm">Present this QR code at JPIA events to log your attendance and earn points.</p>
       </div>
 
       <DigitalIdCard profile={profile} initials={initials} />

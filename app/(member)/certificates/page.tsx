@@ -57,10 +57,10 @@ export default async function CertificatesPage() {
   })
 
   return (
-    <div className="p-6 md:p-8 max-w-4xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 max-w-4xl mx-auto space-y-4 sm:space-y-6">
       <div>
-        <h1 className="text-3xl font-black text-gray-900 tracking-tight">My Portfolio & Certificates</h1>
-        <p className="text-gray-500 mt-1">Review your attended events, submit feedback, and access certificates.</p>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 tracking-tight leading-tight">My Portfolio & Certificates</h1>
+        <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Review your attended events, submit feedback, and access certificates.</p>
       </div>
 
       <CertificatesListClient 

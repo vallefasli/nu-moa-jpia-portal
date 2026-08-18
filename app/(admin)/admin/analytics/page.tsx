@@ -14,7 +14,7 @@ export default async function AnalyticsPage() {
   const supabase = await createClient()
 
   // Fetch all analytics datasets in parallel
-  const [activeUsersRes, pendingUsersRes, eventsRes, userPointsRes] = await Promise.all([
+  const [activeUsersRes, pendingUsersRes, eventsRes, attendanceRes, userPointsRes] = await Promise.all([
     supabase
       .from('users')
       .select('id', { count: 'exact' })
@@ -32,6 +32,10 @@ export default async function AnalyticsPage() {
       .from('events')
       .select('event_type'),
     supabase
+      .from('attendance')
+      .select('id', { count: 'exact', head: true })
+      .eq('action_type', 'time_in'),
+    supabase
       .from('user_points_view')
       .select('*')
       .eq('account_status', 'active')
@@ -43,6 +47,7 @@ export default async function AnalyticsPage() {
   const activeUsers = activeUsersRes.data
   const pendingUsers = pendingUsersRes.data
   const events = eventsRes.data
+  const attendanceCount = attendanceRes.count || 0
   const userPoints = userPointsRes.data
 
   const userStats = [
@@ -84,6 +89,7 @@ export default async function AnalyticsPage() {
         <AnalyticsClient 
           userStats={userStats} 
           eventStats={eventStats} 
+          attendanceCount={attendanceCount}
           leaderboard={leaderboard} 
         />
       </div>

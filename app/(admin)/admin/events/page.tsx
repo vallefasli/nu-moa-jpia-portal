@@ -18,12 +18,12 @@ export default async function EventsPage() {
     .order('time_start', { ascending: false })
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="p-4 sm:p-6 md:p-8">
+      <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 sm:gap-4">
           <div>
-            <h1 className="text-3xl font-black text-gray-900 tracking-tight">Event Management</h1>
-            <p className="text-gray-500 mt-1">Create, edit, and manage all organization events.</p>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 tracking-tight leading-tight">Event Management</h1>
+            <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Create, edit, and manage all organization events.</p>
           </div>
         </div>
 

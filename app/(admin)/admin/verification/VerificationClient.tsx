@@ -136,57 +136,71 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
 
   return (
     <>
-      <div className="p-4 md:p-8 max-w-7xl mx-auto pb-32 md:pb-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+      <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto pb-32 md:pb-8">
+        <div className="flex items-center justify-between mb-4 sm:mb-6 gap-3">
           <div>
-            <h1 className="text-3xl font-black text-gray-900 tracking-tight">Verification Queue</h1>
-            <p className="text-gray-500 mt-1">Manage pending membership applications.</p>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 tracking-tight leading-tight">Verification Queue</h1>
+            <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Manage pending membership applications.</p>
           </div>
           <div>
-            <Badge variant="secondary" className="text-sm px-3 py-1 font-semibold bg-white border border-gray-200 text-gray-700 shadow-sm">
-              {users?.length || 0} Pending {users?.length === 1 ? 'Account' : 'Accounts'}
+            <Badge variant="secondary" className="text-xs sm:text-sm px-2.5 sm:px-3 py-1 font-semibold bg-white border border-gray-200 text-gray-700 shadow-xs shrink-0">
+              {users?.length || 0} Pending
             </Badge>
           </div>
         </div>
 
-        {/* Search & Advanced Filter Bar */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-6 items-center">
-          <div className="relative flex-1 w-full flex flex-col sm:flex-row gap-3">
+        {/* Search & Action Bar */}
+        <div className="space-y-3 mb-6">
+          <div className="flex items-center gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input 
-                placeholder="Search by name, student no, or program..." 
+                placeholder="Search name, student no, program..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 bg-white border-gray-200 shadow-sm rounded-xl h-10 w-full"
+                className="pl-9 bg-white border-gray-200 shadow-xs rounded-xl h-10 text-sm focus-visible:ring-1 focus-visible:ring-[#35408e]"
               />
             </div>
             
             <Button 
               variant="outline" 
-              className="h-10 px-4 rounded-xl border-gray-200 shadow-sm hover:bg-gray-50 flex items-center gap-2 text-gray-700 w-full sm:w-auto shrink-0 transition-colors bg-white"
+              className="h-10 px-3 sm:px-4 rounded-xl border-gray-200 shadow-xs hover:bg-gray-50 flex items-center gap-1.5 text-gray-700 shrink-0 transition-all bg-white"
               onClick={() => setIsFilterDialogOpen(true)}
+              title="Filter Applicants"
             >
               <SlidersHorizontal className="w-4 h-4 text-gray-500" />
-              <span className="font-medium">Filters</span>
+              <span className="font-medium text-xs sm:text-sm">Filters</span>
               {getActiveFilterCount() > 0 && (
-                <span className="bg-[#35408e] text-white text-xs font-bold px-2 py-0.5 rounded-full ml-1">
+                <span className="bg-[#35408e] text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
                   {getActiveFilterCount()}
                 </span>
               )}
             </Button>
           </div>
+
+          {/* Sub-toolbar: Selection & Result Count */}
           {filteredUsers.length > 0 && isAdmin && (
-            <div className="flex items-center gap-2 self-start sm:self-auto bg-white border border-gray-200 px-4 h-10 rounded-xl shadow-sm w-full sm:w-auto">
-              <Checkbox 
-                id="select-all" 
-                checked={selectedIds.size === filteredUsers.length && filteredUsers.length > 0}
-                onCheckedChange={(c) => toggleAll(c as boolean)}
-                className="data-checked:bg-[#35408e] data-checked:border-[#35408e]"
-              />
-              <label htmlFor="select-all" className="text-sm font-medium text-gray-700 cursor-pointer select-none">
-                Select All
+            <div className="flex items-center justify-between px-1 text-xs text-gray-500">
+              <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900 transition-colors">
+                <Checkbox 
+                  id="select-all" 
+                  checked={selectedIds.size === filteredUsers.length && filteredUsers.length > 0}
+                  onCheckedChange={(c) => toggleAll(c as boolean)}
+                  className="data-checked:bg-[#35408e] data-checked:border-[#35408e] rounded-md"
+                />
+                <span className="font-semibold text-gray-700">
+                  Select All ({filteredUsers.length})
+                </span>
               </label>
+
+              {getActiveFilterCount() > 0 && (
+                <button 
+                  onClick={resetFilters}
+                  className="text-[#35408e] font-semibold hover:underline text-xs"
+                >
+                  Clear Filters
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -257,9 +271,9 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
 
       {/* Floating Action Bar for Bulk Actions */}
       {selectedIds.size > 0 && isAdmin && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[90%] max-w-md animate-in slide-in-from-bottom-10 fade-in">
-          <div className="bg-[#35408e] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center justify-between border border-[#28306e]">
-            <span className="text-sm font-medium pl-2">
+        <div className="fixed bottom-20 sm:bottom-24 md:bottom-6 left-1/2 -translate-x-1/2 z-40 w-[92%] sm:w-[90%] max-w-md animate-in slide-in-from-bottom-10 fade-in">
+          <div className="bg-[#35408e] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center justify-between border border-[#28306e] ring-2 ring-white/20">
+            <span className="text-sm font-medium pl-1 sm:pl-2 flex items-center">
               <span className="bg-white text-[#35408e] rounded-md px-2 py-0.5 mr-2 text-xs font-bold">{selectedIds.size}</span>
               Selected
             </span>
@@ -267,7 +281,7 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
               <Button 
                 size="sm" 
                 variant="ghost" 
-                className="text-white hover:text-red-100 hover:bg-[#28306e] h-8 px-3"
+                className="text-white hover:text-red-100 hover:bg-[#28306e] h-8 px-2.5 sm:px-3 text-xs sm:text-sm font-semibold"
                 disabled={isPending}
                 onClick={handleBulkReject}
               >
@@ -275,7 +289,7 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
               </Button>
               <Button 
                 size="sm" 
-                className="bg-green-500 hover:bg-green-400 text-white h-8 px-4 border-0"
+                className="bg-green-500 hover:bg-green-400 text-white h-8 px-3.5 sm:px-4 border-0 text-xs sm:text-sm font-bold shadow-sm"
                 disabled={isPending}
                 onClick={handleBulkApprove}
               >

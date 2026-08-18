@@ -198,30 +198,33 @@ export function CertificatesClient({
                     )}
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 text-lg group-hover:text-[#35408e] transition-colors leading-tight mb-1">{event.title}</h3>
-                    <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500">
-                      <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-gray-400" /> {eventDate}</span>
-                      <span className="flex items-center gap-1.5 font-medium text-gray-700 bg-gray-100 px-2 py-0.5 rounded-md"><User className="w-3.5 h-3.5 text-gray-400" /> {event.feedbackCount || 0} Feedbacks</span>
+                    <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-[#35408e] transition-colors leading-tight mb-1">{event.title}</h3>
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <Calendar className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                      <span>{eventDate}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Status & Action */}
-                <div className="flex flex-wrap items-center gap-3 md:justify-end border-t md:border-t-0 border-gray-100 pt-3 md:pt-0">
-                  <Badge 
-                    variant={effectiveStatus === 'ongoing' ? 'default' : 'secondary'} 
-                    className={
-                      effectiveStatus === 'ongoing' ? 'bg-emerald-500 text-white font-bold shadow-sm' : 
-                      effectiveStatus === 'completed' ? 'bg-gray-100 text-gray-600 border-none' : ''
-                    }
-                  >
-                    {effectiveStatus.toUpperCase()}
-                  </Badge>
-                  <Badge variant="outline" className="border-gray-200 text-gray-500 gap-1.5 px-3 py-1 group-hover:border-[#35408e] group-hover:text-[#35408e] group-hover:bg-[#35408e]/5 transition-colors shadow-sm cursor-pointer">
-                    <Award className="w-3.5 h-3.5" /> Manage Certificates
-                  </Badge>
-                  <div className="w-8 h-8 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 group-hover:bg-[#35408e] group-hover:text-white group-hover:border-[#35408e] transition-colors ml-1 hidden sm:flex">
-                    <ChevronRight className="w-4 h-4 ml-0.5" />
+                {/* Status & Feedbacks Badge Strip */}
+                <div className="flex items-center justify-between md:justify-end gap-2.5 sm:gap-3 border-t md:border-t-0 border-gray-100 pt-2.5 md:pt-0">
+                  <div className="flex items-center gap-2">
+                    <Badge 
+                      variant={effectiveStatus === 'ongoing' ? 'default' : 'secondary'} 
+                      className={
+                        effectiveStatus === 'ongoing' ? 'bg-emerald-500 text-white font-bold shadow-xs text-[10px] sm:text-xs' : 
+                        effectiveStatus === 'completed' ? 'bg-gray-100 text-gray-600 border-none font-semibold text-[10px] sm:text-xs' : 'font-semibold text-[10px] sm:text-xs'
+                      }
+                    >
+                      {effectiveStatus.toUpperCase()}
+                    </Badge>
+                    <Badge variant="outline" className="bg-blue-50/60 text-[#35408e] border-blue-200/60 font-bold text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                      <User className="w-3 h-3 text-[#35408e]" />
+                      <span>{event.feedbackCount || 0} Feedbacks</span>
+                    </Badge>
+                  </div>
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 group-hover:bg-[#35408e] group-hover:text-white group-hover:border-[#35408e] transition-colors shrink-0">
+                    <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-0.5" />
                   </div>
                 </div>
               </div>

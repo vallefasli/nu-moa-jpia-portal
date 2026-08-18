@@ -253,13 +253,15 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
 
       {/* Camera Error Overlay */}
       {cameraError && (
-        <div className="absolute inset-0 bg-gray-950/90 flex flex-col items-center justify-center p-6 text-center z-20">
-          <ZapOff className="w-12 h-12 text-red-500 mb-4" />
-          <h3 className="text-white font-bold text-lg mb-2">Camera Unavailable</h3>
-          <p className="text-gray-400 text-sm">{cameraError}</p>
+        <div className="absolute inset-0 bg-gray-950/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-20">
+          <div className="w-12 h-12 rounded-2xl bg-red-500/10 text-red-400 flex items-center justify-center mb-3 border border-red-500/20">
+            <ZapOff className="w-6 h-6" />
+          </div>
+          <h3 className="text-white font-bold text-base mb-1">Camera Unavailable</h3>
+          <p className="text-gray-400 text-xs max-w-xs">{cameraError}</p>
           <Button 
-            variant="outline" 
-            className="mt-6 border-gray-700 text-white hover:bg-gray-800"
+            type="button"
+            className="mt-5 bg-white text-gray-900 hover:bg-gray-100 font-bold px-5 py-2 rounded-xl text-xs shadow-md transition-all border-0"
             onClick={() => window.location.reload()}
           >
             Retry Connection

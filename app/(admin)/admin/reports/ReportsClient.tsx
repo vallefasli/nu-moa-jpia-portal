@@ -375,137 +375,135 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
   )
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header Section with Brand Theme */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200/80 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 sm:gap-4 border-b border-gray-200/80 pb-4 sm:pb-6">
         <div>
-          <h1 className="text-3xl font-black text-gray-900 tracking-tight">Data Export Center</h1>
-          <p className="text-gray-500 text-sm mt-1">
-            Generate, filter, and export clean CSV datasets for official organization documentation, auditing, and analytics.
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 tracking-tight leading-tight">Data Export Center</h1>
+          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+            Generate, filter, and export clean CSV datasets for official organization documentation.
           </p>
         </div>
       </div>
 
       {/* Summary Metric Stats Bar */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white/80 backdrop-blur-md border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Active Members</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <UserCheck className="w-4 h-4" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+        <div className="bg-white/80 backdrop-blur-md border border-gray-100 rounded-2xl p-3 sm:p-4 shadow-2xs hover:shadow-xs transition-all">
+          <div className="flex items-center justify-between gap-1.5">
+            <span className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-wider truncate">Active Members</span>
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+              <UserCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-gray-900 mt-2">{activeMembersCount}</div>
-          <div className="text-[11px] text-gray-500 mt-0.5">{pendingMembersCount} pending approvals</div>
+          <div className="text-lg sm:text-2xl font-black text-gray-900 mt-1">{activeMembersCount}</div>
+          <div className="text-[10px] sm:text-[11px] text-gray-500 mt-0.5 truncate">{pendingMembersCount} pending approvals</div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-md border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Events</span>
-            <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#35408e] flex items-center justify-center">
-              <Calendar className="w-4 h-4" />
+        <div className="bg-white/80 backdrop-blur-md border border-gray-100 rounded-2xl p-3 sm:p-4 shadow-2xs hover:shadow-xs transition-all">
+          <div className="flex items-center justify-between gap-1.5">
+            <span className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-wider truncate">Total Events</span>
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-blue-50 text-[#35408e] flex items-center justify-center shrink-0">
+              <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-gray-900 mt-2">{events.length}</div>
-          <div className="text-[11px] text-gray-500 mt-0.5">Recorded in portal</div>
+          <div className="text-lg sm:text-2xl font-black text-gray-900 mt-1">{events.length}</div>
+          <div className="text-[10px] sm:text-[11px] text-gray-500 mt-0.5 truncate">Recorded in portal</div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-md border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Attendance Logs</span>
-            <div className="w-8 h-8 rounded-xl bg-amber-50 text-[#fbb03b] flex items-center justify-center">
-              <ClipboardList className="w-4 h-4" />
+        <div className="bg-white/80 backdrop-blur-md border border-gray-100 rounded-2xl p-3 sm:p-4 shadow-2xs hover:shadow-xs transition-all">
+          <div className="flex items-center justify-between gap-1.5">
+            <span className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-wider truncate">Attendance</span>
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-50 text-[#fbb03b] flex items-center justify-center shrink-0">
+              <ClipboardList className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-gray-900 mt-2">{totalAttendanceLogged}</div>
-          <div className="text-[11px] text-gray-500 mt-0.5">Time In & Time Out Logs</div>
+          <div className="text-lg sm:text-2xl font-black text-gray-900 mt-1">{totalAttendanceLogged}</div>
+          <div className="text-[10px] sm:text-[11px] text-gray-500 mt-0.5 truncate">Total check-in logs</div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-md border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Feedback Logs</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-              <MessageSquareQuote className="w-4 h-4" />
+        <div className="bg-white/80 backdrop-blur-md border border-gray-100 rounded-2xl p-3 sm:p-4 shadow-2xs hover:shadow-xs transition-all">
+          <div className="flex items-center justify-between gap-1.5">
+            <span className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-wider truncate">Feedback</span>
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+              <MessageSquareQuote className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-gray-900 mt-2">{totalFeedbackSubmitted}</div>
-          <div className="text-[11px] text-gray-500 mt-0.5">Survey responses collected</div>
+          <div className="text-lg sm:text-2xl font-black text-gray-900 mt-1">{totalFeedbackSubmitted}</div>
+          <div className="text-[10px] sm:text-[11px] text-gray-500 mt-0.5 truncate">Survey responses</div>
         </div>
       </div>
 
       {/* Modern Navigation Tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-gray-200 pb-2">
+      <div className="flex overflow-x-auto no-scrollbar scroll-smooth gap-1.5 sm:gap-2 border-b border-gray-200/80 pb-2.5 sm:pb-3 -mx-4 px-4 sm:mx-0 sm:px-0">
         <button
           onClick={() => setActiveTab('roster')}
-          className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl font-bold text-sm transition-all ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all shrink-0 active:scale-95 whitespace-nowrap ${
             activeTab === 'roster'
-              ? 'bg-[#35408e] text-white shadow-md shadow-[#35408e]/20'
-              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+              ? 'bg-[#35408e] text-white shadow-xs'
+              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 bg-white border border-gray-200/60'
           }`}
         >
-          <Users className="w-4 h-4" />
-          Master Member Roster
+          <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+          <span>Member Roster</span>
         </button>
 
         <button
           onClick={() => setActiveTab('attendance')}
-          className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl font-bold text-sm transition-all ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all shrink-0 active:scale-95 whitespace-nowrap ${
             activeTab === 'attendance'
-              ? 'bg-[#35408e] text-white shadow-md shadow-[#35408e]/20'
-              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+              ? 'bg-[#35408e] text-white shadow-xs'
+              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 bg-white border border-gray-200/60'
           }`}
         >
-          <ClipboardList className="w-4 h-4" />
-          Event Attendance & RSVPs
+          <ClipboardList className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+          <span>Event Attendance</span>
         </button>
 
         <button
           onClick={() => setActiveTab('leaderboard')}
-          className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl font-bold text-sm transition-all ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all shrink-0 active:scale-95 whitespace-nowrap ${
             activeTab === 'leaderboard'
-              ? 'bg-[#35408e] text-white shadow-md shadow-[#35408e]/20'
-              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+              ? 'bg-[#35408e] text-white shadow-xs'
+              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 bg-white border border-gray-200/60'
           }`}
         >
-          <Trophy className="w-4 h-4" />
-          Points Leaderboard
+          <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+          <span>Leaderboard</span>
         </button>
 
         <button
           onClick={() => setActiveTab('feedback')}
-          className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl font-bold text-sm transition-all ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all shrink-0 active:scale-95 whitespace-nowrap ${
             activeTab === 'feedback'
-              ? 'bg-[#35408e] text-white shadow-md shadow-[#35408e]/20'
-              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+              ? 'bg-[#35408e] text-white shadow-xs'
+              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 bg-white border border-gray-200/60'
           }`}
         >
-          <MessageSquareQuote className="w-4 h-4" />
-          Feedback & Surveys
+          <MessageSquareQuote className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+          <span>Feedback & Surveys</span>
         </button>
       </div>
 
       {/* TAB 1: MASTER ROSTER EXPORT */}
       {activeTab === 'roster' && (
         <Card className="border-gray-100 shadow-sm rounded-2xl overflow-hidden bg-white">
-          <CardHeader className="bg-gradient-to-r from-blue-50/50 via-white to-transparent border-b border-gray-100 pb-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 rounded-xl bg-[#35408e]/10 text-[#35408e] flex items-center justify-center">
-                    <Users className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-xl font-bold text-gray-900">Master Membership Roster</CardTitle>
-                    <CardDescription className="text-xs">
-                      Export active, pending, or filtered member lists with full academic and committee assignments.
-                    </CardDescription>
-                  </div>
+          <CardHeader className="bg-gradient-to-r from-blue-50/50 via-white to-transparent border-b border-gray-100 p-4 sm:p-6 pb-4 sm:pb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-100 text-[#35408e] flex items-center justify-center shrink-0">
+                  <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                <div className="min-w-0">
+                  <CardTitle className="text-base sm:text-xl font-bold text-gray-900 leading-tight">Master Membership Roster</CardTitle>
+                  <CardDescription className="text-xs text-gray-500 mt-0.5">
+                    Export active, pending, or filtered member lists.
+                  </CardDescription>
                 </div>
               </div>
               <Button
                 onClick={handleExportRoster}
                 disabled={isExportingRoster || filteredUsers.length === 0}
-                className="bg-[#35408e] hover:bg-[#28316d] text-white font-bold h-11 px-6 rounded-xl shadow-md gap-2"
+                className="bg-[#35408e] hover:bg-[#28316d] text-white font-bold h-10 sm:h-11 px-4 sm:px-6 rounded-xl shadow-xs gap-2 w-full sm:w-auto text-xs sm:text-sm active:scale-95 transition-all shrink-0"
               >
                 {isExportingRoster ? (
                   <>
@@ -515,86 +513,86 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                 ) : (
                   <>
                     <Download className="w-4 h-4" />
-                    Export {filteredUsers.length} Records to CSV
+                    Export {filteredUsers.length} Records
                   </>
                 )}
               </Button>
             </div>
           </CardHeader>
-
-          <CardContent className="p-6 space-y-6">
+          <CardContent className="p-4 sm:p-6 space-y-5">
             {/* Filter Toolbar */}
-            <div className="p-4 bg-gray-50/80 rounded-2xl border border-gray-100 space-y-4">
+            <div className="p-3.5 sm:p-4 bg-gray-50/80 rounded-2xl border border-gray-100 space-y-3">
               <div className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                <Filter className="w-3.5 h-3.5" />
-                Customize Export Dataset
+                <Filter className="w-3.5 h-3.5 text-[#35408e]" />
+                <span>Customize Export Dataset</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-                {/* Search */}
-                <div className="relative sm:col-span-2 lg:col-span-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <Input
-                    placeholder="Search name, ID, student #..."
-                    value={rosterSearch}
-                    onChange={(e) => setRosterSearch(e.target.value)}
-                    className="pl-9 h-10 bg-white border-gray-200 text-xs"
-                  />
-                </div>
+              {/* Search */}
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Input
+                  placeholder="Search name, ID, student #..."
+                  value={rosterSearch}
+                  onChange={(e) => setRosterSearch(e.target.value)}
+                  className="pl-9 h-10 bg-white border-gray-200 text-xs sm:text-sm rounded-xl shadow-xs"
+                />
+              </div>
 
-                {/* Status Filter */}
+              {/* 4 Responsive Dropdown Filters */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
                 <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Status</label>
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="w-full h-10 px-3 bg-white border border-gray-200 rounded-lg text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#35408e]"
+                    className="w-full h-9 px-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#35408e]/20"
                   >
-                    <option value="all">All (Active & Pending)</option>
-                    <option value="active">Active Members Only</option>
-                    <option value="pending">Pending Accounts</option>
+                    <option value="all">All Statuses</option>
+                    <option value="active">Active Members</option>
+                    <option value="pending">Pending</option>
                   </select>
                 </div>
 
-                {/* Program Filter */}
                 <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Program</label>
                   <select
                     value={programFilter}
                     onChange={(e) => setProgramFilter(e.target.value)}
-                    className="w-full h-10 px-3 bg-white border border-gray-200 rounded-lg text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#35408e]"
+                    className="w-full h-9 px-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#35408e]/20"
                   >
                     <option value="all">All Programs</option>
-                    <option value="BS Accountancy">BS Accountancy</option>
-                    <option value="BS Management Accounting">BS Management Accounting</option>
-                    <option value="BS Business Administration">BS Business Administration</option>
+                    <option value="BS Accountancy">BSA</option>
+                    <option value="BS Management Accounting">BSMA</option>
+                    <option value="BS Business Administration">BSBA</option>
                   </select>
                 </div>
 
-                {/* Year Level Filter */}
                 <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Year Level</label>
                   <select
                     value={yearFilter}
                     onChange={(e) => setYearFilter(e.target.value)}
-                    className="w-full h-10 px-3 bg-white border border-gray-200 rounded-lg text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#35408e]"
+                    className="w-full h-9 px-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#35408e]/20"
                   >
-                    <option value="all">All Year Levels</option>
+                    <option value="all">All Years</option>
                     <option value="1st Year">1st Year</option>
                     <option value="2nd Year">2nd Year</option>
                     <option value="3rd Year">3rd Year</option>
                     <option value="4th Year">4th Year</option>
                     <option value="5th Year">5th Year</option>
-                    <option value="Extended Year">Extended Year</option>
+                    <option value="Extended Year">Extended</option>
                   </select>
                 </div>
 
-                {/* Committee Filter */}
                 <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Committee</label>
                   <select
                     value={committeeFilter}
                     onChange={(e) => setCommitteeFilter(e.target.value)}
-                    className="w-full h-10 px-3 bg-white border border-gray-200 rounded-lg text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#35408e]"
+                    className="w-full h-9 px-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#35408e]/20"
                   >
                     <option value="all">All Committees</option>
-                    <option value="None">None (General Member)</option>
+                    <option value="None">None (General)</option>
                     <option value="Academics">Academics</option>
                     <option value="Non-Academics">Non-Academics</option>
                     <option value="Membership">Membership</option>
@@ -610,47 +608,47 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
 
             {/* Live Preview List */}
             <div>
-              <div className="flex items-center justify-between mb-3 text-xs font-bold text-gray-500">
-                <span>Dataset Preview ({filteredUsers.length} records selected)</span>
+              <div className="flex items-center justify-between mb-2.5 text-xs font-bold text-gray-500">
+                <span>Dataset Preview ({filteredUsers.length} records)</span>
                 {filteredUsers.length > 5 && (
-                  <span>Showing first 5 of {filteredUsers.length}</span>
+                  <span className="text-[11px] text-gray-400 font-normal">Top 5 displayed</span>
                 )}
               </div>
 
               {filteredUsers.length === 0 ? (
-                <div className="p-8 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200 text-gray-400 text-sm">
+                <div className="p-6 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200 text-gray-400 text-xs">
                   No members match your selected filters.
                 </div>
               ) : (
-                <div className="divide-y divide-gray-100 border border-gray-100 rounded-xl overflow-hidden bg-white">
+                <div className="divide-y divide-gray-100 border border-gray-100 rounded-2xl overflow-hidden bg-white shadow-xs">
                   {filteredUsers.slice(0, 5).map((user) => (
-                    <div key={user.id || user.student_no} className="p-3.5 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#35408e]/10 text-[#35408e] font-bold text-xs flex items-center justify-center">
+                    <div key={user.id || user.student_no} className="p-3 sm:p-3.5 flex items-center justify-between gap-2 hover:bg-gray-50 transition-colors">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="w-8 h-8 rounded-full bg-[#35408e]/10 text-[#35408e] font-bold text-xs flex items-center justify-center shrink-0">
                           {user.full_name?.charAt(0) || 'U'}
                         </div>
-                        <div>
-                          <div className="font-bold text-sm text-gray-900 leading-tight">{user.full_name}</div>
-                          <div className="text-[11px] text-gray-500 font-mono mt-0.5">
-                            {user.member_id || 'Pending ID'} &middot; {user.student_no}
+                        <div className="min-w-0">
+                          <div className="font-bold text-xs sm:text-sm text-gray-900 leading-tight truncate">{user.full_name}</div>
+                          <div className="text-[10px] text-gray-500 font-mono mt-0.5 truncate">
+                            {user.member_id || 'Pending'} &middot; {user.student_no}
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-[10px] bg-gray-50 text-gray-600 border-gray-200">
-                          {user.program || 'No Program'}
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <Badge variant="outline" className="text-[9px] sm:text-[10px] bg-gray-50 text-gray-600 border-gray-200 px-1.5 py-0">
+                          {user.program ? user.program.replace('BS ', '') : 'General'}
                         </Badge>
                         <Badge
                           variant="outline"
-                          className={
+                          className={`text-[9px] sm:text-[10px] px-1.5 py-0 capitalize ${
                             user.account_status === 'active'
-                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px]'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                               : user.account_status === 'pending'
-                              ? 'bg-amber-50 text-amber-700 border-amber-200 text-[10px]'
-                              : 'bg-red-50 text-red-700 border-red-200 text-[10px]'
-                          }
+                              ? 'bg-amber-50 text-amber-700 border-amber-200'
+                              : 'bg-red-50 text-red-700 border-red-200'
+                          }`}
                         >
-                          {user.account_status?.toUpperCase()}
+                          {user.account_status || 'Active'}
                         </Badge>
                       </div>
                     </div>
@@ -665,16 +663,16 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
       {/* TAB 2: EVENT ATTENDANCE & RSVPS */}
       {activeTab === 'attendance' && (
         <Card className="border-gray-100 shadow-sm rounded-2xl overflow-hidden bg-white">
-          <CardHeader className="bg-gradient-to-r from-amber-50/50 via-white to-transparent border-b border-gray-100 pb-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-xl bg-[#fbb03b]/20 text-[#fbb03b] flex items-center justify-center">
-                  <ClipboardList className="w-5 h-5 text-amber-700" />
+          <CardHeader className="bg-gradient-to-r from-amber-50/50 via-white to-transparent border-b border-gray-100 p-4 sm:p-6 pb-4 sm:pb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+                  <ClipboardList className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div>
-                  <CardTitle className="text-xl font-bold text-gray-900">Event Attendance & RSVPs</CardTitle>
-                  <CardDescription className="text-xs">
-                    Export consolidated registration logs, Time In timestamps, Time Out timestamps, and scanning officers.
+                <div className="min-w-0">
+                  <CardTitle className="text-base sm:text-xl font-bold text-gray-900 leading-tight">Event Attendance & RSVPs</CardTitle>
+                  <CardDescription className="text-xs text-gray-500 mt-0.5">
+                    Export registration logs and timestamps.
                   </CardDescription>
                 </div>
               </div>
@@ -684,19 +682,19 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                   placeholder="Search events..."
                   value={eventSearch}
                   onChange={(e) => setEventSearch(e.target.value)}
-                  className="pl-9 h-10 bg-white border-gray-200 text-xs"
+                  className="pl-9 h-10 bg-white border-gray-200 text-xs sm:text-sm rounded-xl shadow-xs"
                 />
               </div>
             </div>
           </CardHeader>
 
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             {filteredEventsForAttendance.length === 0 ? (
               <div className="p-12 text-center text-gray-400 text-sm">
                 No events found matching your search.
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 {filteredEventsForAttendance.map((ev) => {
                   const effectiveStatus = getEventStatus(ev)
                   const isExportingThis = exportingEventId === ev.id
@@ -704,9 +702,9 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                   return (
                     <div
                       key={ev.id}
-                      className="bg-white border border-gray-100 rounded-2xl p-5 hover:border-[#35408e]/30 hover:shadow-md transition-all flex flex-col justify-between gap-4 group"
+                      className="bg-white border border-gray-100 rounded-2xl p-4 sm:p-5 hover:border-[#35408e]/30 hover:shadow-xs transition-all flex flex-col justify-between gap-3 sm:gap-4 group"
                     >
-                      <div className="space-y-2">
+                      <div className="space-y-1.5 sm:space-y-2">
                         <div className="flex items-center justify-between gap-2">
                           <Badge
                             variant="secondary"
@@ -724,18 +722,12 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                             {new Date(ev.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                           </span>
                         </div>
-                        <h3 className="font-bold text-base text-gray-900 group-hover:text-[#35408e] transition-colors line-clamp-1">
+                        <h3 className="font-bold text-sm sm:text-base text-gray-900 group-hover:text-[#35408e] transition-colors line-clamp-1">
                           {ev.title}
                         </h3>
-                        <div className="flex flex-wrap gap-2 pt-1 text-xs">
-                          <span className="bg-gray-50 border border-gray-100 text-gray-600 px-2 py-0.5 rounded-md font-medium">
-                            {ev.rsvpCount || 0} RSVPs
-                          </span>
-                          <span className="bg-amber-50 border border-amber-100 text-amber-800 px-2 py-0.5 rounded-md font-medium">
+                        <div className="pt-0.5 text-xs">
+                          <span className="bg-gray-100 border border-gray-200 text-gray-700 px-2 py-0.5 rounded-md font-medium text-[11px]">
                             {ev.attendanceCount || 0} Attended
-                          </span>
-                          <span className="bg-[#35408e]/5 border border-[#35408e]/10 text-[#35408e] px-2 py-0.5 rounded-md font-medium">
-                            {ev.points_awarded || 0} pts
                           </span>
                         </div>
                       </div>
@@ -770,23 +762,23 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
       {/* TAB 3: POINTS & LEADERBOARD */}
       {activeTab === 'leaderboard' && (
         <Card className="border-gray-100 shadow-sm rounded-2xl overflow-hidden bg-white">
-          <CardHeader className="bg-gradient-to-r from-yellow-50/50 via-white to-transparent border-b border-gray-100 pb-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-xl bg-yellow-100 text-yellow-700 flex items-center justify-center">
-                  <Trophy className="w-5 h-5" />
+          <CardHeader className="bg-gradient-to-r from-yellow-50/50 via-white to-transparent border-b border-gray-100 p-4 sm:p-6 pb-4 sm:pb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-yellow-100 text-yellow-800 flex items-center justify-center shrink-0">
+                  <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div>
-                  <CardTitle className="text-xl font-bold text-gray-900">Points & Engagement Leaderboard</CardTitle>
-                  <CardDescription className="text-xs">
-                    Download official rankings, accumulated points, and membership reward tier breakdown.
+                <div className="min-w-0">
+                  <CardTitle className="text-base sm:text-xl font-bold text-gray-900 leading-tight">Points & Engagement Leaderboard</CardTitle>
+                  <CardDescription className="text-xs text-gray-500 mt-0.5">
+                    Download official rankings and accumulated points.
                   </CardDescription>
                 </div>
               </div>
               <Button
                 onClick={handleExportLeaderboard}
                 disabled={isExportingLeaderboard}
-                className="bg-[#35408e] hover:bg-[#28316d] text-white font-bold h-11 px-6 rounded-xl shadow-md gap-2"
+                className="bg-[#35408e] hover:bg-[#28316d] text-white font-bold h-10 sm:h-11 px-4 sm:px-6 rounded-xl shadow-xs gap-2 w-full sm:w-auto text-xs sm:text-sm active:scale-95 transition-all shrink-0"
               >
                 {isExportingLeaderboard ? (
                   <>
@@ -803,42 +795,42 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
             </div>
           </CardHeader>
 
-          <CardContent className="p-6 space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="p-4 rounded-2xl bg-yellow-50/60 border border-yellow-100 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-yellow-400 text-white font-black text-sm flex items-center justify-center shadow-sm">
+          <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4">
+              <div className="p-2 sm:p-3.5 rounded-2xl bg-yellow-50/60 border border-yellow-100 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-1.5 sm:gap-3">
+                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-yellow-400 text-white font-black text-xs sm:text-sm flex items-center justify-center shadow-xs shrink-0">
                   🥇
                 </div>
-                <div>
-                  <div className="font-bold text-sm text-yellow-900">Gold Tier</div>
-                  <div className="text-[11px] text-yellow-700 font-medium">151+ Points</div>
+                <div className="min-w-0">
+                  <div className="font-bold text-xs sm:text-sm text-yellow-900 truncate">Gold</div>
+                  <div className="text-[10px] sm:text-[11px] text-yellow-700 font-medium truncate">151+ pts</div>
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-slate-400 text-white font-black text-sm flex items-center justify-center shadow-sm">
+              <div className="p-2 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-1.5 sm:gap-3">
+                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-slate-400 text-white font-black text-xs sm:text-sm flex items-center justify-center shadow-xs shrink-0">
                   🥈
                 </div>
-                <div>
-                  <div className="font-bold text-sm text-slate-800">Silver Tier</div>
-                  <div className="text-[11px] text-slate-600 font-medium">51 - 150 Points</div>
+                <div className="min-w-0">
+                  <div className="font-bold text-xs sm:text-sm text-slate-800 truncate">Silver</div>
+                  <div className="text-[10px] sm:text-[11px] text-slate-600 font-medium truncate">51-150 pts</div>
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-100 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-700 text-white font-black text-sm flex items-center justify-center shadow-sm">
+              <div className="p-2 sm:p-3.5 rounded-2xl bg-amber-50/60 border border-amber-100 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-1.5 sm:gap-3">
+                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-amber-700 text-white font-black text-xs sm:text-sm flex items-center justify-center shadow-xs shrink-0">
                   🥉
                 </div>
-                <div>
-                  <div className="font-bold text-sm text-amber-900">Bronze Tier</div>
-                  <div className="text-[11px] text-amber-700 font-medium">0 - 50 Points</div>
+                <div className="min-w-0">
+                  <div className="font-bold text-xs sm:text-sm text-amber-900 truncate">Bronze</div>
+                  <div className="text-[10px] sm:text-[11px] text-amber-700 font-medium truncate">0-50 pts</div>
                 </div>
               </div>
             </div>
 
-            <div className="p-5 bg-gray-50 rounded-2xl border border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="space-y-1">
-                <h4 className="font-bold text-sm text-gray-900">Complete Points Breakdown</h4>
+            <div className="p-4 sm:p-5 bg-gray-50 rounded-2xl border border-gray-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="space-y-0.5 sm:space-y-1">
+                <h4 className="font-bold text-xs sm:text-sm text-gray-900">Complete Points Breakdown</h4>
                 <p className="text-xs text-gray-500">
                   The generated CSV report will contain all verified members ordered by rank with student IDs, committee assignments, and attended event counts.
                 </p>
@@ -847,7 +839,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                 onClick={handleExportLeaderboard}
                 disabled={isExportingLeaderboard}
                 variant="outline"
-                className="bg-white border-gray-200 text-[#35408e] hover:bg-blue-50 font-bold text-xs h-10 rounded-xl shadow-sm gap-2 whitespace-nowrap"
+                className="bg-white border-gray-200 text-[#35408e] hover:bg-blue-50 font-bold text-xs h-10 rounded-xl shadow-2xs gap-2 whitespace-nowrap w-full sm:w-auto shrink-0"
               >
                 <Download className="w-3.5 h-3.5" />
                 Download Report (.CSV)
@@ -860,16 +852,16 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
       {/* TAB 4: EVENT FEEDBACK & SURVEYS */}
       {activeTab === 'feedback' && (
         <Card className="border-gray-100 shadow-sm rounded-2xl overflow-hidden bg-white">
-          <CardHeader className="bg-gradient-to-r from-purple-50/50 via-white to-transparent border-b border-gray-100 pb-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
-                  <MessageSquareQuote className="w-5 h-5" />
+          <CardHeader className="bg-gradient-to-r from-purple-50/50 via-white to-transparent border-b border-gray-100 p-4 sm:p-6 pb-4 sm:pb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+                  <MessageSquareQuote className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div>
-                  <CardTitle className="text-xl font-bold text-gray-900">Event Feedback & Survey Responses</CardTitle>
-                  <CardDescription className="text-xs">
-                    Export participant evaluation ratings, comments, and answers to custom survey questions for any event.
+                <div className="min-w-0">
+                  <CardTitle className="text-base sm:text-xl font-bold text-gray-900 leading-tight">Event Feedback & Survey Responses</CardTitle>
+                  <CardDescription className="text-xs text-gray-500 mt-0.5">
+                    Export participant evaluation ratings and comments.
                   </CardDescription>
                 </div>
               </div>
@@ -879,7 +871,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                   placeholder="Search events..."
                   value={feedbackEventSearch}
                   onChange={(e) => setFeedbackEventSearch(e.target.value)}
-                  className="pl-9 h-10 bg-white border-gray-200 text-xs"
+                  className="pl-9 h-10 bg-white border-gray-200 text-xs sm:text-sm rounded-xl shadow-xs"
                 />
               </div>
             </div>
@@ -899,13 +891,13 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                   return (
                     <div
                       key={ev.id}
-                      className="bg-white border border-gray-100 rounded-2xl p-5 hover:border-purple-300 hover:shadow-md transition-all flex flex-col justify-between gap-4 group"
+                      className="bg-white border border-gray-100 rounded-2xl p-5 hover:border-gray-200 hover:shadow-md transition-all flex flex-col justify-between gap-4 group"
                     >
                       <div className="space-y-2">
                         <div className="flex items-center justify-between gap-2">
                           <Badge
-                            variant="secondary"
-                            className="bg-purple-50 text-purple-700 border-purple-200 text-[9px] font-bold"
+                            variant="outline"
+                            className="bg-gray-100 text-gray-700 border-gray-200 text-[10px] font-semibold"
                           >
                             {feedbackCount} {feedbackCount === 1 ? 'Response' : 'Responses'}
                           </Badge>
@@ -913,7 +905,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                             {new Date(ev.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                           </span>
                         </div>
-                        <h3 className="font-bold text-base text-gray-900 group-hover:text-purple-700 transition-colors line-clamp-1">
+                        <h3 className="font-bold text-base text-gray-900 group-hover:text-[#35408e] transition-colors line-clamp-1">
                           {ev.title}
                         </h3>
                         <p className="text-xs text-gray-500">
@@ -929,7 +921,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                         variant="outline"
                         className={`w-full font-bold text-xs h-10 rounded-xl transition-all gap-2 ${
                           feedbackCount > 0
-                            ? 'bg-purple-50 hover:bg-purple-600 hover:text-white text-purple-700 border-purple-200'
+                            ? 'bg-gray-50 hover:bg-[#35408e] hover:text-white text-gray-700 border-gray-200'
                             : 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed'
                         }`}
                       >

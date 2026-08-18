@@ -52,10 +52,10 @@ export default async function EventsPage() {
   })
 
   return (
-    <div className="w-full max-w-5xl mx-auto p-4 md:p-8 pb-24 md:pb-8 space-y-10">
+    <div className="w-full max-w-5xl mx-auto p-4 sm:p-6 md:p-8 pb-24 md:pb-8 space-y-6 sm:space-y-8">
       <div className="animate-in fade-in slide-in-from-top-4 duration-500">
-        <h1 className="text-3xl font-black text-gray-900 tracking-tight">Events Board</h1>
-        <p className="text-gray-500 mt-1">Discover organization events and track your participation.</p>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 tracking-tight leading-tight">Events Board</h1>
+        <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Discover organization events and track your participation.</p>
       </div>
 
       {/* 1. ONGOING / HAPPENING NOW SECTION */}

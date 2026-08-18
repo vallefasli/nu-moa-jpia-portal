@@ -2,7 +2,7 @@ import { getAuthenticatedUser, getCurrentUserProfile } from '@/utils/supabase/se
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { User, Mail, BookOpen, GraduationCap, Shield, CalendarDays, Award } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { ProfileUpdateModal } from './ProfileUpdateModal'
 
 export default async function MemberProfilePage() {
   const user = await getAuthenticatedUser()
@@ -15,17 +15,17 @@ export default async function MemberProfilePage() {
   const memberSince = new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 md:p-8 pb-24 md:pb-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="flex flex-col items-center text-center mb-10 pt-4">
+    <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 md:p-8 pb-24 md:pb-8 space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="flex flex-col items-center text-center mb-6 sm:mb-10 pt-2 sm:pt-4">
         <div className="relative">
           <div className="absolute inset-0 bg-[#35408e] blur-2xl opacity-20 rounded-full" />
-          <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-[#35408e] to-[#2a3370] text-white flex items-center justify-center text-4xl font-extrabold shadow-xl ring-8 ring-white relative z-10">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-[#35408e] to-[#2a3370] text-white flex items-center justify-center text-3xl sm:text-4xl font-extrabold shadow-xl ring-4 sm:ring-8 ring-white relative z-10">
             {initials}
           </div>
-          <div className="absolute -bottom-2 -right-2 bg-green-500 w-6 h-6 rounded-full border-4 border-white shadow-sm z-20" />
+          <div className="absolute -bottom-1.5 -right-1.5 sm:-bottom-2 sm:-right-2 bg-green-500 w-5 h-5 sm:w-6 sm:h-6 rounded-full border-4 border-white shadow-sm z-20" />
         </div>
-        <h1 className="text-3xl font-black text-gray-900 tracking-tight mt-6">{profile.full_name}</h1>
-        <p className="text-gray-500 font-mono text-base mt-1">{profile.student_no}</p>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 tracking-tight mt-4 sm:mt-6 leading-tight">{profile.full_name}</h1>
+        <p className="text-gray-500 font-mono text-sm sm:text-base mt-1">{profile.student_no}</p>
         
         <div className="flex gap-2 mt-4 justify-center flex-wrap">
           <Badge className="bg-[#35408e]/10 text-[#35408e] hover:bg-[#35408e]/20 border-none font-bold px-4 py-1.5 shadow-sm">
@@ -104,12 +104,7 @@ export default async function MemberProfilePage() {
         </Card>
       </div>
       
-      <div className="text-center mt-12">
-        <Button variant="outline" className="border-red-100 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-full px-8">
-          Request Profile Update
-        </Button>
-        <p className="text-xs text-gray-400 mt-3 font-medium">To change your personal details, please contact an Administrator.</p>
-      </div>
+      <ProfileUpdateModal profile={profile} />
     </div>
   )
 }

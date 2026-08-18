@@ -72,11 +72,11 @@ export default async function CertificatesPage() {
   })
 
   return (
-    <div className="min-h-full pb-20 p-4 md:p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="min-h-full pb-20 p-4 sm:p-6 md:p-8">
+      <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6">
         <div>
-          <h1 className="text-3xl font-black text-gray-900 tracking-tight">Event Certificates</h1>
-          <p className="text-gray-500 mt-1">Select an event below to distribute certificates to members who submitted feedback.</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 tracking-tight leading-tight">Event Certificates</h1>
+          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Select an event below to distribute certificates to members who submitted feedback.</p>
         </div>
 
         <CertificatesClient events={formattedEvents} />

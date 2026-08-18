@@ -28,8 +28,8 @@ export default async function MemberLayout({
       <MemberSidebar role={profile?.role} />
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto pb-24 md:pb-0 relative w-full h-full bg-[#f8f9fc]">
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out h-full">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden relative w-full h-full bg-[#f8f9fc]">
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out w-full min-h-full pb-28 md:pb-8">
           {children}
         </div>
         <FeedbackWidget userId={user.id} />
