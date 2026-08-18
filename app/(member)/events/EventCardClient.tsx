@@ -212,22 +212,33 @@ export function EventCardClient({
 
               {/* Where */}
               {event.location && (
-                <div className="flex items-start gap-3 flex-1">
-                  <div className="w-9 h-9 rounded-xl bg-[#fbb03b] text-gray-900 flex items-center justify-center shrink-0 shadow-sm">
+                <a 
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-3 flex-1 group/loc transition-all hover:opacity-90 cursor-pointer"
+                  title="Open location in Google Maps"
+                >
+                  <div className="w-9 h-9 rounded-xl bg-[#fbb03b] text-gray-900 flex items-center justify-center shrink-0 shadow-sm group-hover/loc:scale-105 transition-transform">
                     <MapPin className="w-4 h-4" />
                   </div>
-                  <div className="flex-1">
-                    <h5 className="text-xs font-bold text-gray-900">Location</h5>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <h5 className="text-xs font-bold text-gray-900 group-hover/loc:text-[#35408e] transition-colors">Location</h5>
+                      <ExternalLink className="w-3 h-3 text-gray-400 group-hover/loc:text-[#35408e] transition-colors shrink-0" />
+                    </div>
                     <p className="text-xs font-medium text-gray-700 mt-0.5 whitespace-pre-wrap leading-relaxed">{event.location}</p>
                   </div>
-                </div>
+                </a>
               )}
 
               {/* Map Embed */}
               {event.location && (
-                <div 
-                  onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`, '_blank')}
-                  className="w-full lg:w-48 min-h-[72px] rounded-xl overflow-hidden relative shadow-xs border border-gray-200 group/map cursor-pointer bg-gray-100 shrink-0"
+                <a 
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full lg:w-48 min-h-[76px] h-20 rounded-xl overflow-hidden relative shadow-xs border border-gray-200 group/map cursor-pointer bg-gray-100 shrink-0 block transition-all hover:border-[#35408e]/50 hover:shadow-md"
                   title="Click to open in Google Maps"
                 >
                    <iframe
@@ -237,7 +248,7 @@ export function EventCardClient({
                      referrerPolicy="no-referrer-when-downgrade"
                      src={`https://maps.google.com/maps?q=${encodeURIComponent(event.location)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                    ></iframe>
-                </div>
+                </a>
               )}
             </div>
 

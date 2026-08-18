@@ -214,6 +214,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
   
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [locationInput, setLocationInput] = useState('')
 
   const filteredEvents = events.filter(e => e.title.toLowerCase().includes(searchQuery.toLowerCase()))
   
@@ -224,6 +225,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
     setCustomQuestions(event?.custom_feedback_questions || [])
     setThemes(event?.themes || [])
     setThemeInput('')
+    setLocationInput(event?.location || '')
     setPosterPreview(event?.poster_url || null)
     setPosterFile(null)
     setPosterPosition(event?.poster_position || 'center')
@@ -240,6 +242,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
     setCustomQuestions([])
     setThemes([])
     setThemeInput('')
+    setLocationInput('')
     setPosterPreview(null)
     setPosterFile(null)
     setPosterPosition('center')
@@ -483,7 +486,31 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                       <div>
                         <label className="block text-xs sm:text-sm font-bold text-gray-900 mb-1">Location</label>
-                        <Input name="location" defaultValue={editingEvent?.location} required placeholder="e.g. One Ayala, Makati" className="bg-gray-50/70 border-gray-200 h-10 text-xs sm:text-sm rounded-xl" />
+                        <Input 
+                          name="location" 
+                          value={locationInput}
+                          onChange={(e) => setLocationInput(e.target.value)}
+                          required 
+                          placeholder="e.g. One Ayala, Makati" 
+                          className="bg-gray-50/70 border-gray-200 h-10 text-xs sm:text-sm rounded-xl" 
+                        />
+                        {locationInput.trim() && (
+                          <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationInput.trim())}`}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="mt-2 rounded-xl overflow-hidden border border-gray-200 h-24 relative bg-gray-100 block transition-all hover:border-[#35408e]/50 hover:shadow-md cursor-pointer"
+                            title="Click to view in Google Maps"
+                          >
+                            <iframe
+                              style={{ border: 0, pointerEvents: 'none', position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+                              loading="lazy"
+                              allowFullScreen
+                              referrerPolicy="no-referrer-when-downgrade"
+                              src={`https://maps.google.com/maps?q=${encodeURIComponent(locationInput.trim())}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                            />
+                          </a>
+                        )}
                       </div>
                       <div>
                         <label className="block text-xs sm:text-sm font-bold text-gray-900 mb-1">Base Category</label>

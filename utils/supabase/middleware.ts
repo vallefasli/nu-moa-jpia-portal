@@ -60,6 +60,22 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse
   }
 
+  // Protect /admin routes from non-admin users if authenticated
+  if (user && path.startsWith('/admin')) {
+    const { data: profile } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (profile?.role !== 'admin') {
+      if (profile?.role === 'officer') {
+        return NextResponse.redirect(new URL('/scanner', request.url))
+      }
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+  }
+
   // If no user and not an auth route or public route, redirect to login
   if (!user && !isAuthRoute && !isPublicRoute && !path.startsWith('/complete-profile')) {
     if (path.startsWith('/admin')) {

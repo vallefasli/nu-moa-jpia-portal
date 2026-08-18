@@ -32,6 +32,10 @@ export async function completeProfile(prevState: unknown, formData: FormData) {
     return { error: 'Student Email must end with @students.nu-moa.edu.ph' }
   }
 
+  if (!/^\d{4}-\d{6,7}$/.test(student_no)) {
+    return { error: 'Student Number must follow the format YYYY-XXXXXX or YYYY-XXXXXXX (e.g. 2024-123456 or 2024-1234567)' }
+  }
+
   // Update public.users table
   const { error } = await supabase
     .from('users')

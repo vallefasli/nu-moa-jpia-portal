@@ -116,7 +116,7 @@ export function ProfileUpdateModal({ profile }: { profile: any }) {
                   placeholder={
                     field === 'Committee' ? 'e.g. Change to Academics Committee' :
                     field === 'Full Name' ? 'e.g. Correct full name format' :
-                    field === 'Student Number' ? 'e.g. 2024-XXXXX-MN-0' :
+                    field === 'Student Number' ? 'e.g. 2024-1234567' :
                     'Describe the requested new details...'
                   }
                   className="bg-gray-50/70 border-gray-200 h-11 text-xs sm:text-sm rounded-xl font-medium focus:bg-white"

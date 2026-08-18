@@ -303,6 +303,13 @@ function AuthStateSync({ setActiveRole }: { setActiveRole: (role: string) => voi
       window.history.replaceState({}, '', '/?tab=officer')
     }
 
+    if (searchParams.get('error') === 'admin_account') {
+      toast.error('Access Denied', {
+        description: 'Administrator accounts must sign in through the Administrator Portal.'
+      })
+      window.history.replaceState({}, '', '/')
+    }
+
     const tab = searchParams.get('tab')
     if (tab && ['member', 'officer'].includes(tab)) {
       setActiveRole(tab)

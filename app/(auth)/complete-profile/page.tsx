@@ -201,12 +201,12 @@ export default function CompleteProfilePage() {
                     <Input 
                       id="student_no" 
                       name="student_no" 
-                      placeholder="2024-123456" 
+                      placeholder="2024-1234567" 
                       required 
                       value={studentNo}
                       onChange={e => setStudentNo(e.target.value)}
-                      pattern="^\d{4}-\d{6}$"
-                      title="Format: 202X-XXXXXX"
+                      pattern="^\d{4}-\d{6,7}$"
+                      title="Format: 202X-XXXXXX or 202X-XXXXXXX (e.g. 2024-1234567)"
                       className="pl-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#35408e] focus:ring-2 focus:ring-[#35408e]/15 transition-all font-mono"
                     />
                   </div>

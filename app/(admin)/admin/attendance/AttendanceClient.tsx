@@ -486,7 +486,7 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
                   <div>
                     <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Student Number</label>
                     <Input 
-                      placeholder="e.g. 2024-123456" 
+                      placeholder="e.g. 2024-1234567" 
                       className="bg-gray-50/70 rounded-xl text-sm h-10"
                       value={overrideStudentNo}
                       onChange={e => setOverrideStudentNo(e.target.value)}

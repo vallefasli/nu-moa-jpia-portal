@@ -38,14 +38,26 @@ export async function login(prevState: any, formData: FormData): Promise<AuthSta
   const status = profile?.account_status || 'pending'
 
   // Verify role permissions
-  if (requestedRole === 'officer' && actualRole !== 'officer' && actualRole !== 'admin') {
+  if (requestedRole === 'admin' && actualRole !== 'admin') {
     await supabase.auth.signOut()
     return { 
-      error: `You do not have officer privileges.` 
+      error: 'You do not have administrator privileges.' 
     }
   }
 
+  if (requestedRole !== 'admin' && actualRole === 'admin') {
+    await supabase.auth.signOut()
+    return { 
+      error: 'Administrator accounts must sign in through the Administrator Portal.' 
+    }
+  }
 
+  if (requestedRole === 'officer' && actualRole !== 'officer') {
+    await supabase.auth.signOut()
+    return { 
+      error: 'You do not have officer privileges.' 
+    }
+  }
 
   (await cookies()).set('active_role', requestedRole, { path: '/' })
 

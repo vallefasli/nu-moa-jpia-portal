@@ -37,8 +37,14 @@ export async function GET(request: Request) {
 
       console.log('Profile complete, redirecting to app')
       
+      // Admin accounts cannot sign in via public member/officer OAuth
+      if (profile.role === 'admin') {
+        await supabase.auth.signOut()
+        return NextResponse.redirect(`${origin}/?error=admin_account`)
+      }
+
       // Verify role permissions if they requested to log in as an officer
-      if (loginRole === 'officer' && profile.role !== 'officer' && profile.role !== 'admin') {
+      if (loginRole === 'officer' && profile.role !== 'officer') {
         await supabase.auth.signOut()
         return NextResponse.redirect(`${origin}/?error=not_officer&tab=officer`)
       }
@@ -46,8 +52,6 @@ export async function GET(request: Request) {
       let redirectPath = next
       if (profile.account_status === 'pending') {
         redirectPath = '/pending'
-      } else if (profile.role === 'admin') {
-        redirectPath = '/admin/verification'
       } else if (profile.role === 'officer' && loginRole === 'officer') {
         redirectPath = '/scanner'
       } else {
