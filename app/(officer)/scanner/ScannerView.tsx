@@ -164,12 +164,12 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
         {selectedEvent ? (
           <>
             {/* Event Selector */}
-            <Card className="border-gray-200 shadow-sm">
-              <CardContent className="p-4 flex items-center gap-4">
-                <div className="p-2 bg-yellow-100 rounded-lg text-[#fbb03b]">
+            <Card className="border-gray-200/80 shadow-xs rounded-2xl bg-white">
+              <CardContent className="p-4 flex items-center gap-3.5">
+                <div className="p-2.5 bg-[#fbb03b]/15 rounded-xl text-[#fbb03b]">
                   <CalendarDays className="w-5 h-5" />
                 </div>
-                <div className="flex-1 text-lg font-bold text-gray-900">
+                <div className="flex-1 text-base sm:text-lg font-bold text-gray-900 truncate">
                   {activeEvents.find(ev => ev.id === selectedEvent)?.title || "No active event"}
                 </div>
               </CardContent>
@@ -179,16 +179,15 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
             <QrScanner eventId={selectedEvent} onScanComplete={handleScanComplete} />
 
             {/* Manual Fallback with Autocomplete */}
-            <Card className="border-gray-200 shadow-sm overflow-visible">
-              <div className="h-1 bg-gradient-to-r from-gray-200 to-gray-300" />
-              <CardContent className="p-5 overflow-visible">
-                <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">Manual Fallback Search</p>
-                <form onSubmit={handleManualSubmit} className="relative flex gap-3">
+            <Card className="border-gray-200/80 shadow-xs rounded-2xl bg-white overflow-visible">
+              <CardContent className="p-5 overflow-visible space-y-3">
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Manual Fallback Search</p>
+                <form onSubmit={handleManualSubmit} className="relative flex gap-2.5">
                   <div className="relative flex-1">
-                    <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                    <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-gray-400" />
                     <Input 
                       placeholder="Search by Name or Student No..." 
-                      className="pl-10 h-11 bg-gray-50 border-gray-200"
+                      className="pl-10 h-11 bg-gray-50/70 border-gray-200 rounded-xl text-sm focus-visible:ring-1 focus-visible:ring-[#35408e]"
                       value={manualQuery}
                       onChange={e => setManualQuery(e.target.value)}
                       autoComplete="off"
@@ -196,7 +195,7 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
                     
                     {/* Autocomplete Dropdown */}
                     {manualQuery.length >= 2 && searchResults.length > 0 && (
-                      <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden max-h-60 overflow-y-auto">
+                      <div className="absolute top-full left-0 right-0 mt-1.5 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden max-h-60 overflow-y-auto divide-y divide-gray-50">
                         {searchResults.map((user) => (
                           <button
                             key={user.id}
@@ -205,16 +204,19 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
                               setManualQuery(user.student_no)
                               handleManualSubmit(undefined, user.student_no)
                             }}
-                            className="w-full flex flex-col items-start px-4 py-3 hover:bg-gray-50 border-b border-gray-50 last:border-0 transition-colors"
+                            className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors text-left group"
                           >
-                            <span className="font-bold text-gray-900 text-sm">{user.full_name}</span>
-                            <span className="text-xs text-gray-500 font-mono">{user.student_no}</span>
+                            <div>
+                              <span className="font-bold text-gray-900 text-sm block group-hover:text-[#35408e] transition-colors">{user.full_name}</span>
+                              <span className="text-xs text-gray-400 font-mono">{user.student_no}</span>
+                            </div>
+                            <span className="text-xs font-semibold text-[#35408e] bg-blue-50 px-2.5 py-1 rounded-md">Check In</span>
                           </button>
                         ))}
                       </div>
                     )}
                   </div>
-                  <Button type="submit" className="h-11 px-8 bg-gray-900 hover:bg-gray-800">
+                  <Button type="submit" className="h-11 px-7 bg-[#35408e] hover:bg-[#2a3370] text-white rounded-xl font-bold transition-all shadow-xs">
                     Submit
                   </Button>
                 </form>
@@ -222,9 +224,9 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
             </Card>
           </>
         ) : (
-          <Card className="border-gray-200 shadow-sm bg-gray-50/50">
+          <Card className="border-gray-200/80 shadow-xs bg-gray-50/50 rounded-2xl">
             <CardContent className="p-12 flex flex-col items-center justify-center text-center">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-gray-400">
+              <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mb-4 text-gray-400">
                 <CalendarDays className="w-8 h-8" />
               </div>
               <h3 className="text-lg font-bold text-gray-900">No events available at the moment</h3>
@@ -238,18 +240,18 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
 
       {/* Live Feed (Right Column) */}
       <div className="lg:col-span-5">
-        <Card className="h-full max-h-[800px] flex flex-col border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-          <CardHeader className="border-b border-gray-100 bg-gray-50/50 pb-4">
+        <Card className="h-full max-h-[800px] flex flex-col border-gray-200/80 shadow-xs rounded-2xl bg-white overflow-hidden">
+          <CardHeader className="border-b border-gray-100 bg-gray-50/50 p-4 sm:p-5">
             <div className="flex justify-between items-center">
-              <CardTitle className="text-lg font-bold flex items-center gap-2">
-                <Activity className="w-5 h-5 text-blue-500" /> Live Feed
+              <CardTitle className="text-base font-bold flex items-center gap-2 text-gray-900">
+                <Activity className="w-4 h-4 text-[#35408e]" /> Live Feed
               </CardTitle>
               {isPending && <Loader2 className="w-4 h-4 animate-spin text-gray-400" />}
             </div>
-            <p className="text-xs text-gray-500 font-medium">Headcount (Recent): {Math.max(0, headcount)}</p>
+            <p className="text-xs text-gray-500 font-medium mt-1">Headcount (Recent): <span className="font-bold text-gray-900">{Math.max(0, headcount)}</span></p>
           </CardHeader>
           <CardContent className="flex-1 overflow-y-auto p-0">
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-gray-100">
               {!selectedEvent ? (
                 <div className="p-8 text-center text-gray-400 text-sm">
                   Waiting for an active event...
@@ -260,19 +262,19 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
                 </div>
               ) : (
                 filteredFeed.map((entry: any) => (
-                  <div key={entry.id} className="p-4 hover:bg-gray-50 transition-colors animate-in fade-in slide-in-from-left-2 duration-300">
+                  <div key={entry.id} className="p-4 hover:bg-gray-50/80 transition-colors animate-in fade-in slide-in-from-left-2 duration-300">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-bold text-gray-900">{entry.users?.full_name}</p>
-                        <p className="text-xs font-mono text-gray-500 mt-0.5">{entry.users?.student_no}</p>
+                        <p className="font-bold text-gray-900 text-sm">{entry.users?.full_name}</p>
+                        <p className="text-xs font-mono text-gray-400 mt-0.5">{entry.users?.student_no}</p>
                       </div>
-                      <div className={`px-2 py-1 rounded text-[10px] font-black tracking-widest ${entry.type === 'time_in' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                      <div className={`px-2.5 py-0.5 rounded-lg text-[10px] font-black tracking-wider uppercase ${entry.type === 'time_in' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' : 'bg-amber-50 text-amber-700 border border-amber-200/60'}`}>
                         {entry.type === 'time_in' ? 'TIME IN' : 'TIME OUT'}
                       </div>
                     </div>
                     <div className="mt-2 flex justify-between items-end">
-                      <div className="text-[10px] text-gray-400 font-medium uppercase tracking-wider flex gap-4">
-                        <span>{new Date(entry.timestamp).toLocaleTimeString()}</span>
+                      <div className="text-[11px] text-gray-400 font-medium flex gap-3">
+                        <span>{new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
                         <span title={`Recorded by: ${entry.officer?.full_name || 'System Admin'}`}>
                           Recorded by: {(() => {
                             const name = entry.officer?.full_name
@@ -286,7 +288,7 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
                       <Button 
                         variant="ghost" 
                         size="icon" 
-                        className="h-6 w-6 text-red-400 hover:text-red-600 hover:bg-red-50"
+                        className="h-7 w-7 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
                         onClick={() => handleDeleteScan(entry.id, entry.users?.full_name)}
                         disabled={isPending}
                       >

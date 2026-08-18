@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/server'
+import { getAuthenticatedUser, getCurrentUserProfile } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { MemberSidebar } from './MemberNav'
 import { FeedbackWidget } from './components/FeedbackWidget'
@@ -9,16 +9,10 @@ export default async function MemberLayout({
 }: {
   children: React.ReactNode
 }) {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthenticatedUser()
   if (!user) redirect('/')
 
-  const { data: profile } = await supabase
-    .from('users')
-    .select('account_status, role')
-    .eq('id', user.id)
-    .single()
+  const profile = await getCurrentUserProfile(user.id)
 
   if (profile?.role === 'admin') {
     redirect('/admin/verification')

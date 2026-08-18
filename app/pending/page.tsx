@@ -24,12 +24,12 @@ export default function PendingVerificationPage() {
             <strong>Officer Approval:</strong> Your email is verified, but an administrator must review your student details before you can access the dashboard. 
           </p>
           <p className="mb-6 text-left w-full">
-            You will be able to log in normally once your account is activated by an officer.
+            You will be able to sign in normally once your account is activated by an officer.
           </p>
           
           <LogoutDialog>
             <Button variant="outline">
-              Log Out
+              Sign Out
             </Button>
           </LogoutDialog>
         </CardContent>

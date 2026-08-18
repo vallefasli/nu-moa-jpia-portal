@@ -1,26 +1,30 @@
-import { createClient } from '@/utils/supabase/server'
+import { createClient, getAuthenticatedUser } from '@/utils/supabase/server'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { CalendarDays, Clock, MapPin, Users, Trophy, Radio } from 'lucide-react'
 import { EventCardClient } from './EventCardClient'
 
 export default async function EventsPage() {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthenticatedUser()
   if (!user) return null
 
-  const { data: events } = await supabase
-    .from('events')
-    .select('*')
-    .order('date', { ascending: true })
-    .order('time_start', { ascending: true })
+  const supabase = await createClient()
 
-  // Fetch the current user's RSVPs
-  const { data: rsvps } = await supabase
-    .from('event_rsvps')
-    .select('event_id')
-    .eq('user_id', user.id)
+  // Fetch events and current user's RSVPs in parallel
+  const [eventsRes, rsvpsRes] = await Promise.all([
+    supabase
+      .from('events')
+      .select('*')
+      .order('date', { ascending: true })
+      .order('time_start', { ascending: true }),
+    supabase
+      .from('event_rsvps')
+      .select('event_id')
+      .eq('user_id', user.id)
+  ])
+
+  const events = eventsRes.data
+  const rsvps = rsvpsRes.data
 
   const userRsvpEventIds = new Set(rsvps?.map(r => r.event_id) || [])
 
@@ -48,7 +52,7 @@ export default async function EventsPage() {
   })
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 md:p-8 pb-24 md:pb-8 space-y-10">
+    <div className="w-full max-w-5xl mx-auto p-4 md:p-8 pb-24 md:pb-8 space-y-10">
       <div className="animate-in fade-in slide-in-from-top-4 duration-500">
         <h1 className="text-3xl font-black text-gray-900 tracking-tight">Events Board</h1>
         <p className="text-gray-500 mt-1">Discover organization events and track your participation.</p>

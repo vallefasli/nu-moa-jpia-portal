@@ -1,15 +1,15 @@
-import { createClient } from '@/utils/supabase/server'
+import { createClient, getAuthenticatedUser, getCurrentUserProfile } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { EventManagementClient } from './EventManagementClient'
 
 export default async function EventsPage() {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthenticatedUser()
   if (!user) redirect('/')
 
-  const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single()
+  const profile = await getCurrentUserProfile(user.id)
   if (profile?.role !== 'admin' && profile?.role !== 'officer') redirect('/')
+
+  const supabase = await createClient()
 
   const { data: events } = await supabase
     .from('events')

@@ -171,7 +171,7 @@ function LoginForm({ role }: { role: string }) {
             onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
             className="font-medium text-[#35408e] hover:underline"
           >
-            {mode === 'login' ? 'Sign up' : 'Sign in'}
+            {mode === 'login' ? 'Sign Up' : 'Sign In'}
           </button>
         </div>
       )}
@@ -185,7 +185,7 @@ function AuthStateSync({ setActiveRole }: { setActiveRole: (role: string) => voi
   useEffect(() => {
     if (searchParams.get('expired') === 'true') {
       toast.error('Session Expired', {
-        description: 'You have been logged out due to inactivity.'
+        description: 'You have been signed out due to inactivity.'
       })
       // Clean up the URL
       window.history.replaceState({}, '', '/')
@@ -232,7 +232,7 @@ export default function LoginPage() {
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center text-[#35408e]">Welcome Back</CardTitle>
           <CardDescription className="text-center">
-            Select your role to sign in to the portal
+            Select your role to Sign In to the portal
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -263,8 +263,8 @@ export default function LoginPage() {
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
           {activeRole === 'member' ? (
-            <div className="text-sm text-gray-500 text-center w-full">
-              Sign in or sign up securely using your personal Google or Microsoft account.
+            <div className="text-xs text-gray-500 text-center w-full">
+              Sign In or Sign Up using your personal Google or Microsoft account.
             </div>
           ) : (
             <div className="text-xs text-gray-500 text-center w-full bg-gray-100 p-2.5 rounded-md border border-gray-200">

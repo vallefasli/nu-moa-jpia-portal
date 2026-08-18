@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/server'
+import { getAuthenticatedUser, getCurrentUserProfile } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { ScanLine, LogOut, FileBadge, User } from 'lucide-react'
@@ -11,17 +11,10 @@ export default async function OfficerLayout({
 }: {
   children: React.ReactNode
 }) {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthenticatedUser()
   if (!user) redirect('/')
 
-  const { data: profile } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getCurrentUserProfile(user.id)
   const role = profile?.role
 
   if (role !== 'officer' && role !== 'admin') {
@@ -34,8 +27,8 @@ export default async function OfficerLayout({
       <OfficerNav role={role} />
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto relative w-full h-full bg-[#f8f9fc]">
-        <div className="h-full">
+      <main className="flex-1 overflow-y-auto pb-24 md:pb-0 relative w-full h-full bg-[#f8f9fc]">
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out h-full">
           {children}
         </div>
       </main>

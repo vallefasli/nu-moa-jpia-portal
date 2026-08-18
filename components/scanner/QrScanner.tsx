@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode'
+import { Html5Qrcode } from 'html5-qrcode'
 import { processScan } from '@/app/(officer)/scanner/actions'
-import { Camera, RefreshCw, Zap, ZapOff, CheckCircle2, XCircle } from 'lucide-react'
+import { RefreshCw, Zap, ZapOff, CheckCircle2, XCircle, Volume2, VolumeX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -12,11 +12,41 @@ interface QrScannerProps {
   onScanComplete?: () => void
 }
 
+const isRearCamera = (device?: { id: string, label: string }) => {
+  if (!device) return false
+  const l = device.label.toLowerCase()
+  return (
+    l.includes('back') || 
+    l.includes('rear') || 
+    l.includes('environment') || 
+    l.includes('facing back') ||
+    l.includes('main') ||
+    l.includes('wide') ||
+    l.includes('triple') ||
+    l.includes('dual')
+  )
+}
+
+const isFrontCamera = (device?: { id: string, label: string }) => {
+  if (!device) return true
+  const l = device.label.toLowerCase()
+  if (isRearCamera(device)) return false
+  return (
+    l.includes('front') || 
+    l.includes('user') || 
+    l.includes('facetime') || 
+    l.includes('selfie') || 
+    l.includes('integrated') || 
+    l.includes('built-in')
+  )
+}
+
 export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
   const [scanner, setScanner] = useState<Html5Qrcode | null>(null)
   const [isScanning, setIsScanning] = useState(true)
   const [cameras, setCameras] = useState<{ id: string, label: string }[]>([])
   const [currentCameraIdx, setCurrentCameraIdx] = useState(0)
+  const [isMirrored, setIsMirrored] = useState(false)
   const [torchEnabled, setTorchEnabled] = useState(false)
   const [torchSupported, setTorchSupported] = useState(false)
   const [overlay, setOverlay] = useState<{ visible: boolean, success: boolean, data: any, message?: string }>({ visible: false, success: false, data: null })
@@ -42,12 +72,12 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
   }
 
   const triggerSuccessFeedback = () => {
-    playTone(880, 'sine', 0.5) // High chime
+    playTone(880, 'sine', 0.4) // High chime
     if (navigator.vibrate) navigator.vibrate([100])
   }
 
   const triggerErrorFeedback = () => {
-    playTone(220, 'square', 0.5) // Low buzz
+    playTone(220, 'square', 0.4) // Low buzz
     if (navigator.vibrate) navigator.vibrate([200, 100, 200])
   }
 
@@ -72,9 +102,18 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
     eventIdRef.current = eventId
   }, [eventId])
 
+  const clearDomContainer = () => {
+    const el = document.getElementById("qr-reader")
+    if (el) {
+      el.innerHTML = ""
+    }
+  }
+
   const startScanning = async (qrInstance: Html5Qrcode, cameraId: string) => {
     try {
-      if (qrInstance.isScanning) await qrInstance.stop()
+      if (qrInstance.isScanning) {
+        await qrInstance.stop()
+      }
       setCameraError(null)
       
       await qrInstance.start(
@@ -129,11 +168,14 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
   }
 
   useEffect(() => {
+    let isMounted = true
     isComponentMounted.current = true
+
     const initScanner = async () => {
-      // Delay slightly to ensure DOM is fully painted
       await new Promise(r => setTimeout(r, 100))
-      if (!isComponentMounted.current) return
+      if (!isMounted) return
+
+      clearDomContainer()
 
       try {
         const html5Qrcode = new Html5Qrcode("qr-reader")
@@ -141,17 +183,17 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
         setScanner(html5Qrcode)
 
         const devices = await Html5Qrcode.getCameras()
-        if (!isComponentMounted.current) return
+        if (!isMounted) {
+          html5Qrcode.clear()
+          return
+        }
         
         if (devices && devices.length) {
           setCameras(devices)
-          let defaultIdx = devices.findIndex(d => 
-            d.label.toLowerCase().includes('back') || 
-            d.label.toLowerCase().includes('rear') ||
-            d.label.toLowerCase().includes('environment')
-          )
-          if (defaultIdx === -1) defaultIdx = devices.length > 1 ? 1 : 0 // Fallback to 1 if multiple cameras and none match, otherwise 0
+          let defaultIdx = devices.findIndex(d => isRearCamera(d))
+          if (defaultIdx === -1) defaultIdx = 0
           setCurrentCameraIdx(defaultIdx)
+          setIsMirrored(isFrontCamera(devices[defaultIdx]))
           startScanning(html5Qrcode, devices[defaultIdx].id)
         } else {
           setCameraError("No cameras found on this device.")
@@ -165,14 +207,17 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
     initScanner()
 
     return () => {
+      isMounted = false
       isComponentMounted.current = false
       if (scannerRef.current) {
         if (scannerRef.current.isScanning) {
           scannerRef.current.stop().catch(console.error).finally(() => {
             scannerRef.current?.clear()
+            clearDomContainer()
           })
         } else {
           scannerRef.current.clear()
+          clearDomContainer()
         }
       }
     }
@@ -183,6 +228,7 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
     if (!scanner || cameras.length < 2) return
     const nextIdx = (currentCameraIdx + 1) % cameras.length
     setCurrentCameraIdx(nextIdx)
+    setIsMirrored(isFrontCamera(cameras[nextIdx]))
     startScanning(scanner, cameras[nextIdx].id)
   }
 
@@ -195,13 +241,19 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
   }
 
   return (
-    <div className="relative w-full max-w-[440px] mx-auto overflow-hidden rounded-2xl bg-black ring-4 ring-gray-900 shadow-2xl">
+    <div className="relative w-full max-w-[440px] mx-auto overflow-hidden rounded-2xl bg-gray-950 border border-gray-800 shadow-xl">
       {/* Viewfinder */}
-      <div id="qr-reader" className="w-full h-full min-h-[420px] border-none"></div>
+      <div 
+        id="qr-reader" 
+        className={cn(
+          "w-full h-full min-h-[400px] border-none bg-black overflow-hidden [&_video]:object-cover [&_video]:w-full [&_video]:h-full",
+          isMirrored && "[&_video]:-scale-x-100"
+        )}
+      />
 
       {/* Camera Error Overlay */}
       {cameraError && (
-        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center p-6 text-center z-20">
+        <div className="absolute inset-0 bg-gray-950/90 flex flex-col items-center justify-center p-6 text-center z-20">
           <ZapOff className="w-12 h-12 text-red-500 mb-4" />
           <h3 className="text-white font-bold text-lg mb-2">Camera Unavailable</h3>
           <p className="text-gray-400 text-sm">{cameraError}</p>
@@ -216,19 +268,42 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
       )}
 
       {/* Controls */}
-      <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
-        <Button variant="secondary" size="icon" onClick={() => setIsMuted(!isMuted)} className="bg-white/20 backdrop-blur-md text-white hover:bg-white/30 border-none rounded-full">
-          {isMuted ? <span className="text-red-400 font-bold text-xs">MUTE</span> : <span className="text-white font-bold text-xs">BEEP</span>}
-        </Button>
+      <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5 z-20 bg-black/50 backdrop-blur-md p-1 rounded-xl border border-white/10 shadow-md">
+        <button 
+          type="button"
+          onClick={() => setIsMuted(!isMuted)} 
+          title={isMuted ? "Unmute Audio" : "Mute Audio"}
+          className={cn(
+            "p-2 rounded-lg transition-colors",
+            isMuted ? "text-red-400 hover:bg-white/10" : "text-white/90 hover:bg-white/10"
+          )}
+        >
+          {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+        </button>
+
         {cameras.length > 1 && (
-          <Button variant="secondary" size="icon" onClick={switchCamera} className="bg-white/20 backdrop-blur-md text-white hover:bg-white/30 border-none rounded-full">
-            <RefreshCw className="w-5 h-5" />
-          </Button>
+          <button 
+            type="button"
+            onClick={switchCamera} 
+            title="Switch Camera"
+            className="p-2 text-white/90 hover:bg-white/10 rounded-lg transition-colors"
+          >
+            <RefreshCw className="w-4 h-4" />
+          </button>
         )}
+
         {torchSupported && (
-          <Button variant="secondary" size="icon" onClick={toggleTorch} className="bg-white/20 backdrop-blur-md text-white hover:bg-white/30 border-none rounded-full">
-            {torchEnabled ? <Zap className="w-5 h-5 text-yellow-400" /> : <ZapOff className="w-5 h-5" />}
-          </Button>
+          <button 
+            type="button"
+            onClick={toggleTorch} 
+            title={torchEnabled ? "Turn Off Flashlight" : "Turn On Flashlight"}
+            className={cn(
+              "p-2 rounded-lg transition-colors",
+              torchEnabled ? "text-amber-300 bg-amber-400/20" : "text-white/90 hover:bg-white/10"
+            )}
+          >
+            {torchEnabled ? <Zap className="w-4 h-4 fill-amber-300" /> : <ZapOff className="w-4 h-4" />}
+          </button>
         )}
       </div>
 
@@ -243,22 +318,22 @@ export function QrScanner({ eventId, onScanComplete }: QrScannerProps) {
       <div className={cn(
         "absolute inset-0 z-30 flex flex-col items-center justify-center transition-all duration-300",
         overlay.visible ? "opacity-100 scale-100" : "opacity-0 scale-110 pointer-events-none",
-        overlay.success ? "bg-green-500/90 backdrop-blur-sm" : "bg-red-500/90 backdrop-blur-sm"
+        overlay.success ? "bg-emerald-950/90 backdrop-blur-sm" : "bg-rose-950/90 backdrop-blur-sm"
       )}>
         {overlay.success ? (
           <div className="text-center text-white animate-in zoom-in duration-300">
-            <CheckCircle2 className="w-20 h-20 mx-auto mb-4 drop-shadow-md" />
-            <h2 className="text-3xl font-black tracking-tight">{overlay.data?.full_name}</h2>
-            <p className="text-green-100 font-mono text-lg mt-1">{overlay.data?.student_no}</p>
-            <div className="mt-6 inline-block bg-white text-green-700 px-6 py-2 rounded-full font-black uppercase tracking-widest shadow-lg">
+            <CheckCircle2 className="w-16 h-16 mx-auto mb-3 text-emerald-400 drop-shadow-md" />
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight">{overlay.data?.full_name}</h2>
+            <p className="text-emerald-200 font-mono text-base mt-1">{overlay.data?.student_no}</p>
+            <div className="mt-5 inline-block bg-white text-emerald-800 px-6 py-2 rounded-full font-black uppercase tracking-widest shadow-lg text-xs">
               {overlay.message === 'time_in' ? 'TIME IN' : 'TIME OUT'}
             </div>
           </div>
         ) : (
           <div className="text-center text-white animate-in zoom-in duration-300 px-4">
-            <XCircle className="w-20 h-20 mx-auto mb-4 drop-shadow-md" />
-            <h2 className="text-2xl font-black tracking-tight">Scan Failed</h2>
-            <p className="text-red-100 font-medium text-sm mt-2 max-w-xs mx-auto">{overlay.message}</p>
+            <XCircle className="w-16 h-16 mx-auto mb-3 text-rose-400 drop-shadow-md" />
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight">Scan Failed</h2>
+            <p className="text-rose-200 font-medium text-xs mt-2 max-w-xs mx-auto">{overlay.message}</p>
           </div>
         )}
       </div>

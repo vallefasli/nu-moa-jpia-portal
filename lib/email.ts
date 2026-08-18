@@ -10,9 +10,9 @@ export async function sendWelcomeEmail(to: string, name: string) {
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: #35408e;">Welcome to NU MOA JPIA, ${name}!</h2>
       <p>Your membership registration has been <strong>approved</strong> by the administrators.</p>
-      <p>You can now log in to the Member Portal to access your Digital QR Code, view upcoming events, and track your attendance points.</p>
+      <p>You can now sign in to the Member Portal to access your Digital QR Code, view upcoming events, and track your attendance points.</p>
       <div style="margin: 30px 0;">
-        <a href="https://nu-moa-jpia-portal.vercel.app/" style="background-color: #35408e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Log in to Portal</a>
+        <a href="https://nu-moa-jpia-portal.vercel.app/" style="background-color: #35408e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Sign In to Portal</a>
       </div>
       <p style="color: #666; font-size: 12px;">If you did not request this, please ignore this email.</p>
     </div>

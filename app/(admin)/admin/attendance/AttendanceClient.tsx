@@ -107,7 +107,7 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
   }
 
   const formatOfficerName = (fullName?: string) => {
-    if (!fullName || fullName === 'System Admin') return 'System Admin'
+    if (!fullName || fullName === 'System Admin' || fullName === 'System Account') return 'System Admin'
     const parts = fullName.trim().split(' ')
     if (parts.length === 1) return parts[0]
     return `${parts[0]} ${parts[parts.length - 1][0]}.`

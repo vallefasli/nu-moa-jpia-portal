@@ -4,9 +4,9 @@ import { useState, useTransition, useRef } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Plus, Edit2,  Image as ImageIcon, Upload, X, MapPin, 
+import { Plus, Edit2, Image as ImageIcon, Upload, X, MapPin, 
   Users, Trash2, Calendar, FileText, Share2, Eye, ExternalLink, RefreshCw, CheckCircle2, ChevronRight, ListChecks, ArrowLeft,
-  Search, Trash, ImageIcon as BannerIcon
+  Search, Trash, ImageIcon as BannerIcon, Move, RotateCcw
 } from 'lucide-react'
 import { createEvent, updateEvent, deleteEvent } from './actions'
 import { getEventStatus } from '@/lib/utils'
@@ -25,6 +25,162 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+
+function parsePosition(pos: string): { x: number, y: number } {
+  if (!pos || pos === 'center') return { x: 50, y: 50 }
+  if (pos === 'top') return { x: 50, y: 0 }
+  if (pos === 'bottom') return { x: 50, y: 100 }
+  if (pos === 'left') return { x: 0, y: 50 }
+  if (pos === 'right') return { x: 100, y: 50 }
+  
+  const parts = pos.split(' ').map(p => parseFloat(p.replace('%', '')))
+  if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+    return { x: parts[0], y: parts[1] }
+  }
+  return { x: 50, y: 50 }
+}
+
+function ImageFocalAdjuster({
+  label,
+  aspect,
+  preview,
+  position,
+  onPositionChange,
+  onFileSelect,
+  sizeNote
+}: {
+  label: string
+  aspect: 'circle' | 'banner'
+  preview: string | null
+  position: string
+  onPositionChange: (pos: string) => void
+  onFileSelect: () => void
+  sizeNote: string
+}) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const currentPos = parsePosition(position)
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!preview) {
+      onFileSelect()
+      return
+    }
+    e.preventDefault()
+    e.stopPropagation()
+    const container = containerRef.current
+    if (!container) return
+
+    const rect = container.getBoundingClientRect()
+    const startX = e.clientX
+    const startY = e.clientY
+    const startPosX = currentPos.x
+    const startPosY = currentPos.y
+
+    setIsDragging(true)
+    container.setPointerCapture(e.pointerId)
+
+    const handlePointerMove = (moveEvent: PointerEvent) => {
+      const deltaX = ((moveEvent.clientX - startX) / rect.width) * 100
+      const deltaY = ((moveEvent.clientY - startY) / rect.height) * 100
+
+      const newX = Math.min(100, Math.max(0, Math.round(startPosX - deltaX)))
+      const newY = Math.min(100, Math.max(0, Math.round(startPosY - deltaY)))
+      onPositionChange(`${newX}% ${newY}%`)
+    }
+
+    const handlePointerUp = (upEvent: PointerEvent) => {
+      setIsDragging(false)
+      try {
+        container.releasePointerCapture(upEvent.pointerId)
+      } catch {}
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('pointerup', handlePointerUp)
+    }
+
+    window.addEventListener('pointermove', handlePointerMove)
+    window.addEventListener('pointerup', handlePointerUp)
+  }
+
+  const resetToCenter = () => {
+    onPositionChange('50% 50%')
+  }
+
+  return (
+    <div className="space-y-2">
+      <div>
+        <label className="block text-sm font-bold text-gray-900">{label}</label>
+        <p className="text-[11px] text-gray-500">{sizeNote}</p>
+      </div>
+
+      {/* Image Preview / Drag Area */}
+      <div 
+        ref={containerRef}
+        onPointerDown={handlePointerDown}
+        className={`relative overflow-hidden group select-none ${
+          aspect === 'circle' 
+            ? 'aspect-square w-full max-w-[170px] mx-auto rounded-full border-2 border-dashed border-gray-200 bg-gray-50 shadow-sm' 
+            : 'aspect-[21/9] w-full rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 shadow-sm'
+        } ${
+          preview 
+            ? isDragging ? 'cursor-grabbing border-blue-500' : 'cursor-grab hover:border-gray-300' 
+            : 'cursor-pointer hover:bg-gray-100'
+        } transition-all flex flex-col items-center justify-center`}
+      >
+        {preview ? (
+          <>
+            <img 
+              src={preview} 
+              alt={label} 
+              draggable={false}
+              className={`w-full h-full object-cover pointer-events-none ${isDragging ? 'transition-none' : 'transition-[object-position] duration-75'}`}
+              style={{ objectPosition: position || '50% 50%' }}
+            />
+
+            {/* Hover Drag Hint */}
+            <div className={`absolute inset-0 bg-black/30 flex items-center justify-center text-white text-xs font-semibold gap-1.5 transition-opacity ${
+              isDragging ? 'opacity-90' : 'opacity-0 group-hover:opacity-100'
+            }`}>
+              <div className="bg-black/60 px-3 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5 shadow-sm">
+                <Move className="w-3.5 h-3.5" />
+                {isDragging ? 'Dragging...' : 'Drag to adjust'}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="text-center p-3 pointer-events-none">
+            {aspect === 'circle' ? (
+              <ImageIcon className="w-7 h-7 text-gray-300 mx-auto mb-1.5" />
+            ) : (
+              <BannerIcon className="w-7 h-7 text-gray-300 mx-auto mb-1.5" />
+            )}
+            <span className="text-[11px] text-gray-500 font-bold block">Upload Image</span>
+          </div>
+        )}
+      </div>
+
+      {/* Action Links */}
+      {preview && (
+        <div className="flex items-center justify-between text-xs pt-0.5 px-1">
+          <button
+            type="button"
+            onClick={onFileSelect}
+            className="text-blue-600 hover:text-blue-800 font-semibold hover:underline flex items-center gap-1"
+          >
+            <Upload className="w-3 h-3" /> Change
+          </button>
+          <button
+            type="button"
+            onClick={resetToCenter}
+            className="text-gray-500 hover:text-gray-800 font-semibold hover:underline flex items-center gap-1"
+          >
+            <RotateCcw className="w-3 h-3" /> Reset position
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
 
 export function EventManagementClient({ events, isAdmin }: { events: any[], isAdmin: boolean }) {
   const router = useRouter()
@@ -45,9 +201,11 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
   // Image Upload State
   const [posterPreview, setPosterPreview] = useState<string | null>(null)
   const [posterFile, setPosterFile] = useState<File | null>(null)
+  const [posterPosition, setPosterPosition] = useState('center')
   
   const [bannerPreview, setBannerPreview] = useState<string | null>(null)
   const [bannerFile, setBannerFile] = useState<File | null>(null)
+  const [bannerPosition, setBannerPosition] = useState('center')
 
   const [isUploading, setIsUploading] = useState(false)
   
@@ -68,8 +226,10 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
     setThemeInput('')
     setPosterPreview(event?.poster_url || null)
     setPosterFile(null)
+    setPosterPosition(event?.poster_position || 'center')
     setBannerPreview(event?.banner_url || null)
     setBannerFile(null)
+    setBannerPosition(event?.banner_position || 'center')
     const initialType = event?.event_type || 'General'
     setCategorySelect(predefinedTypes.includes(initialType) ? initialType : 'Other')
     setIsModalOpen(true)
@@ -82,8 +242,10 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
     setThemeInput('')
     setPosterPreview(null)
     setPosterFile(null)
+    setPosterPosition('center')
     setBannerPreview(null)
     setBannerFile(null)
+    setBannerPosition('center')
     setCategorySelect('General')
     setIsModalOpen(false)
   }
@@ -137,6 +299,8 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
     const formData = new FormData(e.currentTarget)
     formData.append('custom_feedback_questions', JSON.stringify(customQuestions))
     formData.append('themes', JSON.stringify(themes))
+    formData.append('poster_position', posterPosition)
+    formData.append('banner_position', bannerPosition)
     
     setIsUploading(true)
     const [uploadedPosterUrl, uploadedBannerUrl] = await Promise.all([
@@ -254,63 +418,41 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Images Column */}
                 <div className="space-y-6 lg:col-span-1">
-                  <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-2">Circle Badge (Card Poster)</label>
-                    <div 
-                      onClick={() => posterInputRef.current?.click()}
-                      className="aspect-square w-full max-w-[200px] mx-auto rounded-full border-2 border-dashed border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors flex flex-col items-center justify-center cursor-pointer overflow-hidden relative group shadow-sm"
-                    >
-                      {posterPreview ? (
-                        <>
-                          <img src={posterPreview} alt="Preview" className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span className="text-white text-sm font-semibold flex items-center gap-2"><Upload className="w-4 h-4" /> Change</span>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="text-center p-4">
-                          <ImageIcon className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                          <span className="text-[10px] text-gray-500 font-medium">Upload Badge (1:1)</span>
-                        </div>
-                      )}
-                    </div>
-                    <input 
-                      type="file" 
-                      accept="image/jpeg,image/png,image/webp" 
-                      ref={posterInputRef} 
-                      onChange={(e) => handleImageChange(e, setPosterFile, setPosterPreview)}
-                      className="hidden" 
-                    />
-                  </div>
+                  {/* Circle Poster Adjuster */}
+                  <ImageFocalAdjuster
+                    label="Circle Poster"
+                    aspect="circle"
+                    preview={posterPreview}
+                    position={posterPosition}
+                    onPositionChange={setPosterPosition}
+                    onFileSelect={() => posterInputRef.current?.click()}
+                    sizeNote="Recommended: 1:1 Square (e.g. 500×500 px), Max 1MB"
+                  />
+                  <input 
+                    type="file" 
+                    accept="image/jpeg,image/png,image/webp" 
+                    ref={posterInputRef} 
+                    onChange={(e) => handleImageChange(e, setPosterFile, setPosterPreview)}
+                    className="hidden" 
+                  />
 
-                  <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-2">Wide Banner (Expanded View)</label>
-                    <div 
-                      onClick={() => bannerInputRef.current?.click()}
-                      className="aspect-video w-full rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors flex flex-col items-center justify-center cursor-pointer overflow-hidden relative group shadow-sm"
-                    >
-                      {bannerPreview ? (
-                        <>
-                          <img src={bannerPreview} alt="Banner Preview" className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span className="text-white text-sm font-semibold flex items-center gap-2"><Upload className="w-4 h-4" /> Change</span>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="text-center p-4">
-                          <BannerIcon className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                          <span className="text-[10px] text-gray-500 font-medium">Upload Banner (16:9)</span>
-                        </div>
-                      )}
-                    </div>
-                    <input 
-                      type="file" 
-                      accept="image/jpeg,image/png,image/webp" 
-                      ref={bannerInputRef} 
-                      onChange={(e) => handleImageChange(e, setBannerFile, setBannerPreview)}
-                      className="hidden" 
-                    />
-                  </div>
+                  {/* Wide Banner Adjuster */}
+                  <ImageFocalAdjuster
+                    label="Wide Banner"
+                    aspect="banner"
+                    preview={bannerPreview}
+                    position={bannerPosition}
+                    onPositionChange={setBannerPosition}
+                    onFileSelect={() => bannerInputRef.current?.click()}
+                    sizeNote="Recommended: 21:9 Wide (e.g. 1200×500 px), Max 1MB"
+                  />
+                  <input 
+                    type="file" 
+                    accept="image/jpeg,image/png,image/webp" 
+                    ref={bannerInputRef} 
+                    onChange={(e) => handleImageChange(e, setBannerFile, setBannerPreview)}
+                    className="hidden" 
+                  />
                 </div>
 
                 {/* Details Column */}
@@ -425,7 +567,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                     )}
                     <div>
                       <label className="block text-sm font-bold text-gray-900 mb-1.5">Capacity</label>
-                      <Input type="number" name="capacity" defaultValue={editingEvent?.capacity} placeholder="Leave blank for unlimited" className="bg-white border-gray-200 h-11 rounded-xl" />
+                      <Input type="number" name="capacity" defaultValue={editingEvent?.capacity} placeholder="Leave blank for no limit" className="bg-white border-gray-200 h-11 rounded-xl" />
                     </div>
                     <div>
                       <label className="block text-sm font-bold text-gray-900 mb-1.5">Points Awarded</label>

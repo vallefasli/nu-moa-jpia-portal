@@ -1,19 +1,12 @@
-import { createClient } from '@/utils/supabase/server'
+import { getAuthenticatedUser, getCurrentUserProfile } from '@/utils/supabase/server'
 import DigitalIdCard from './DigitalIdCard'
 
 export default async function DigitalIdPage() {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthenticatedUser()
   if (!user) return null
 
-  // Fetch profile to get qr_token and member_id
-  const { data: profile } = await supabase
-    .from('users')
-    .select('full_name, student_no, member_id, program, year_level, qr_token')
-    .eq('id', user.id)
-    .single()
-
+  // Fetch profile
+  const profile = await getCurrentUserProfile(user.id)
   if (!profile) return null
 
   const initials = profile.full_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase()

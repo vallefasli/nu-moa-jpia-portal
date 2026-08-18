@@ -1,64 +1,81 @@
-import { createClient } from '@/utils/supabase/server'
+import { createClient, getAuthenticatedUser, getCurrentUserProfile } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { AttendanceClient } from './AttendanceClient'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AttendancePage({ searchParams }: { searchParams: Promise<{ eventId?: string }> }) {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthenticatedUser()
   if (!user) redirect('/')
 
-  const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single()
+  const profile = await getCurrentUserProfile(user.id)
   if (profile?.role !== 'admin') redirect('/')
+
+  const supabase = await createClient()
 
   const params = await searchParams
   const eventIdParams = params.eventId
 
-  // Fetch all events for the dropdown
+  // Fetch all events with full details for the selector
   const { data: events } = await supabase
     .from('events')
-    .select('id, title, date, status')
+    .select('id, title, date, time_start, time_end, status, points_awarded, poster_url')
     .order('date', { ascending: false })
 
-  const activeEventId = eventIdParams || (events && events.length > 0 ? events[0].id : null)
+  const activeEvent = (events || []).find(e => e.id === eventIdParams) || (events && events.length > 0 ? events[0] : null)
+  const activeEventId = activeEvent?.id || null
 
   let consolidatedRecords: any[] = []
 
   if (activeEventId) {
-    // 1. Fetch RSVPs for active event
-    const { data: rsvps } = await supabase
-      .from('event_rsvps')
-      .select(`
-        user_id,
-        users ( id, full_name, student_no, program )
-      `)
-      .eq('event_id', activeEventId)
+    // 1. Fetch RSVPs and Attendance in parallel for active event
+    const [rsvpsRes, attendanceRes] = await Promise.all([
+      supabase
+        .from('event_rsvps')
+        .select(`
+          user_id,
+          users ( id, first_name, middle_name, last_name, full_name, student_no, member_id, program, year_level, committee, email )
+        `)
+        .eq('event_id', activeEventId),
+      supabase
+        .from('attendance')
+        .select(`
+          id, user_id, type, timestamp,
+          users!attendance_user_id_fkey ( id, first_name, middle_name, last_name, full_name, student_no, member_id, program, year_level, committee, email ),
+          officer:users!attendance_officer_id_fkey ( full_name )
+        `)
+        .eq('event_id', activeEventId)
+        .order('timestamp', { ascending: true })
+    ])
 
-    // 2. Fetch Attendance for active event
-    const { data: attendance } = await supabase
-      .from('attendance')
-      .select(`
-        id, user_id, type, timestamp,
-        users!attendance_user_id_fkey ( id, full_name, student_no, program ),
-        officer:users!attendance_officer_id_fkey ( full_name )
-      `)
-      .eq('event_id', activeEventId)
-      .order('timestamp', { ascending: true })
+    const rsvps = rsvpsRes.data
+    const attendance = attendanceRes.data
 
     // Consolidate Data
     const participantsMap = new Map<string, any>()
 
+    const isSystemUser = (u: any) => {
+      if (!u) return true
+      if (u.full_name === 'System Account' || u.full_name === 'System Admin') return true
+      return false
+    }
+
     // Add RSVPs
     rsvps?.forEach((rsvp: any) => {
       const u = rsvp.users
-      if (!u) return
+      if (!u || isSystemUser(u)) return
       participantsMap.set(u.id, {
         user_id: u.id,
-        full_name: u.full_name,
-        student_no: u.student_no,
-        program: u.program,
+        member_id: u.member_id || '',
+        first_name: u.first_name || '',
+        middle_name: u.middle_name || '',
+        last_name: u.last_name || '',
+        full_name: u.full_name || '',
+        student_no: u.student_no || '',
+        program: u.program || '',
+        year_level: u.year_level || '',
+        committee: u.committee || 'None',
+        email: u.email || '',
         is_registered: true,
         time_in: null,
         time_in_officer: null,
@@ -72,14 +89,21 @@ export default async function AttendancePage({ searchParams }: { searchParams: P
     // Add Attendance
     attendance?.forEach((log: any) => {
       const u = log.users
-      if (!u) return
+      if (!u || isSystemUser(u)) return
 
       if (!participantsMap.has(u.id)) {
         participantsMap.set(u.id, {
           user_id: u.id,
-          full_name: u.full_name,
-          student_no: u.student_no,
-          program: u.program,
+          member_id: u.member_id || '',
+          first_name: u.first_name || '',
+          middle_name: u.middle_name || '',
+          last_name: u.last_name || '',
+          full_name: u.full_name || '',
+          student_no: u.student_no || '',
+          program: u.program || '',
+          year_level: u.year_level || '',
+          committee: u.committee || 'None',
+          email: u.email || '',
           is_registered: false,
           time_in: null,
           time_in_officer: null,
@@ -106,7 +130,9 @@ export default async function AttendancePage({ searchParams }: { searchParams: P
       }
     })
 
-    consolidatedRecords = Array.from(participantsMap.values())
+    consolidatedRecords = Array.from(participantsMap.values()).sort((a, b) => 
+      (a.full_name || '').localeCompare(b.full_name || '')
+    )
   }
 
   return (

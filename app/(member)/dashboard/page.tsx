@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/server'
+import { createClient, getAuthenticatedUser } from '@/utils/supabase/server'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Calendar, Trophy, Medal, LogIn } from 'lucide-react'
@@ -13,44 +13,45 @@ function getTier(points: number) {
 }
 
 export default async function MemberDashboardPage() {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthenticatedUser()
   if (!user) return null
 
-  // Fetch profile
-  const { data: profile } = await supabase
-    .from('users')
-    .select('full_name, student_no, member_id, committee')
-    .eq('id', user.id)
-    .single()
+  const supabase = await createClient()
 
+  // Fetch profile, total points/attendance stats, and recent activity in parallel
+  const [profileRes, statsRes, activityRes] = await Promise.all([
+    supabase
+      .from('users')
+      .select('full_name, student_no, member_id, committee')
+      .eq('id', user.id)
+      .single(),
+    supabase
+      .from('user_points_view')
+      .select('total_points, events_attended')
+      .eq('user_id', user.id)
+      .single(),
+    supabase
+      .from('attendance')
+      .select(`
+        timestamp,
+        type,
+        events (
+          title,
+          points_awarded
+        )
+      `)
+      .eq('user_id', user.id)
+      .order('timestamp', { ascending: false })
+      .limit(3)
+  ])
+
+  const profile = profileRes.data
   if (!profile) return null
 
-  // Fetch total points and attendance stats efficiently using the PostgreSQL View
-  const { data: userStats } = await supabase
-    .from('user_points_view')
-    .select('total_points, events_attended')
-    .eq('user_id', user.id)
-    .single()
-
+  const userStats = statsRes.data
   const attendanceCount = userStats?.events_attended || 0
   const totalPoints = userStats?.total_points || 0
-
-  // Fetch recent activity
-  const { data: recentActivity } = await supabase
-    .from('attendance')
-    .select(`
-      timestamp,
-      type,
-      events (
-        title,
-        points_awarded
-      )
-    `)
-    .eq('user_id', user.id)
-    .order('timestamp', { ascending: false })
-    .limit(3)
+  const recentActivity = activityRes.data
 
   const initials = profile.full_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase()
   const currentTier = getTier(totalPoints)
@@ -163,7 +164,7 @@ export default async function MemberDashboardPage() {
                   <Calendar className="w-8 h-8 text-gray-300" />
                 </div>
                 <p className="text-gray-500 font-medium">No recent activity found.</p>
-                <p className="text-sm text-gray-400 mt-1">Attend an event to log your first check-in!</p>
+                <p className="text-sm text-gray-400 mt-1">Attend an event to log your first Time In!</p>
               </div>
             ) : (
               recentActivity.map((activity: any, idx: number) => (

@@ -1,58 +1,55 @@
-import { createClient } from '@/utils/supabase/server'
+import { createClient, getAuthenticatedUser, getCurrentUserProfile } from '@/utils/supabase/server'
 import { ScannerView } from './ScannerView'
 import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 
 export default async function ScannerPage() {
-  const supabase = await createClient()
-
-  // 1. Authenticate & Authorize
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthenticatedUser()
   if (!user) redirect('/')
 
-  const { data: profile } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getCurrentUserProfile(user.id)
   if (profile?.role !== 'admin' && profile?.role !== 'officer') {
     redirect('/dashboard')
   }
 
-  // 2. Fetch Active Events (ongoing or upcoming, or happening today/future)
+  const supabase = await createClient()
+
+  // 2. Fetch Active Events and Recent Attendance Feed in parallel
   const todayStr = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0];
   
-  const { data: activeEvents } = await supabase
-    .from('events')
-    .select('id, title, status, date, time_start, time_end')
-    .or(`status.in.(ongoing,upcoming),date.gte.${todayStr}`)
-    .order('date', { ascending: true })
+  const [eventsRes, feedRes] = await Promise.all([
+    supabase
+      .from('events')
+      .select('id, title, status, date, time_start, time_end')
+      .or(`status.in.(ongoing,upcoming),date.gte.${todayStr}`)
+      .order('date', { ascending: true }),
+    supabase
+      .from('attendance')
+      .select(`
+        id,
+        event_id,
+        timestamp,
+        type,
+        officer_id,
+        users!attendance_user_id_fkey (
+          full_name,
+          student_no
+        ),
+        officer:users!attendance_officer_id_fkey (
+          full_name,
+          student_no
+        )
+      `)
+      .order('timestamp', { ascending: false })
+      .limit(50)
+  ])
 
-  // 3. Fetch Recent Attendance Feed (last 50 scans)
-  const { data: initialFeed, error: feedError } = await supabase
-    .from('attendance')
-    .select(`
-      id,
-      event_id,
-      timestamp,
-      type,
-      officer_id,
-      users!attendance_user_id_fkey (
-        full_name,
-        student_no
-      ),
-      officer:users!attendance_officer_id_fkey (
-        full_name,
-        student_no
-      )
-    `)
-    .order('timestamp', { ascending: false })
-    .limit(50)
+  const activeEvents = eventsRes.data
+  const initialFeed = feedRes.data
 
-  if (feedError) {
-    console.error("FEED FETCH ERROR:", feedError)
+  if (feedRes.error) {
+    console.error("FEED FETCH ERROR:", feedRes.error)
   }
 
   return (

@@ -1,25 +1,20 @@
-import { createClient } from '@/utils/supabase/server'
+import { createClient, getAuthenticatedUser, getCurrentUserProfile } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { CertificatesClient } from './CertificatesClient'
 
 export const dynamic = 'force-dynamic'
 
 export default async function CertificatesPage() {
-  const supabase = await createClient()
-
   // 1. Authenticate & Authorize
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthenticatedUser()
   if (!user) redirect('/')
 
-  const { data: profile } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getCurrentUserProfile(user.id)
   if (profile?.role !== 'admin' && profile?.role !== 'officer') {
     redirect('/dashboard')
   }
+
+  const supabase = await createClient()
 
   // 2. Fetch all events with feedback count
   const { data: events, error } = await supabase

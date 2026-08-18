@@ -1,29 +1,55 @@
-import { createClient } from '@/utils/supabase/server'
+import { createClient, getAuthenticatedUser, getCurrentUserProfile } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { AnalyticsClient } from './AnalyticsClient'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AnalyticsPage() {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthenticatedUser()
   if (!user) redirect('/')
 
-  const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single()
+  const profile = await getCurrentUserProfile(user.id)
   if (profile?.role !== 'admin') redirect('/dashboard')
 
-  // 1. Fetch User Stats (Active vs Pending)
-  const { data: activeUsers } = await supabase.from('users').select('id', { count: 'exact' }).eq('account_status', 'active')
-  const { data: pendingUsers } = await supabase.from('users').select('id', { count: 'exact' }).eq('account_status', 'pending')
-  
+  const supabase = await createClient()
+
+  // Fetch all analytics datasets in parallel
+  const [activeUsersRes, pendingUsersRes, eventsRes, userPointsRes] = await Promise.all([
+    supabase
+      .from('users')
+      .select('id', { count: 'exact' })
+      .eq('account_status', 'active')
+      .neq('full_name', 'System Account')
+      .neq('full_name', 'System Admin')
+      .neq('role', 'admin'),
+    supabase
+      .from('users')
+      .select('id', { count: 'exact' })
+      .eq('account_status', 'pending')
+      .neq('full_name', 'System Account')
+      .neq('full_name', 'System Admin'),
+    supabase
+      .from('events')
+      .select('event_type'),
+    supabase
+      .from('user_points_view')
+      .select('*')
+      .eq('account_status', 'active')
+      .neq('full_name', 'System Account')
+      .neq('full_name', 'System Admin')
+      .order('total_points', { ascending: false })
+  ])
+
+  const activeUsers = activeUsersRes.data
+  const pendingUsers = pendingUsersRes.data
+  const events = eventsRes.data
+  const userPoints = userPointsRes.data
+
   const userStats = [
     { name: 'Active', value: activeUsers?.length || 0 },
     { name: 'Pending', value: pendingUsers?.length || 0 }
   ]
 
-  // 2. Fetch Event Stats (by category)
-  const { data: events } = await supabase.from('events').select('event_type')
   const eventCounts = events?.reduce((acc: any, curr) => {
     acc[curr.event_type] = (acc[curr.event_type] || 0) + 1
     return acc
@@ -33,17 +59,10 @@ export default async function AnalyticsPage() {
     name: key,
     count: eventCounts[key]
   }))
-
-  // 3. Leaderboard Calculation
-  // Use the highly optimized PostgreSQL View to get total points directly from the DB
-  const { data: userPoints } = await supabase
-    .from('user_points_view')
-    .select('*')
-    .eq('account_status', 'active')
-    .order('total_points', { ascending: false })
     
   // Sort leaderboard by points (descending), then by name
   const leaderboard = (userPoints || [])
+    .filter((u: any) => u.full_name !== 'System Account' && u.full_name !== 'System Admin')
     .map((u: any) => ({
       id: u.user_id,
       full_name: u.full_name,

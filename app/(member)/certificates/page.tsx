@@ -1,12 +1,12 @@
-import { createClient } from '@/utils/supabase/server'
+import { createClient, getAuthenticatedUser } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { CertificatesListClient } from './components/CertificatesListClient'
 
 export default async function CertificatesPage() {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthenticatedUser()
   if (!user) redirect('/')
+
+  const supabase = await createClient()
 
   // Fetch all attendance logs, feedbacks, and events
   const [attendanceRes, feedbackRes] = await Promise.all([

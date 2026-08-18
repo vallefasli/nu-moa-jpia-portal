@@ -35,6 +35,7 @@ export function MemberSidebar({ role }: { role?: string }) {
               <Link
                 key={item.name}
                 href={item.href}
+                prefetch={true}
                 className={cn(
                   "flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 group",
                   isActive 
@@ -59,6 +60,7 @@ export function MemberSidebar({ role }: { role?: string }) {
           {role === 'officer' && (
             <Link 
               href="/scanner"
+              prefetch={true}
               className="flex w-full items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-500 hover:bg-[#35408e]/10 hover:text-[#35408e] transition-all duration-200 group"
             >
               <div className="p-2 bg-gray-100 rounded-lg group-hover:bg-[#35408e]/20 transition-colors">
@@ -74,7 +76,7 @@ export function MemberSidebar({ role }: { role?: string }) {
               <div className="p-2 bg-gray-100 rounded-lg group-hover:bg-red-100 transition-colors">
                 <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" />
               </div>
-              Log Out
+              Sign Out
             </button>
           </LogoutDialog>
         </div>
@@ -88,7 +90,7 @@ export function MemberSidebar({ role }: { role?: string }) {
         </div>
         <div className="flex items-center gap-1">
           {role === 'officer' && (
-            <Link href="/scanner" className="text-gray-400 p-2 hover:bg-[#35408e]/10 hover:text-[#35408e] rounded-full transition-colors active:scale-95">
+            <Link href="/scanner" prefetch={true} className="text-gray-400 p-2 hover:bg-[#35408e]/10 hover:text-[#35408e] rounded-full transition-colors active:scale-95">
               <Shield className="w-5 h-5" />
             </Link>
           )}
@@ -109,6 +111,7 @@ export function MemberSidebar({ role }: { role?: string }) {
               <Link
                 key={item.name}
                 href={item.href}
+                prefetch={true}
                 className={cn(
                   "relative flex flex-col items-center justify-center p-2 rounded-2xl min-w-[72px] transition-all duration-300 ease-out active:scale-90",
                   isActive ? "text-[#35408e]" : "text-gray-400 hover:text-gray-600"

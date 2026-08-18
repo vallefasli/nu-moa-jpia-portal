@@ -1,21 +1,14 @@
-import { createClient } from '@/utils/supabase/server'
+import { getAuthenticatedUser, getCurrentUserProfile } from '@/utils/supabase/server'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { User, Mail, BookOpen, GraduationCap, Shield, CalendarDays, Award } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default async function MemberProfilePage() {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthenticatedUser()
   if (!user) return null
 
-  const { data: profile } = await supabase
-    .from('users')
-    .select('*')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getCurrentUserProfile(user.id)
   if (!profile) return null
 
   const initials = profile.full_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase()
