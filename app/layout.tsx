@@ -4,6 +4,7 @@ import './globals.css'
 import { Toaster } from '@/components/ui/sonner'
 import { AuthSync } from '@/components/AuthSync'
 import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,6 +25,7 @@ export default function RootLayout({
         {children}
         <Toaster richColors position="top-center" />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
