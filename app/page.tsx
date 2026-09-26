@@ -18,8 +18,7 @@ import {
   AlertCircle, 
   CheckCircle2, 
   Info,
-  ArrowRight,
-  ShieldAlert
+  ArrowRight
 } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 
@@ -465,15 +464,7 @@ export default function LoginPage() {
           </div>
 
           {/* Admin Portal Shortcut */}
-          <div className="mt-3.5 text-center">
-            <Link 
-              href="/admin-login" 
-              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-[#006B3C] transition-colors py-1 px-2 rounded-md hover:bg-slate-100"
-            >
-              <ShieldAlert className="w-3.5 h-3.5" />
-              <span>Administrator Access</span>
-            </Link>
-          </div>
+
 
           {/* Minimalist Footer */}
           <div className="mt-5 text-center text-xs text-slate-400 space-y-1.5">
