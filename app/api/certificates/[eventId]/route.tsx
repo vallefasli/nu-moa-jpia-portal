@@ -78,8 +78,8 @@ export async function GET(
               flexDirection: 'column',
               width: '100%',
               height: '100%',
-              border: '8px solid #35408e',
-              outline: '2px solid #fbb03b',
+              border: '8px solid #006B3C',
+              outline: '2px solid #FFD54F',
               outlineOffset: '-16px',
               backgroundColor: '#fafafa',
               alignItems: 'center',
@@ -95,8 +95,8 @@ export async function GET(
                 left: 0,
                 width: '150px',
                 height: '150px',
-                borderRight: '8px solid #fbb03b',
-                borderBottom: '8px solid #fbb03b',
+                borderRight: '8px solid #FFD54F',
+                borderBottom: '8px solid #FFD54F',
                 borderBottomRightRadius: '100px',
               }}
             />
@@ -108,8 +108,8 @@ export async function GET(
                 right: 0,
                 width: '150px',
                 height: '150px',
-                borderLeft: '8px solid #fbb03b',
-                borderTop: '8px solid #fbb03b',
+                borderLeft: '8px solid #FFD54F',
+                borderTop: '8px solid #FFD54F',
                 borderTopLeftRadius: '100px',
               }}
             />
@@ -119,7 +119,7 @@ export async function GET(
               style={{
                 fontSize: 32,
                 fontWeight: 700,
-                color: '#fbb03b',
+                color: '#FFD54F',
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 marginBottom: '24px',
@@ -148,7 +148,7 @@ export async function GET(
                 textTransform: 'uppercase',
                 letterSpacing: '-0.02em',
                 lineHeight: 1.1,
-                borderBottom: '4px solid #35408e',
+                borderBottom: '4px solid #006B3C',
                 paddingBottom: '12px',
                 marginBottom: '32px',
                 minWidth: '60%',
@@ -174,7 +174,7 @@ export async function GET(
               style={{
                 fontSize: 56,
                 fontWeight: 800,
-                color: '#35408e',
+                color: '#006B3C',
                 textAlign: 'center',
                 maxWidth: '85%',
                 lineHeight: 1.2,
@@ -210,7 +210,7 @@ export async function GET(
               }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ width: '200px', height: '2px', backgroundColor: '#35408e', marginBottom: '8px' }} />
+                <div style={{ width: '200px', height: '2px', backgroundColor: '#006B3C', marginBottom: '8px' }} />
                 <div style={{ fontSize: 18, color: '#4b5563', fontWeight: 600 }}>NU MOA JPIA</div>
                 <div style={{ fontSize: 14, color: '#9ca3af' }}>Official Organization</div>
               </div>

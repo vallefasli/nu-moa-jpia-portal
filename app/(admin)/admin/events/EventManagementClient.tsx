@@ -165,7 +165,7 @@ function ImageFocalAdjuster({
           <button
             type="button"
             onClick={onFileSelect}
-            className="text-blue-600 hover:text-blue-800 font-semibold hover:underline flex items-center gap-1"
+            className="text-[#006B3C] hover:text-[#004d2b] font-semibold hover:underline flex items-center gap-1"
           >
             <Upload className="w-3 h-3" /> Change
           </button>
@@ -363,10 +363,10 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
             placeholder="Search events..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-white border-gray-200 focus-visible:ring-[#35408e] rounded-xl h-10 shadow-xs text-sm"
+            className="pl-10 bg-white border-gray-200 focus-visible:ring-[#006B3C] rounded-xl h-10 shadow-xs text-sm"
           />
         </div>
-        <Button onClick={() => handleOpenModal()} className="bg-[#fbb03b] hover:bg-[#e09e35] text-black font-bold shadow-sm rounded-xl px-5 h-10 shrink-0 active:scale-95 transition-all">
+        <Button onClick={() => handleOpenModal()} className="bg-[#FFD54F] hover:bg-[#e09e35] text-black font-bold shadow-sm rounded-xl px-5 h-10 shrink-0 active:scale-95 transition-all">
           <Plus className="w-4 h-4 mr-2" />
           Create New Event
         </Button>
@@ -396,7 +396,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
               {searchQuery ? 'Try adjusting your search query.' : 'Create your first event to get started.'}
             </p>
             {!searchQuery && (
-              <Button onClick={() => handleOpenModal()} className="bg-[#fbb03b] hover:bg-[#e09e35] text-black font-bold rounded-xl shadow-sm">
+              <Button onClick={() => handleOpenModal()} className="bg-[#FFD54F] hover:bg-[#e09e35] text-black font-bold rounded-xl shadow-sm">
                 Create Event
               </Button>
             )}
@@ -478,7 +478,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                         name="description" 
                         defaultValue={editingEvent?.description} 
                         rows={3}
-                        className="w-full rounded-xl border border-gray-200 bg-gray-50/70 px-3.5 py-2.5 text-xs sm:text-sm shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35408e]/20 transition-all resize-none" 
+                        className="w-full rounded-xl border border-gray-200 bg-gray-50/70 px-3.5 py-2.5 text-xs sm:text-sm shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006B3C]/20 transition-all resize-none" 
                         placeholder="Provide details about the event..."
                       />
                     </div>
@@ -499,7 +499,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationInput.trim())}`}
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="mt-2 rounded-xl overflow-hidden border border-gray-200 h-24 relative bg-gray-100 block transition-all hover:border-[#35408e]/50 hover:shadow-md cursor-pointer"
+                            className="mt-2 rounded-xl overflow-hidden border border-gray-200 h-24 relative bg-gray-100 block transition-all hover:border-[#006B3C]/50 hover:shadow-md cursor-pointer"
                             title="Click to view in Google Maps"
                           >
                             <iframe
@@ -518,7 +518,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                           name={categorySelect === 'Other' ? "dummy_event_type" : "event_type"} 
                           value={categorySelect}
                           onChange={(e) => setCategorySelect(e.target.value)}
-                          className={`w-full h-10 rounded-xl border border-gray-200 bg-gray-50/70 px-3 text-xs sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35408e]/20 ${categorySelect === 'Other' ? 'mb-2' : ''}`}
+                          className={`w-full h-10 rounded-xl border border-gray-200 bg-gray-50/70 px-3 text-xs sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006B3C]/20 ${categorySelect === 'Other' ? 'mb-2' : ''}`}
                         >
                           <option value="General">General Assembly</option>
                           <option value="Academic">Academic</option>
@@ -541,10 +541,10 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                     {/* Custom Themes */}
                     <div>
                       <label className="block text-xs sm:text-sm font-bold text-gray-900 mb-1">Custom Themes / Tags</label>
-                      <div className="bg-gray-50/70 border border-gray-200 rounded-xl p-2 focus-within:ring-2 focus-within:ring-[#35408e]/20 transition-all">
+                      <div className="bg-gray-50/70 border border-gray-200 rounded-xl p-2 focus-within:ring-2 focus-within:ring-[#006B3C]/20 transition-all">
                         <div className="flex flex-wrap gap-1.5 mb-1.5 px-1">
                           {themes.map(t => (
-                            <span key={t} className="flex items-center gap-1 bg-blue-100 text-blue-800 text-[11px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+                            <span key={t} className="flex items-center gap-1 bg-[#006B3C]/10 text-[#006B3C] text-[11px] font-bold px-2 py-0.5 rounded-full shadow-xs">
                               {t}
                               <button type="button" onClick={() => setThemes(themes.filter(theme => theme !== t))} className="hover:text-red-600 hover:bg-white rounded-full p-0.5 transition-colors">
                                 <X className="w-3 h-3" />
@@ -575,7 +575,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                     <div className="p-3.5 sm:p-4 bg-gray-50/80 rounded-2xl border border-gray-100 space-y-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5 text-xs font-bold text-gray-700 uppercase tracking-wider">
-                          <Calendar className="w-3.5 h-3.5 text-[#35408e]" />
+                          <Calendar className="w-3.5 h-3.5 text-[#006B3C]" />
                           <span>Event Schedule</span>
                         </div>
                       </div>
@@ -587,7 +587,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                             Date
                           </label>
                           <div className="relative">
-                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#35408e] pointer-events-none" />
+                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#006B3C] pointer-events-none" />
                             <Input 
                               type="date" 
                               name="date" 
@@ -639,7 +639,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                       {editingEvent && (
                         <div className="col-span-2 sm:col-span-1">
                           <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Status Override</label>
-                          <select name="status" defaultValue={editingEvent?.status || 'upcoming'} className="w-full h-10 rounded-xl border border-gray-200 bg-white px-3 text-xs sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35408e]/20">
+                          <select name="status" defaultValue={editingEvent?.status || 'upcoming'} className="w-full h-10 rounded-xl border border-gray-200 bg-white px-3 text-xs sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006B3C]/20">
                             <option value="upcoming">Upcoming</option>
                             <option value="ongoing">Ongoing</option>
                             <option value="completed">Completed</option>
@@ -664,7 +664,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                     <div className="flex items-center gap-2">
                       <label className="block text-xs sm:text-sm font-bold text-gray-900">Custom Feedback Questions</label>
                       {customQuestions.length > 0 && (
-                        <span className="px-2 py-0.5 bg-purple-50 text-purple-700 text-[10px] font-bold rounded-full">
+                        <span className="px-2 py-0.5 bg-[#006B3C]/10 text-[#006B3C] text-[10px] font-bold rounded-full">
                           {customQuestions.length} {customQuestions.length === 1 ? 'Question' : 'Questions'}
                         </span>
                       )}
@@ -678,7 +678,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                         <div key={cq.id} className="bg-white p-3.5 sm:p-4 rounded-2xl border border-gray-200 shadow-xs transition-all space-y-3">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-1.5">
-                              <span className="w-5 h-5 rounded-md bg-[#35408e]/10 text-[#35408e] text-[10px] font-black flex items-center justify-center">
+                              <span className="w-5 h-5 rounded-md bg-[#006B3C]/10 text-[#006B3C] text-[10px] font-black flex items-center justify-center">
                                 Q{index + 1}
                               </span>
                               <span className="text-xs font-bold text-gray-700">Question {index + 1}</span>
@@ -716,7 +716,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                                 }
                                 setCustomQuestions(newQs)
                               }}
-                              className="h-10 w-full sm:w-44 rounded-xl border border-gray-200 bg-white px-3 text-xs sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35408e]/20"
+                              className="h-10 w-full sm:w-44 rounded-xl border border-gray-200 bg-white px-3 text-xs sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006B3C]/20"
                             >
                               <option value="text_short">Short Answer</option>
                               <option value="text_long">Paragraph</option>
@@ -744,7 +744,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                                       setCustomQuestions(newQs)
                                     }}
                                     placeholder={`Option ${optIndex + 1}`}
-                                    className="h-8 border-0 border-b border-gray-200 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:border-[#35408e] flex-1 shadow-none text-xs"
+                                    className="h-8 border-0 border-b border-gray-200 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:border-[#006B3C] flex-1 shadow-none text-xs"
                                   />
                                   {cq.options.length > 1 && (
                                     <button type="button" onClick={() => {
@@ -784,7 +784,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                                     setCustomQuestions(newQs)
                                   }}
                                   placeholder="Low Label (e.g. Poor)"
-                                  className="h-8 border-0 border-b border-gray-200 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:border-[#35408e] flex-1 shadow-none text-xs"
+                                  className="h-8 border-0 border-b border-gray-200 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:border-[#006B3C] flex-1 shadow-none text-xs"
                                 />
                               </div>
                               <div className="flex items-center gap-2">
@@ -798,7 +798,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                                     setCustomQuestions(newQs)
                                   }}
                                   placeholder="High Label (e.g. Excellent)"
-                                  className="h-8 border-0 border-b border-gray-200 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:border-[#35408e] flex-1 shadow-none text-xs"
+                                  className="h-8 border-0 border-b border-gray-200 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:border-[#006B3C] flex-1 shadow-none text-xs"
                                 />
                               </div>
                             </div>
@@ -812,7 +812,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                         onClick={() => {
                           setCustomQuestions([...customQuestions, { id: crypto.randomUUID(), question: '', type: 'text_short' }])
                         }}
-                        className="w-full py-3 px-4 border-2 border-dashed border-gray-200 hover:border-[#35408e]/40 hover:bg-blue-50/50 bg-white text-[#35408e] font-bold text-xs sm:text-sm rounded-2xl flex items-center justify-center gap-2 transition-all shadow-xs active:scale-[0.99]"
+                        className="w-full py-3 px-4 border-2 border-dashed border-gray-200 hover:border-[#006B3C]/40 hover:bg-green-50/50 bg-white text-[#006B3C] font-bold text-xs sm:text-sm rounded-2xl flex items-center justify-center gap-2 transition-all shadow-xs active:scale-[0.99]"
                       >
                         <Plus className="w-4 h-4" />
                         Add Another Question ({customQuestions.length + 1})
@@ -841,7 +841,7 @@ export function EventManagementClient({ events, isAdmin }: { events: any[], isAd
                 <Button type="button" variant="ghost" onClick={handleCloseModal} disabled={isPending || isUploading} className="rounded-xl font-semibold text-xs sm:text-sm">
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isPending || isUploading} className="bg-[#35408e] hover:bg-[#28316d] text-white rounded-xl font-bold px-6 sm:px-8 text-xs sm:text-sm shadow-md active:scale-95 transition-all">
+                <Button type="submit" disabled={isPending || isUploading} className="bg-[#006B3C] hover:bg-[#28316d] text-white rounded-xl font-bold px-6 sm:px-8 text-xs sm:text-sm shadow-md active:scale-95 transition-all">
                   {isUploading ? 'Uploading Images...' : isPending ? 'Saving...' : editingEvent ? 'Save Changes' : 'Create Event'}
                 </Button>
               </div>

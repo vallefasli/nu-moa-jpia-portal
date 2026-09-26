@@ -41,7 +41,7 @@ export function CertificateGenerator({
       ctx.textBaseline = 'middle'
 
       // 1. Draw "CERTIFICATE OF COMPLETION" (if not already in the template)
-      ctx.fillStyle = '#2a3370' // Dark blue
+      ctx.fillStyle = '#004d2b' // Dark blue
       ctx.font = 'bold 60px "Inter", sans-serif'
       ctx.fillText('CERTIFICATE OF COMPLETION', canvas.width / 2, canvas.height * 0.3)
 
@@ -68,7 +68,7 @@ export function CertificateGenerator({
       ctx.font = 'italic 35px "Inter", sans-serif'
       ctx.fillText('For successfully attending and participating in', canvas.width / 2, canvas.height * 0.65)
       
-      ctx.fillStyle = '#fbb03b' // JPIA Gold
+      ctx.fillStyle = '#FFD54F' // JPIA Gold
       ctx.font = 'bold 45px "Inter", sans-serif'
       ctx.fillText(eventTitle, canvas.width / 2, canvas.height * 0.72)
 
@@ -104,7 +104,7 @@ export function CertificateGenerator({
       <div className="w-full max-w-4xl bg-gray-50 rounded-xl overflow-hidden border border-gray-200 shadow-inner relative aspect-[1.414/1] flex items-center justify-center">
         {isGenerating && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50/80 backdrop-blur-sm z-10">
-            <Loader2 className="w-8 h-8 text-[#35408e] animate-spin mb-2" />
+            <Loader2 className="w-8 h-8 text-[#006B3C] animate-spin mb-2" />
             <p className="text-sm font-bold text-gray-500 uppercase tracking-widest">Rendering Certificate...</p>
           </div>
         )}
@@ -119,7 +119,7 @@ export function CertificateGenerator({
       <Button 
         onClick={handleDownload} 
         disabled={isGenerating || !dataUrl}
-        className="h-12 px-8 bg-gradient-to-r from-[#35408e] to-[#2a3370] hover:from-[#2a3370] hover:to-[#1a2350] text-white shadow-lg shadow-blue-900/20 text-lg font-bold min-w-[250px]"
+        className="h-12 px-8 bg-gradient-to-r from-[#006B3C] to-[#004d2b] hover:from-[#004d2b] hover:to-[#1a2350] text-white shadow-lg shadow-green-900/20 text-lg font-bold min-w-[250px]"
       >
         <Download className="w-5 h-5 mr-2" />
         Download High-Res

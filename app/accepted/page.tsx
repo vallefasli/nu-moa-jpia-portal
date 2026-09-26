@@ -10,26 +10,35 @@ export default function AcceptedPage() {
   const router = useRouter()
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-md border-t-4 border-t-green-500">
-        <CardHeader className="text-center space-y-4">
-          <div className="mx-auto bg-green-100 p-3 rounded-full w-16 h-16 flex items-center justify-center">
-            <CheckCircle2 className="w-8 h-8 text-green-500" />
+    <div className="relative flex min-h-screen flex-col items-center justify-center p-4 overflow-hidden bg-gradient-to-br from-[#004d2b] via-[#006B3C] to-[#00854a]">
+      {/* Decorative circles */}
+      <div className="absolute -top-20 -right-20 w-72 h-72 bg-white/[0.04] rounded-full pointer-events-none" />
+      <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-white/[0.04] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FFD54F]/30 to-transparent" />
+
+      <Card className="w-full max-w-md border-0 shadow-2xl shadow-black/20 rounded-3xl overflow-hidden">
+        {/* Gold top accent */}
+        <div className="h-1.5 w-full bg-gradient-to-r from-[#FFD54F] via-amber-300 to-[#FFD54F]" />
+        <CardHeader className="text-center space-y-4 pt-8 pb-4">
+          <div className="mx-auto bg-[#006B3C] p-4 rounded-2xl w-20 h-20 flex items-center justify-center shadow-lg shadow-[#006B3C]/30 ring-4 ring-[#006B3C]/10">
+            <CheckCircle2 className="w-10 h-10 text-[#FFD54F]" />
           </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">Application Approved!</CardTitle>
-          <CardDescription className="text-base">
-            Your account is now active.
+          <CardTitle className="text-2xl font-black text-gray-900">Application Approved!</CardTitle>
+          <CardDescription className="text-sm font-semibold text-[#006B3C]">
+            Your account is now active ✓
           </CardDescription>
         </CardHeader>
-        <CardContent className="text-center text-gray-600 flex flex-col items-center">
-          <p className="mb-6 text-justify px-4 w-full">
-            Welcome to the NU MOA JPIA Portal. You can now access all member features.
+        <CardContent className="text-center text-gray-600 flex flex-col items-center px-8 pb-8">
+          <p className="mb-6 text-sm text-gray-500 leading-relaxed text-center">
+            Welcome to the <strong className="text-[#006B3C]">NU MOA JPIA Portal</strong>. You can now access all member features including events, your digital ID, and certificates.
           </p>
-          <Button onClick={() => router.push('/dashboard')} className="w-full bg-green-600 hover:bg-green-700 text-white py-6 text-lg rounded-xl transition-all active:scale-[0.98]">
-            Go to Dashboard
+          <Button onClick={() => router.push('/dashboard')} className="w-full bg-[#006B3C] hover:bg-[#004d2b] text-white py-6 text-base font-bold rounded-2xl transition-all active:scale-[0.98] shadow-lg shadow-[#006B3C]/20 gap-2">
+            Go to Dashboard →
           </Button>
         </CardContent>
       </Card>
+
+      <p className="mt-6 text-white/40 text-xs font-medium">NU MOA JPIA Membership Portal</p>
     </div>
   )
 }

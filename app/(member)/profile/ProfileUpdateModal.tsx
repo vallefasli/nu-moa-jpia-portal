@@ -61,9 +61,9 @@ export function ProfileUpdateModal({ profile }: { profile: any }) {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="p-4 sm:p-5 bg-gradient-to-r from-[#35408e]/5 via-white to-amber-50/40 border-b border-gray-100 flex items-center justify-between shrink-0">
+            <div className="p-4 sm:p-5 bg-gradient-to-r from-[#006B3C]/5 via-white to-amber-50/40 border-b border-gray-100 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-[#35408e]/10 text-[#35408e]">
+                <div className="p-2 rounded-xl bg-[#006B3C]/10 text-[#006B3C]">
                   <UserCheck className="w-5 h-5" />
                 </div>
                 <div>
@@ -94,7 +94,7 @@ export function ProfileUpdateModal({ profile }: { profile: any }) {
                 <select
                   value={field}
                   onChange={(e) => setField(e.target.value)}
-                  className="w-full h-11 bg-white border border-gray-200 rounded-xl px-3 text-xs sm:text-sm font-semibold text-gray-900 focus:ring-2 focus:ring-[#35408e]/20 focus:border-[#35408e] outline-none transition-all"
+                  className="w-full h-11 bg-white border border-gray-200 rounded-xl px-3 text-xs sm:text-sm font-semibold text-gray-900 focus:ring-2 focus:ring-[#006B3C]/20 focus:border-[#006B3C] outline-none transition-all"
                 >
                   <option value="Committee">Committee Assignment</option>
                   <option value="Full Name">Full Name / Spelling Correction</option>
@@ -132,7 +132,7 @@ export function ProfileUpdateModal({ profile }: { profile: any }) {
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="Explain why this update is needed (e.g. Assigned to new committee by VP, typo in registration, etc.)"
-                  className="w-full bg-gray-50/70 border border-gray-200 rounded-xl p-3 text-xs sm:text-sm focus:ring-2 focus:ring-[#35408e]/20 focus:border-[#35408e] focus:bg-white outline-none resize-none transition-all text-gray-900 placeholder:text-gray-400"
+                  className="w-full bg-gray-50/70 border border-gray-200 rounded-xl p-3 text-xs sm:text-sm focus:ring-2 focus:ring-[#006B3C]/20 focus:border-[#006B3C] focus:bg-white outline-none resize-none transition-all text-gray-900 placeholder:text-gray-400"
                 />
               </div>
 
@@ -148,7 +148,7 @@ export function ProfileUpdateModal({ profile }: { profile: any }) {
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="h-10 px-5 bg-[#35408e] hover:bg-[#28306e] text-white font-bold rounded-xl text-xs sm:text-sm shadow-sm active:scale-95 transition-all"
+                  className="h-10 px-5 bg-[#006B3C] hover:bg-[#28306e] text-white font-bold rounded-xl text-xs sm:text-sm shadow-sm active:scale-95 transition-all"
                 >
                   {isSubmitting ? (
                     <>

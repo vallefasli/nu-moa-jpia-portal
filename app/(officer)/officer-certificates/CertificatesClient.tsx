@@ -158,7 +158,7 @@ export function CertificatesClient({
           placeholder="Search events..."
           value={eventSearchQuery}
           onChange={(e) => setEventSearchQuery(e.target.value)}
-          className="pl-10 bg-white border-gray-200 focus-visible:ring-[#35408e]"
+          className="pl-10 bg-white border-gray-200 focus-visible:ring-[#006B3C]"
         />
       </div>
 
@@ -176,14 +176,14 @@ export function CertificatesClient({
               <div 
                 key={event.id}
                 onClick={() => handleCardClick(event)}
-                className="group bg-white border border-gray-100 rounded-2xl p-4 sm:p-5 hover:border-[#35408e]/30 hover:shadow-xl hover:shadow-[#35408e]/5 transition-all cursor-pointer flex flex-col md:flex-row md:items-center gap-4 md:gap-6 relative overflow-hidden"
+                className="group bg-white border border-gray-100 rounded-2xl p-4 sm:p-5 hover:border-[#006B3C]/30 hover:shadow-xl hover:shadow-[#006B3C]/5 transition-all cursor-pointer flex flex-col md:flex-row md:items-center gap-4 md:gap-6 relative overflow-hidden"
               >
-                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#35408e] to-[#fbb03b] opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#006B3C] to-[#FFD54F] opacity-0 group-hover:opacity-100 transition-opacity" />
                 
                 {/* Icon & Details */}
                 <div className="flex-1 flex items-start md:items-center gap-4 pl-1 sm:pl-0">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors relative overflow-hidden ${
-                    event.poster_url ? 'bg-gray-100' : 'bg-gray-50 text-gray-400 group-hover:bg-[#35408e]/5 group-hover:text-[#35408e]'
+                    event.poster_url ? 'bg-gray-100' : 'bg-gray-50 text-gray-400 group-hover:bg-[#006B3C]/5 group-hover:text-[#006B3C]'
                   }`}>
                     {event.poster_url ? (
                       <Image 
@@ -198,7 +198,7 @@ export function CertificatesClient({
                     )}
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-[#35408e] transition-colors leading-tight mb-1">{event.title}</h3>
+                    <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-[#006B3C] transition-colors leading-tight mb-1">{event.title}</h3>
                     <div className="flex items-center gap-2 text-xs text-gray-500">
                       <Calendar className="w-3.5 h-3.5 text-gray-400 shrink-0" />
                       <span>{eventDate}</span>
@@ -218,12 +218,12 @@ export function CertificatesClient({
                     >
                       {effectiveStatus.toUpperCase()}
                     </Badge>
-                    <Badge variant="outline" className="bg-blue-50/60 text-[#35408e] border-blue-200/60 font-bold text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                      <User className="w-3 h-3 text-[#35408e]" />
+                    <Badge variant="outline" className="bg-green-50/60 text-[#006B3C] border-green-200/60 font-bold text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                      <User className="w-3 h-3 text-[#006B3C]" />
                       <span>{event.feedbackCount || 0} Feedbacks</span>
                     </Badge>
                   </div>
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 group-hover:bg-[#35408e] group-hover:text-white group-hover:border-[#35408e] transition-colors shrink-0">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 group-hover:bg-[#006B3C] group-hover:text-white group-hover:border-[#006B3C] transition-colors shrink-0">
                     <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-0.5" />
                   </div>
                 </div>
@@ -271,7 +271,7 @@ export function CertificatesClient({
                       <label className="flex items-center gap-3 cursor-pointer select-none">
                         <input 
                           type="checkbox"
-                          className="rounded border-gray-300 w-4 h-4 text-[#35408e] focus:ring-[#35408e]"
+                          className="rounded border-gray-300 w-4 h-4 text-[#006B3C] focus:ring-[#006B3C]"
                           checked={selectedUsers.size === filteredFeedbacks.length && filteredFeedbacks.length > 0}
                           onChange={(e) => {
                             if (e.target.checked) setSelectedUsers(new Set(filteredFeedbacks.map(f => f.user_id)))
@@ -288,7 +288,7 @@ export function CertificatesClient({
                             <div className="pt-1">
                               <input 
                                 type="checkbox"
-                                className="rounded border-gray-300 w-4 h-4 text-[#35408e] focus:ring-[#35408e]"
+                                className="rounded border-gray-300 w-4 h-4 text-[#006B3C] focus:ring-[#006B3C]"
                                 checked={selectedUsers.has(feedback.user_id)}
                                 onChange={(e) => {
                                   const newSet = new Set(selectedUsers)
@@ -302,20 +302,20 @@ export function CertificatesClient({
                               <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
                                 <div>
                                   <div className="flex items-center gap-2">
-                                    <div className="font-bold text-lg text-gray-900 group-hover:text-[#35408e] transition-colors">{feedback.users.full_name}</div>
+                                    <div className="font-bold text-lg text-gray-900 group-hover:text-[#006B3C] transition-colors">{feedback.users.full_name}</div>
                                     {feedback.additional_responses?.auto_certificate && feedback.additional_responses?.certificate_link ? (
                                       <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[9px] px-1.5 py-0.5 uppercase">Both</Badge>
                                     ) : feedback.additional_responses?.auto_certificate ? (
-                                      <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-[9px] px-1.5 py-0.5 uppercase">Auto-Cert</Badge>
+                                      <Badge variant="outline" className="bg-green-50 text-[#006B3C] border-green-200 text-[9px] px-1.5 py-0.5 uppercase">Auto-Cert</Badge>
                                     ) : feedback.additional_responses?.certificate_link ? (
-                                      <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 text-[9px] px-1.5 py-0.5 uppercase">Link</Badge>
+                                      <Badge variant="outline" className="bg-[#006B3C]/10 text-[#006B3C] border-[#006B3C]/20 text-[9px] px-1.5 py-0.5 uppercase">Link</Badge>
                                     ) : null}
                                   </div>
                                   <div className="text-sm text-gray-500 font-mono">{feedback.users.student_no}</div>
                                 </div>
                                 <div className="flex items-center gap-1 bg-white p-1.5 rounded-full border border-gray-100 shadow-sm">
                                   {Array.from({ length: 5 }).map((_, i) => (
-                                    <svg key={i} className={`w-4 h-4 ${i < feedback.rating ? 'text-[#fbb03b]' : 'text-gray-200'}`} fill="currentColor" viewBox="0 0 20 20">
+                                    <svg key={i} className={`w-4 h-4 ${i < feedback.rating ? 'text-[#FFD54F]' : 'text-gray-200'}`} fill="currentColor" viewBox="0 0 20 20">
                                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                     </svg>
                                   ))}
@@ -382,11 +382,11 @@ export function CertificatesClient({
                         type="checkbox"
                         checked={isAutoEnabled}
                         onChange={(e) => setIsAutoEnabled(e.target.checked)}
-                        className="rounded border-gray-300 w-4 h-4 text-[#35408e] focus:ring-[#35408e]"
+                        className="rounded border-gray-300 w-4 h-4 text-[#006B3C] focus:ring-[#006B3C]"
                       />
                     </div>
                     <div>
-                      <div className="text-sm font-bold text-gray-900 group-hover:text-[#35408e] transition-colors">Auto-Certificate</div>
+                      <div className="text-sm font-bold text-gray-900 group-hover:text-[#006B3C] transition-colors">Auto-Certificate</div>
                       <div className="text-[10px] text-gray-500 mt-0.5 leading-tight">Automatically generate a certificate for each member with their name on it.</div>
                     </div>
                   </label>
@@ -400,11 +400,11 @@ export function CertificatesClient({
                           type="checkbox"
                           checked={isLinkEnabled}
                           onChange={(e) => setIsLinkEnabled(e.target.checked)}
-                          className="rounded border-gray-300 w-4 h-4 text-[#35408e] focus:ring-[#35408e]"
+                          className="rounded border-gray-300 w-4 h-4 text-[#006B3C] focus:ring-[#006B3C]"
                         />
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-gray-900 group-hover:text-[#35408e] transition-colors flex items-center gap-1.5">
+                        <div className="text-sm font-bold text-gray-900 group-hover:text-[#006B3C] transition-colors flex items-center gap-1.5">
                           <LinkIcon className="w-3.5 h-3.5" />
                           Certificate Link
                         </div>
@@ -436,7 +436,7 @@ export function CertificatesClient({
                     Distributing to all {feedbacks.length} {feedbacks.length === 1 ? 'member' : 'members'}.
                   </p>
                 ) : (
-                  <p className="text-[10px] text-blue-600 font-medium bg-blue-50 p-2 rounded border border-blue-100">
+                  <p className="text-[10px] text-blue-600 font-medium bg-green-50 p-2 rounded border border-blue-100">
                     Distributing to {selectedUsers.size} selected {selectedUsers.size === 1 ? 'member' : 'members'} only.
                   </p>
                 )}
@@ -446,7 +446,7 @@ export function CertificatesClient({
                 <Button 
                   onClick={handleDistribute} 
                   disabled={isSubmitting || isLoadingFeedbacks || selectedUsers.size === 0}
-                  className="w-full bg-[#35408e] hover:bg-[#28316d] text-white font-bold h-11 shadow-md disabled:bg-gray-300"
+                  className="w-full bg-[#006B3C] hover:bg-[#28316d] text-white font-bold h-11 shadow-md disabled:bg-gray-300"
                 >
                   {isSubmitting ? 'Processing...' : 'Distribute Certificates'}
                 </Button>

@@ -83,8 +83,8 @@ function LoginForm({ role }: { role: string }) {
 
       {/* Role specific helper note */}
       {role === 'officer' && (
-        <div className="bg-blue-50/70 border border-blue-200/60 rounded-xl p-3 text-xs text-slate-700 flex items-center gap-2.5 leading-relaxed">
-          <Info className="w-4 h-4 text-[#35408e] shrink-0" />
+        <div className="bg-green-50/70 border border-green-200/60 rounded-xl p-3 text-xs text-slate-700 flex items-center gap-2.5 leading-relaxed">
+          <Info className="w-4 h-4 text-[#006B3C] shrink-0" />
           <p className="text-slate-600 font-medium">
             Officer accounts are assigned and managed by administrators.
           </p>
@@ -112,7 +112,7 @@ function LoginForm({ role }: { role: string }) {
               type="email" 
               placeholder="personal@gmail.com" 
               required 
-              className="pl-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#35408e] focus:ring-2 focus:ring-[#35408e]/15 transition-all"
+              className="pl-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#006B3C] focus:ring-2 focus:ring-[#006B3C]/15 transition-all"
             />
           </div>
         </div>
@@ -137,7 +137,7 @@ function LoginForm({ role }: { role: string }) {
               type={showPassword ? "text" : "password"} 
               placeholder="••••••••"
               required 
-              className="pl-10 pr-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#35408e] focus:ring-2 focus:ring-[#35408e]/15 transition-all"
+              className="pl-10 pr-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#006B3C] focus:ring-2 focus:ring-[#006B3C]/15 transition-all"
             />
             <button
               type="button"
@@ -169,7 +169,7 @@ function LoginForm({ role }: { role: string }) {
                 type={showConfirmPassword ? "text" : "password"} 
                 placeholder="••••••••"
                 required 
-                className="pl-10 pr-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#35408e] focus:ring-2 focus:ring-[#35408e]/15 transition-all"
+                className="pl-10 pr-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#006B3C] focus:ring-2 focus:ring-[#006B3C]/15 transition-all"
               />
               <button
                 type="button"
@@ -185,7 +185,7 @@ function LoginForm({ role }: { role: string }) {
 
         {/* Submit Button */}
         <Button 
-          className="w-full h-11 sm:h-12 bg-[#35408e] hover:bg-[#2a3370] text-white font-semibold rounded-xl shadow-md shadow-[#35408e]/20 active:scale-[0.99] transition-all cursor-pointer text-sm" 
+          className="w-full h-11 sm:h-12 bg-[#006B3C] hover:bg-[#004d2b] text-white font-semibold rounded-xl shadow-md shadow-[#006B3C]/20 active:scale-[0.99] transition-all cursor-pointer text-sm" 
           type="submit" 
           disabled={isPending}
         >
@@ -268,7 +268,7 @@ function LoginForm({ role }: { role: string }) {
           <button 
             type="button" 
             onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-            className="font-semibold text-[#35408e] hover:text-[#252d6a] hover:underline transition-colors cursor-pointer"
+            className="font-semibold text-[#006B3C] hover:text-[#004d2b] hover:underline transition-colors cursor-pointer"
           >
             {mode === 'login' ? 'Sign Up' : 'Sign In'}
           </button>
@@ -328,85 +328,164 @@ export default function LoginPage() {
   }, [])
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50/70 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
-      {/* Subtle Background Glows */}
-      <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#35408e]/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#fbb03b]/8 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen flex flex-col lg:flex-row overflow-hidden">
+      {/* ── Left Branding Panel (desktop only) ── */}
+      <div className="hidden lg:flex lg:w-[55%] xl:w-[60%] flex-col justify-between relative bg-gradient-to-br from-[#004d2b] via-[#006B3C] to-[#00854a] overflow-hidden p-12 xl:p-16">
+        {/* Decorative background shapes */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/[0.03] rounded-full -translate-y-1/3 translate-x-1/4 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-white/[0.03] rounded-full translate-y-1/3 -translate-x-1/4 pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#FFD54F]/[0.04] rounded-full blur-3xl pointer-events-none" />
 
-      <Suspense fallback={null}>
-        <AuthStateSync setActiveRole={setActiveRole} />
-      </Suspense>
+        {/* Gold accent lines */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#FFD54F]/60 to-transparent" />
 
-      {/* Main Content Area */}
-      <div className="w-full max-w-md flex flex-col items-center">
-        {/* Brand Header */}
-        <div className="text-center mb-6">
-          <div className="mx-auto w-12 h-12 rounded-2xl bg-gradient-to-br from-[#35408e] to-[#202758] flex items-center justify-center text-white shadow-lg shadow-[#35408e]/20 ring-4 ring-[#35408e]/10 mb-3">
-            <GraduationCap className="w-6 h-6 text-[#fbb03b]" />
+        {/* Brand header */}
+        <div className="relative z-10 animate-in fade-in slide-in-from-top-4 duration-700">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center backdrop-blur-sm">
+              <GraduationCap className="w-5 h-5 text-[#FFD54F]" />
+            </div>
+            <div>
+              <p className="text-white/60 text-[10px] font-bold tracking-[0.25em] uppercase">Official Portal</p>
+            </div>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-            NU MOA JPIA
+          <h1 className="text-5xl xl:text-6xl font-black text-white tracking-tight leading-[1.05] mt-6">
+            NU MOA<br />
+            <span className="text-[#FFD54F]">JPIA</span>
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            Membership Portal
+          <p className="text-white/60 mt-4 text-lg font-medium leading-relaxed max-w-xs">
+            Junior Philippine Institute<br />of Accountants
           </p>
         </div>
 
-        {/* Auth Card */}
-        <div className="w-full bg-white border border-slate-200/80 shadow-xl shadow-slate-900/[0.04] rounded-2xl sm:rounded-3xl p-6 sm:p-8 transition-all">
-          {/* Segmented Role Selector */}
-          <div className="grid w-full grid-cols-2 bg-slate-100/80 p-1 rounded-xl sm:rounded-2xl mb-6 border border-slate-200/60">
-            <button
-              type="button"
-              onClick={() => setActiveRole('member')}
-              className={`cursor-pointer flex items-center justify-center gap-2 rounded-lg sm:rounded-xl py-2 px-3 text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                activeRole === 'member'
-                  ? 'bg-white text-[#35408e] shadow-sm border border-slate-200/80 font-bold'
-                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/40'
-              }`}
-            >
-              <GraduationCap className={`w-4 h-4 ${activeRole === 'member' ? 'text-[#35408e]' : 'text-slate-400'}`} />
-              <span>Member</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveRole('officer')}
-              className={`cursor-pointer flex items-center justify-center gap-2 rounded-lg sm:rounded-xl py-2 px-3 text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                activeRole === 'officer'
-                  ? 'bg-white text-[#35408e] shadow-sm border border-slate-200/80 font-bold'
-                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/40'
-              }`}
-            >
-              <ShieldCheck className={`w-4 h-4 ${activeRole === 'officer' ? 'text-[#35408e]' : 'text-slate-400'}`} />
-              <span>Officer</span>
-            </button>
+        {/* Center content */}
+        <div className="relative z-10 animate-in fade-in duration-1000 delay-200">
+          <div className="space-y-6">
+            {[
+              { icon: '🎓', title: 'Membership Management', desc: 'Track your membership status and ID' },
+              { icon: '📅', title: 'Events & Attendance', desc: 'Register for events and earn points' },
+              { icon: '🏅', title: 'Certificates & Rewards', desc: 'Access your earned certificates' },
+            ].map((item, i) => (
+              <div key={i} className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-lg shrink-0 backdrop-blur-sm">
+                  {item.icon}
+                </div>
+                <div>
+                  <p className="text-white font-semibold text-sm">{item.title}</p>
+                  <p className="text-white/50 text-xs mt-0.5">{item.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
-
-          {/* Form */}
-          <LoginForm role={activeRole} />
         </div>
 
-        {/* Admin Portal Shortcut */}
-        <div className="mt-3.5 text-center">
-          <Link 
-            href="/admin-login" 
-            className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-[#35408e] transition-colors py-1 px-2 rounded-md hover:bg-slate-100"
-          >
-            <ShieldAlert className="w-3.5 h-3.5" />
-            <span>Administrator Access</span>
-          </Link>
-        </div>
-
-        {/* Minimalist Footer */}
-        <div className="mt-5 text-center text-xs text-slate-400 space-y-1.5">
-          <div className="space-x-3 text-[12px]">
-            <Link href="/privacy" className="hover:text-slate-600 hover:underline transition-colors">Privacy Policy</Link>
-            <span>&middot;</span>
-            <Link href="/terms" className="hover:text-slate-600 hover:underline transition-colors">Terms and Conditions</Link>
+        {/* Bottom badge */}
+        <div className="relative z-10 animate-in fade-in duration-1000 delay-500">
+          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 backdrop-blur-sm">
+            <div className="w-2 h-2 rounded-full bg-[#FFD54F] animate-pulse" />
+            <span className="text-white/80 text-xs font-semibold tracking-wide">National University — MOA Campus</span>
           </div>
-          <p className="text-[11px] text-slate-400/80">
-            {`© ${new Date().getFullYear()} National University MOA • Junior Philippine Institute of Accountants`}
-          </p>
+        </div>
+      </div>
+
+      {/* ── Right Auth Panel ── */}
+      <div className="flex-1 flex flex-col items-center justify-center bg-slate-50/70 p-4 sm:p-6 lg:p-10 xl:p-14 relative overflow-hidden">
+        {/* Mobile background glows */}
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#006B3C]/5 rounded-full blur-3xl pointer-events-none lg:hidden" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#FFD54F]/8 rounded-full blur-3xl pointer-events-none lg:hidden" />
+
+        <Suspense fallback={null}>
+          <AuthStateSync setActiveRole={setActiveRole} />
+        </Suspense>
+
+        {/* Main Content Area */}
+        <div className="w-full max-w-md flex flex-col items-center relative z-10">
+          {/* Brand Header (mobile only) */}
+          <div className="text-center mb-6 lg:hidden">
+            <div className="mx-auto w-12 h-12 rounded-2xl bg-gradient-to-br from-[#006B3C] to-[#004d2b] flex items-center justify-center text-white shadow-lg shadow-[#006B3C]/20 ring-4 ring-[#006B3C]/10 mb-3">
+              <GraduationCap className="w-6 h-6 text-[#FFD54F]" />
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+              NU MOA JPIA
+            </h1>
+            <p className="text-sm text-slate-500 mt-0.5">
+              Membership Portal
+            </p>
+          </div>
+
+          {/* Desktop welcome text */}
+          <div className="hidden lg:block text-center w-full mb-8">
+            <h2 className="text-2xl xl:text-3xl font-black text-slate-900 tracking-tight">Welcome back</h2>
+            <p className="text-slate-500 mt-1 text-sm">Sign in to access your membership portal</p>
+          </div>
+
+          {/* Auth Card */}
+          <div className="w-full bg-white border border-slate-200/80 shadow-xl shadow-slate-900/[0.04] rounded-2xl sm:rounded-3xl p-6 sm:p-8 transition-all">
+            {/* Segmented Role Selector */}
+            <div className="grid w-full grid-cols-2 bg-slate-100/80 p-1 rounded-xl sm:rounded-2xl mb-6 border border-slate-200/60">
+              <button
+                type="button"
+                onClick={() => setActiveRole('member')}
+                className={`cursor-pointer flex items-center justify-center gap-2 rounded-lg sm:rounded-xl py-2 px-3 text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                  activeRole === 'member'
+                    ? 'bg-white text-[#006B3C] shadow-sm border border-slate-200/80 font-bold'
+                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/40'
+                }`}
+              >
+                <GraduationCap className={`w-4 h-4 ${activeRole === 'member' ? 'text-[#006B3C]' : 'text-slate-400'}`} />
+                <span>Member</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveRole('officer')}
+                className={`cursor-pointer flex items-center justify-center gap-2 rounded-lg sm:rounded-xl py-2 px-3 text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                  activeRole === 'officer'
+                    ? 'bg-white text-[#006B3C] shadow-sm border border-slate-200/80 font-bold'
+                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/40'
+                }`}
+              >
+                <ShieldCheck className={`w-4 h-4 ${activeRole === 'officer' ? 'text-[#006B3C]' : 'text-slate-400'}`} />
+                <span>Officer</span>
+              </button>
+            </div>
+
+            {/* Gold underline indicator for active tab */}
+            <div className="relative h-0.5 bg-slate-100 rounded-full mb-6 -mt-4 mx-1">
+              <div
+                className="absolute top-0 h-full bg-[#FFD54F] rounded-full transition-all duration-300 shadow-[0_0_8px_rgba(255,213,79,0.6)]"
+                style={{
+                  width: '45%',
+                  left: activeRole === 'member' ? '2.5%' : '52.5%',
+                }}
+              />
+            </div>
+
+            {/* Form */}
+            <LoginForm role={activeRole} />
+          </div>
+
+          {/* Admin Portal Shortcut */}
+          <div className="mt-3.5 text-center">
+            <Link 
+              href="/admin-login" 
+              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-[#006B3C] transition-colors py-1 px-2 rounded-md hover:bg-slate-100"
+            >
+              <ShieldAlert className="w-3.5 h-3.5" />
+              <span>Administrator Access</span>
+            </Link>
+          </div>
+
+          {/* Minimalist Footer */}
+          <div className="mt-5 text-center text-xs text-slate-400 space-y-1.5">
+            <div className="space-x-3 text-[12px]">
+              <Link href="/privacy" className="hover:text-slate-600 hover:underline transition-colors">Privacy Policy</Link>
+              <span>&middot;</span>
+              <Link href="/terms" className="hover:text-slate-600 hover:underline transition-colors">Terms and Conditions</Link>
+            </div>
+            <p className="text-[11px] text-slate-400/80">
+              {`© ${new Date().getFullYear()} National University MOA • Junior Philippine Institute of Accountants`}
+            </p>
+          </div>
         </div>
       </div>
     </div>

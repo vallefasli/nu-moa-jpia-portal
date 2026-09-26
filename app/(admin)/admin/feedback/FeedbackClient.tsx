@@ -165,7 +165,7 @@ export function FeedbackClient({
               placeholder="Search name, student no, or message..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-white border-gray-200 shadow-xs rounded-xl h-10 text-xs sm:text-sm focus-visible:ring-1 focus-visible:ring-[#35408e]"
+              className="pl-9 bg-white border-gray-200 shadow-xs rounded-xl h-10 text-xs sm:text-sm focus-visible:ring-1 focus-visible:ring-[#006B3C]"
             />
           </div>
 
@@ -178,7 +178,7 @@ export function FeedbackClient({
             <SlidersHorizontal className="w-4 h-4 text-gray-500" />
             <span className="text-xs sm:text-sm">Filters</span>
             {activeFiltersCount > 0 && (
-              <span className="bg-[#35408e] text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
+              <span className="bg-[#006B3C] text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
                 {activeFiltersCount}
               </span>
             )}
@@ -208,7 +208,7 @@ export function FeedbackClient({
             <button
               type="button"
               onClick={resetFilters}
-              className="text-[11px] text-[#35408e] font-semibold hover:underline ml-1"
+              className="text-[11px] text-[#006B3C] font-semibold hover:underline ml-1"
             >
               Clear all
             </button>
@@ -220,7 +220,7 @@ export function FeedbackClient({
       <div className="space-y-3">
         {filteredFeedbacks.length === 0 ? (
           <div className="bg-white border border-gray-200/80 rounded-2xl p-10 sm:p-14 text-center space-y-2">
-            <div className="w-12 h-12 rounded-2xl bg-gray-50 text-gray-400 flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-green-50 text-[#006B3C]/40 flex items-center justify-center mx-auto">
               <MessageSquare className="w-6 h-6" />
             </div>
             <h3 className="text-sm sm:text-base font-bold text-gray-900">No submissions found</h3>
@@ -260,7 +260,7 @@ export function FeedbackClient({
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-gray-100">
                     {/* Member Meta */}
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs sm:text-sm shrink-0 border border-gray-200">
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#006B3C] text-[#FFD54F] flex items-center justify-center font-bold text-xs sm:text-sm shrink-0 shadow-sm">
                         {initials}
                       </div>
                       <div className="min-w-0">
@@ -324,7 +324,7 @@ export function FeedbackClient({
                       {item.type === 'profile_update' && item.users?.student_no && (
                         <Link
                           href={`/admin/members?search=${encodeURIComponent(item.users.student_no)}`}
-                          className="inline-flex items-center gap-1 px-3 py-1 bg-white hover:bg-gray-50 text-[#35408e] text-xs font-semibold rounded-xl border border-gray-200 transition-colors shadow-2xs"
+                          className="inline-flex items-center gap-1 px-3 py-1 bg-white hover:bg-gray-50 text-[#006B3C] text-xs font-semibold rounded-xl border border-gray-200 transition-colors shadow-2xs"
                         >
                           <User className="w-3 h-3" />
                           <span>Edit Member</span>
@@ -400,7 +400,7 @@ export function FeedbackClient({
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full h-10 bg-white border border-gray-200 rounded-xl px-3 text-xs sm:text-sm font-medium text-gray-900 focus:ring-1 focus:ring-[#35408e] outline-none"
+                className="w-full h-10 bg-white border border-gray-200 rounded-xl px-3 text-xs sm:text-sm font-medium text-gray-900 focus:ring-1 focus:ring-[#006B3C] outline-none"
               >
                 <option value="all">All Categories</option>
                 <option value="profile_update">Profile Updates</option>
@@ -419,7 +419,7 @@ export function FeedbackClient({
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as any)}
-                className="w-full h-10 bg-white border border-gray-200 rounded-xl px-3 text-xs sm:text-sm font-medium text-gray-900 focus:ring-1 focus:ring-[#35408e] outline-none"
+                className="w-full h-10 bg-white border border-gray-200 rounded-xl px-3 text-xs sm:text-sm font-medium text-gray-900 focus:ring-1 focus:ring-[#006B3C] outline-none"
               >
                 <option value="all">All Status</option>
                 <option value="open">Open Only</option>
@@ -440,7 +440,7 @@ export function FeedbackClient({
             <Button
               type="button"
               onClick={() => setIsFilterDialogOpen(false)}
-              className="bg-[#35408e] hover:bg-[#28306e] text-white text-xs font-bold px-4 h-9 rounded-xl shadow-xs"
+              className="bg-[#006B3C] hover:bg-[#28306e] text-white text-xs font-bold px-4 h-9 rounded-xl shadow-xs"
             >
               Apply Filters
             </Button>

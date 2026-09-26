@@ -21,7 +21,7 @@ export default function BackButton() {
   return (
     <button 
       onClick={handleBack}
-      className="inline-flex items-center text-sm font-medium text-[#35408e] hover:underline mb-6"
+      className="inline-flex items-center text-sm font-medium text-[#006B3C] hover:underline mb-6"
     >
       <ArrowLeft className="w-4 h-4 mr-2" />
       Back

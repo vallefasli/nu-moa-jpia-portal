@@ -22,11 +22,11 @@ export function MemberSidebar({ role }: { role?: string }) {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-72 flex-col bg-white/80 backdrop-blur-xl border-r border-gray-200/60 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10 transition-all duration-300">
         <div className="p-8 pb-4">
-          <div className="bg-gradient-to-r from-[#35408e] to-[#2a3370] bg-clip-text text-transparent">
+          <div className="bg-gradient-to-r from-[#006B3C] to-[#004d2b] bg-clip-text text-transparent">
             <h2 className="text-3xl font-extrabold tracking-tight">NU MOA</h2>
             <h2 className="text-3xl font-extrabold tracking-tight mt-[-4px]">JPIA</h2>
           </div>
-          <p className="text-[10px] text-[#fbb03b] font-bold tracking-[0.2em] uppercase mt-2">Member Portal</p>
+          <p className="text-[10px] text-[#FFD54F] font-bold tracking-[0.2em] uppercase mt-2">Member Portal</p>
         </div>
         <nav className="flex-1 px-4 mt-6 space-y-1.5">
           {navItems.map((item) => {
@@ -39,7 +39,7 @@ export function MemberSidebar({ role }: { role?: string }) {
                 className={cn(
                   "flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 group",
                   isActive 
-                    ? "bg-gradient-to-r from-[#35408e] to-[#2a3370] text-white shadow-md shadow-blue-900/20 translate-x-1" 
+                    ? "bg-gradient-to-r from-[#006B3C] to-[#004d2b] text-white shadow-md shadow-green-900/20 translate-x-1" 
                     : "text-gray-500 hover:bg-gray-100/80 hover:text-gray-900 hover:translate-x-1"
                 )}
               >
@@ -61,9 +61,9 @@ export function MemberSidebar({ role }: { role?: string }) {
             <Link 
               href="/scanner"
               prefetch={true}
-              className="flex w-full items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-500 hover:bg-[#35408e]/10 hover:text-[#35408e] transition-all duration-200 group"
+              className="flex w-full items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-500 hover:bg-[#006B3C]/10 hover:text-[#006B3C] transition-all duration-200 group"
             >
-              <div className="p-2 bg-gray-100 rounded-lg group-hover:bg-[#35408e]/20 transition-colors">
+              <div className="p-2 bg-gray-100 rounded-lg group-hover:bg-[#006B3C]/20 transition-colors">
                 <Shield className="w-5 h-5 group-hover:scale-110 transition-transform" />
               </div>
               Officer Portal
@@ -86,11 +86,11 @@ export function MemberSidebar({ role }: { role?: string }) {
       <div className="md:hidden flex items-center justify-between h-14 px-4 bg-white/90 backdrop-blur-xl border-b border-gray-200/70 sticky top-0 z-40 shadow-xs pt-safe">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
-            <span className="font-black text-[#35408e] text-base tracking-tight">NU MOA</span>
+            <span className="font-black text-[#006B3C] text-base tracking-tight">NU MOA</span>
             <span className="font-black text-gray-900 text-base tracking-tight">JPIA</span>
           </div>
-          <div className="w-1.5 h-1.5 rounded-full bg-[#fbb03b]" />
-          <span className="text-[10px] bg-[#35408e]/10 text-[#35408e] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#FFD54F]" />
+          <span className="text-[10px] bg-[#006B3C]/10 text-[#006B3C] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
             Member
           </span>
         </div>
@@ -99,7 +99,7 @@ export function MemberSidebar({ role }: { role?: string }) {
             <Link 
               href="/scanner" 
               prefetch={true} 
-              className="w-9 h-9 flex items-center justify-center rounded-xl bg-blue-50/80 hover:bg-blue-100 text-[#35408e] border border-blue-200/60 shadow-2xs transition-all active:scale-95"
+              className="w-9 h-9 flex items-center justify-center rounded-xl bg-green-50/80 hover:bg-green-100 text-[#006B3C] border border-green-200/60 shadow-2xs transition-all active:scale-95"
               title="Officer Portal"
               aria-label="Officer Portal"
             >
@@ -130,21 +130,21 @@ export function MemberSidebar({ role }: { role?: string }) {
                 prefetch={true}
                 className={cn(
                   "relative flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-1 rounded-xl transition-all duration-200 ease-out active:scale-95",
-                  isActive ? "text-[#35408e]" : "text-gray-400 hover:text-gray-600"
+                  isActive ? "text-[#006B3C]" : "text-gray-400 hover:text-gray-600"
                 )}
               >
                 {isActive && (
-                  <span className="absolute -top-1.5 w-8 h-1 bg-[#35408e] rounded-full shadow-[0_2px_8px_rgba(53,64,142,0.4)]" />
+                  <span className="absolute -top-1.5 w-8 h-1 bg-[#006B3C] rounded-full shadow-[0_2px_8px_rgba(0,107,60,0.4)]" />
                 )}
                 <div className={cn(
                   "p-1.5 rounded-xl mb-0.5 transition-all duration-200",
-                  isActive ? "bg-blue-50/90 scale-105 shadow-inner" : "bg-transparent"
+                  isActive ? "bg-green-50/90 scale-105 shadow-inner" : "bg-transparent"
                 )}>
-                  <item.icon className={cn("w-5 h-5 transition-all", isActive ? "text-[#35408e] stroke-[2.25]" : "text-gray-400")} />
+                  <item.icon className={cn("w-5 h-5 transition-all", isActive ? "text-[#006B3C] stroke-[2.25]" : "text-gray-400")} />
                 </div>
                 <span className={cn(
                   "text-[10px] font-bold tracking-tight transition-colors text-center truncate max-w-full",
-                  isActive ? "text-[#35408e]" : "text-gray-400 font-medium"
+                  isActive ? "text-[#006B3C]" : "text-gray-400 font-medium"
                 )}>
                   {item.name}
                 </span>

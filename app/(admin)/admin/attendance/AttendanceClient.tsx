@@ -138,7 +138,7 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
           type="button"
           onClick={() => setMobileTab('logs')}
           className={`flex-1 py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-            mobileTab === 'logs' ? 'bg-white text-[#35408e] shadow-sm' : 'text-gray-600 hover:text-gray-900'
+            mobileTab === 'logs' ? 'bg-white text-[#006B3C] shadow-sm' : 'text-gray-600 hover:text-gray-900'
           }`}
         >
           <UserCheck className="w-4 h-4" />
@@ -173,7 +173,7 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
             </div>
 
             <div className="relative w-full sm:w-72 border border-gray-200 rounded-xl bg-white shadow-xs">
-              <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#35408e] pointer-events-none" />
+              <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#006B3C] pointer-events-none" />
               <select 
                 className="w-full h-10 pl-9 pr-8 bg-transparent text-xs sm:text-sm font-semibold text-gray-800 focus:outline-none appearance-none truncate"
                 value={activeEventId}
@@ -198,7 +198,7 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
               <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900 transition-colors">
                 <input 
                   type="checkbox" 
-                  className="rounded border-gray-300 w-4 h-4 text-[#35408e] cursor-pointer"
+                  className="rounded border-gray-300 w-4 h-4 text-[#006B3C] cursor-pointer"
                   checked={selectedUserIds.length > 0 && selectedUserIds.length === filteredLogs.length}
                   ref={input => {
                     if (input) {
@@ -232,14 +232,14 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
                 <div 
                   key={log.user_id}
                   className={`bg-white rounded-2xl p-4 border transition-all shadow-xs ${
-                    isSelected ? 'border-[#35408e] bg-blue-50/30 ring-1 ring-[#35408e]/30' : 'border-gray-100 hover:border-gray-200'
+                    isSelected ? 'border-[#006B3C] bg-green-50/30 ring-1 ring-[#006B3C]/30' : 'border-gray-100 hover:border-gray-200'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3 pb-3 border-b border-gray-100">
                     <div className="flex items-center gap-3">
                       <input 
                         type="checkbox" 
-                        className="rounded border-gray-300 w-4 h-4 text-[#35408e] cursor-pointer mt-0.5"
+                        className="rounded border-gray-300 w-4 h-4 text-[#006B3C] cursor-pointer mt-0.5"
                         checked={isSelected}
                         onChange={() => toggleSelect(log.user_id)}
                       />
@@ -250,7 +250,7 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
                     </div>
 
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                      log.is_registered ? 'bg-blue-50 text-[#35408e] border border-blue-200' : 'bg-gray-100 text-gray-600'
+                      log.is_registered ? 'bg-green-50 text-[#006B3C] border border-green-200' : 'bg-gray-100 text-gray-600'
                     }`}>
                       {log.is_registered ? 'RSVP\'d' : 'Walk-in'}
                     </span>
@@ -338,7 +338,7 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
                     <th className="px-4 py-3 w-10">
                       <input 
                         type="checkbox" 
-                        className="rounded border-gray-300 w-4 h-4 text-[#35408e] cursor-pointer"
+                        className="rounded border-gray-300 w-4 h-4 text-[#006B3C] cursor-pointer"
                         checked={selectedUserIds.length > 0 && selectedUserIds.length === filteredLogs.length}
                         ref={input => {
                           if (input) {
@@ -358,11 +358,11 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
                   {filteredLogs.map(log => {
                     const isSelected = selectedUserIds.includes(log.user_id)
                     return (
-                      <tr key={log.user_id} className={`bg-white hover:bg-gray-50/80 transition-colors ${isSelected ? 'bg-blue-50/50' : ''}`}>
+                      <tr key={log.user_id} className={`bg-white hover:bg-gray-50/80 transition-colors ${isSelected ? 'bg-green-50/50' : ''}`}>
                         <td className="px-4 py-3">
                           <input 
                             type="checkbox" 
-                            className="rounded border-gray-300 w-4 h-4 text-[#35408e] cursor-pointer"
+                            className="rounded border-gray-300 w-4 h-4 text-[#006B3C] cursor-pointer"
                             checked={isSelected}
                             onChange={() => toggleSelect(log.user_id)}
                           />
@@ -373,7 +373,7 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
                         </td>
                         <td className="px-4 py-3 text-center whitespace-nowrap">
                           <span className={`inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap ${
-                            log.is_registered ? 'bg-blue-50 text-[#35408e] border border-blue-200' : 'bg-gray-100 text-gray-700'
+                            log.is_registered ? 'bg-green-50 text-[#006B3C] border border-green-200' : 'bg-gray-100 text-gray-700'
                           }`}>
                             {log.is_registered ? 'RSVP\'d' : 'Walk-in'}
                           </span>
@@ -478,7 +478,7 @@ export function AttendanceClient({ events, initialLogs, activeEventId }: { event
                 </div>
 
                 {selectedUserIds.length > 1 ? (
-                  <div className="p-3.5 bg-blue-50 text-blue-900 rounded-xl border border-blue-100 text-xs">
+                  <div className="p-3.5 bg-green-50 text-blue-900 rounded-xl border border-blue-100 text-xs">
                     <div className="font-bold">{selectedUserIds.length} students selected</div>
                     <p className="text-[11px] text-blue-700 mt-0.5">This action will be applied to all selected accounts simultaneously.</p>
                   </div>

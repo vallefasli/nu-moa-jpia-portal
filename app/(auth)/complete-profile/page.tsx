@@ -103,15 +103,15 @@ export default function CompleteProfilePage() {
   return (
     <div className="min-h-screen flex flex-col justify-between items-center bg-slate-50/70 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
       {/* Subtle Background Glows */}
-      <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#35408e]/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#fbb03b]/8 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#006B3C]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#FFD54F]/8 rounded-full blur-3xl pointer-events-none" />
 
       {/* Main Content Area */}
       <div className="w-full max-w-2xl my-auto flex flex-col items-center">
         {/* Brand Header */}
         <div className="text-center mb-6">
-          <div className="mx-auto w-12 h-12 rounded-2xl bg-gradient-to-br from-[#35408e] to-[#202758] flex items-center justify-center text-white shadow-lg shadow-[#35408e]/20 ring-4 ring-[#35408e]/10 mb-3">
-            <UserCheck className="w-6 h-6 text-[#fbb03b]" />
+          <div className="mx-auto w-12 h-12 rounded-2xl bg-gradient-to-br from-[#006B3C] to-[#004d2b] flex items-center justify-center text-white shadow-lg shadow-[#006B3C]/20 ring-4 ring-[#006B3C]/10 mb-3">
+            <UserCheck className="w-6 h-6 text-[#FFD54F]" />
           </div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
             Complete Your Profile
@@ -135,7 +135,7 @@ export default function CompleteProfilePage() {
             {/* Section 1: Personal Information */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
-                <User className="w-4 h-4 text-[#35408e]" />
+                <User className="w-4 h-4 text-[#006B3C]" />
                 <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800">
                   Personal Information
                 </h2>
@@ -154,7 +154,7 @@ export default function CompleteProfilePage() {
                     required 
                     value={firstName} 
                     onChange={e => setFirstName(e.target.value)} 
-                    className="h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#35408e] focus:ring-2 focus:ring-[#35408e]/15 transition-all"
+                    className="h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#006B3C] focus:ring-2 focus:ring-[#006B3C]/15 transition-all"
                   />
                 </div>
                 
@@ -170,7 +170,7 @@ export default function CompleteProfilePage() {
                     required 
                     value={lastName} 
                     onChange={e => setLastName(e.target.value)} 
-                    className="h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#35408e] focus:ring-2 focus:ring-[#35408e]/15 transition-all"
+                    className="h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#006B3C] focus:ring-2 focus:ring-[#006B3C]/15 transition-all"
                   />
                 </div>
                 
@@ -185,7 +185,7 @@ export default function CompleteProfilePage() {
                     placeholder="e.g. Santos" 
                     value={middleName} 
                     onChange={e => setMiddleName(e.target.value)} 
-                    className="h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#35408e] focus:ring-2 focus:ring-[#35408e]/15 transition-all"
+                    className="h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#006B3C] focus:ring-2 focus:ring-[#006B3C]/15 transition-all"
                   />
                 </div>
                 
@@ -207,7 +207,7 @@ export default function CompleteProfilePage() {
                       onChange={e => setStudentNo(e.target.value)}
                       pattern="^\d{4}-\d{6,7}$"
                       title="Format: 202X-XXXXXX or 202X-XXXXXXX (e.g. 2024-1234567)"
-                      className="pl-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#35408e] focus:ring-2 focus:ring-[#35408e]/15 transition-all font-mono"
+                      className="pl-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#006B3C] focus:ring-2 focus:ring-[#006B3C]/15 transition-all font-mono"
                     />
                   </div>
                 </div>
@@ -231,7 +231,7 @@ export default function CompleteProfilePage() {
                       onChange={e => setStudentEmail(e.target.value)}
                       pattern="^[a-zA-Z0-9._%+-]+@students\.nu-moa\.edu\.ph$"
                       title="Must be a valid @students.nu-moa.edu.ph email address"
-                      className="pl-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#35408e] focus:ring-2 focus:ring-[#35408e]/15 transition-all"
+                      className="pl-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#006B3C] focus:ring-2 focus:ring-[#006B3C]/15 transition-all"
                     />
                   </div>
                 </div>
@@ -241,7 +241,7 @@ export default function CompleteProfilePage() {
             {/* Section 2: Academic & Organization */}
             <div className="space-y-4 pt-2">
               <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
-                <GraduationCap className="w-4 h-4 text-[#35408e]" />
+                <GraduationCap className="w-4 h-4 text-[#006B3C]" />
                 <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800">
                   Academic & Organization
                 </h2>
@@ -257,7 +257,7 @@ export default function CompleteProfilePage() {
                   required 
                   value={program}
                   onChange={e => setProgram(e.target.value)}
-                  className="flex h-11 w-full rounded-xl border border-slate-200 bg-slate-50/60 px-3.5 py-2 text-sm text-slate-900 transition-all focus:bg-white focus:border-[#35408e] focus:ring-2 focus:ring-[#35408e]/15 focus:outline-none cursor-pointer"
+                  className="flex h-11 w-full rounded-xl border border-slate-200 bg-slate-50/60 px-3.5 py-2 text-sm text-slate-900 transition-all focus:bg-white focus:border-[#006B3C] focus:ring-2 focus:ring-[#006B3C]/15 focus:outline-none cursor-pointer"
                 >
                   <option value="" disabled>Select your academic program</option>
                   <option value="BS Accountancy">BS Accountancy</option>
@@ -277,7 +277,7 @@ export default function CompleteProfilePage() {
                     required 
                     value={yearLevel}
                     onChange={e => setYearLevel(e.target.value)}
-                    className="flex h-11 w-full rounded-xl border border-slate-200 bg-slate-50/60 px-3.5 py-2 text-sm text-slate-900 transition-all focus:bg-white focus:border-[#35408e] focus:ring-2 focus:ring-[#35408e]/15 focus:outline-none cursor-pointer"
+                    className="flex h-11 w-full rounded-xl border border-slate-200 bg-slate-50/60 px-3.5 py-2 text-sm text-slate-900 transition-all focus:bg-white focus:border-[#006B3C] focus:ring-2 focus:ring-[#006B3C]/15 focus:outline-none cursor-pointer"
                   >
                     <option value="" disabled>Select year level</option>
                     <option value="1st Year">1st Year</option>
@@ -299,7 +299,7 @@ export default function CompleteProfilePage() {
                     required 
                     value={committee}
                     onChange={e => setCommittee(e.target.value)}
-                    className="flex h-11 w-full rounded-xl border border-slate-200 bg-slate-50/60 px-3.5 py-2 text-sm text-slate-900 transition-all focus:bg-white focus:border-[#35408e] focus:ring-2 focus:ring-[#35408e]/15 focus:outline-none cursor-pointer"
+                    className="flex h-11 w-full rounded-xl border border-slate-200 bg-slate-50/60 px-3.5 py-2 text-sm text-slate-900 transition-all focus:bg-white focus:border-[#006B3C] focus:ring-2 focus:ring-[#006B3C]/15 focus:outline-none cursor-pointer"
                   >
                     <option value="None">None (General Member)</option>
                     <option value="Academics">Academics</option>
@@ -323,15 +323,15 @@ export default function CompleteProfilePage() {
                   id="terms"
                   name="terms"
                   required
-                  className="mt-0.5 h-4 w-4 rounded border-slate-300 text-[#35408e] focus:ring-[#35408e] cursor-pointer shrink-0"
+                  className="mt-0.5 h-4 w-4 rounded border-slate-300 text-[#006B3C] focus:ring-[#006B3C] cursor-pointer shrink-0"
                 />
                 <label htmlFor="terms" className="block text-xs text-slate-600 leading-relaxed cursor-pointer font-normal">
                   I agree to the{' '}
-                  <Link href="/terms" className="text-[#35408e] font-semibold hover:underline" target="_blank">
+                  <Link href="/terms" className="text-[#006B3C] font-semibold hover:underline" target="_blank">
                     Terms and Conditions
                   </Link>{' '}
                   and{' '}
-                  <Link href="/privacy" className="text-[#35408e] font-semibold hover:underline" target="_blank">
+                  <Link href="/privacy" className="text-[#006B3C] font-semibold hover:underline" target="_blank">
                     Privacy Policy
                   </Link>. I understand that my information will be used for organizational purposes only.
                 </label>
@@ -340,7 +340,7 @@ export default function CompleteProfilePage() {
 
             {/* Submit Button */}
             <Button 
-              className="w-full h-11 sm:h-12 bg-[#35408e] hover:bg-[#2a3370] text-white font-semibold rounded-xl shadow-md shadow-[#35408e]/20 active:scale-[0.99] transition-all cursor-pointer text-sm" 
+              className="w-full h-11 sm:h-12 bg-[#006B3C] hover:bg-[#004d2b] text-white font-semibold rounded-xl shadow-md shadow-[#006B3C]/20 active:scale-[0.99] transition-all cursor-pointer text-sm" 
               type="submit" 
               disabled={isPending}
             >

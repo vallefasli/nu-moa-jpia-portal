@@ -53,7 +53,7 @@ function LoginForm({ role }: { role: string }) {
             type="email" 
             placeholder="admin@domain.com" 
             required 
-            className="pl-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#35408e] focus:ring-2 focus:ring-[#35408e]/15 transition-all"
+            className="pl-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#006B3C] focus:ring-2 focus:ring-[#006B3C]/15 transition-all"
           />
         </div>
       </div>
@@ -76,7 +76,7 @@ function LoginForm({ role }: { role: string }) {
             type={showPassword ? "text" : "password"} 
             placeholder="••••••••"
             required 
-            className="pl-10 pr-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#35408e] focus:ring-2 focus:ring-[#35408e]/15 transition-all"
+            className="pl-10 pr-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#006B3C] focus:ring-2 focus:ring-[#006B3C]/15 transition-all"
           />
           <button
             type="button"
@@ -91,7 +91,7 @@ function LoginForm({ role }: { role: string }) {
 
       {/* Submit Button */}
       <Button 
-        className="w-full h-11 sm:h-12 bg-[#35408e] hover:bg-[#2a3370] text-white font-semibold rounded-xl shadow-md shadow-[#35408e]/20 active:scale-[0.99] transition-all cursor-pointer text-sm" 
+        className="w-full h-11 sm:h-12 bg-[#006B3C] hover:bg-[#004d2b] text-white font-semibold rounded-xl shadow-md shadow-[#006B3C]/20 active:scale-[0.99] transition-all cursor-pointer text-sm" 
         type="submit" 
         disabled={isPending}
       >
@@ -133,8 +133,8 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50/70 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
       {/* Subtle Background Glows */}
-      <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#35408e]/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#fbb03b]/8 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#006B3C]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#FFD54F]/8 rounded-full blur-3xl pointer-events-none" />
 
       <Suspense fallback={null}>
         <AuthStateSync />
@@ -144,8 +144,8 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md flex flex-col items-center">
         {/* Brand Header */}
         <div className="text-center mb-6">
-          <div className="mx-auto w-12 h-12 rounded-2xl bg-gradient-to-br from-[#35408e] to-[#1e2452] flex items-center justify-center text-white shadow-lg shadow-[#35408e]/25 ring-4 ring-[#35408e]/10 mb-3">
-            <ShieldCheck className="w-6 h-6 text-[#fbb03b]" />
+          <div className="mx-auto w-12 h-12 rounded-2xl bg-gradient-to-br from-[#006B3C] to-[#004d2b] flex items-center justify-center text-white shadow-lg shadow-[#006B3C]/25 ring-4 ring-[#006B3C]/10 mb-3">
+            <ShieldCheck className="w-6 h-6 text-[#FFD54F]" />
           </div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
             Administrator Portal
@@ -164,7 +164,7 @@ export default function AdminLoginPage() {
         <div className="mt-4 text-center">
           <Link 
             href="/" 
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#35408e] hover:text-[#252d6a] hover:underline transition-colors py-1.5 px-3 rounded-lg hover:bg-slate-100/80"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#006B3C] hover:text-[#004d2b] hover:underline transition-colors py-1.5 px-3 rounded-lg hover:bg-slate-100/80"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Return to Member Portal</span>

@@ -158,7 +158,7 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
                 placeholder="Search name, student no, program..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 bg-white border-gray-200 shadow-xs rounded-xl h-10 text-sm focus-visible:ring-1 focus-visible:ring-[#35408e]"
+                className="pl-9 bg-white border-gray-200 shadow-xs rounded-xl h-10 text-sm focus-visible:ring-1 focus-visible:ring-[#006B3C]"
               />
             </div>
             
@@ -171,7 +171,7 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
               <SlidersHorizontal className="w-4 h-4 text-gray-500" />
               <span className="font-medium text-xs sm:text-sm">Filters</span>
               {getActiveFilterCount() > 0 && (
-                <span className="bg-[#35408e] text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
+                <span className="bg-[#006B3C] text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
                   {getActiveFilterCount()}
                 </span>
               )}
@@ -186,7 +186,7 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
                   id="select-all" 
                   checked={selectedIds.size === filteredUsers.length && filteredUsers.length > 0}
                   onCheckedChange={(c) => toggleAll(c as boolean)}
-                  className="data-checked:bg-[#35408e] data-checked:border-[#35408e] rounded-md"
+                  className="data-checked:bg-[#006B3C] data-checked:border-[#006B3C] rounded-md"
                 />
                 <span className="font-semibold text-gray-700">
                   Select All ({filteredUsers.length})
@@ -196,7 +196,7 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
               {getActiveFilterCount() > 0 && (
                 <button 
                   onClick={resetFilters}
-                  className="text-[#35408e] font-semibold hover:underline text-xs"
+                  className="text-[#006B3C] font-semibold hover:underline text-xs"
                 >
                   Clear Filters
                 </button>
@@ -226,7 +226,7 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
               return (
                 <div 
                   key={pendingUser.id} 
-                  className={`bg-white border rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between group cursor-pointer ${isSelected ? 'border-indigo-400 bg-indigo-50/30' : 'border-gray-100 hover:border-indigo-100'}`}
+                  className={`bg-white border rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between group cursor-pointer ${isSelected ? 'border-[#006B3C] bg-green-50/30' : 'border-gray-100 hover:border-green-200'}`}
                   onClick={() => setSelectedUser(pendingUser)}
                 >
                   <div className="flex items-center gap-4 min-w-0">
@@ -235,18 +235,18 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
                         <Checkbox 
                           checked={isSelected}
                           onCheckedChange={(c) => toggleSelection(pendingUser.id, c as boolean)}
-                          className="data-checked:bg-[#35408e] data-checked:border-[#35408e]"
+                          className="data-checked:bg-[#006B3C] data-checked:border-[#006B3C]"
                         />
                       </div>
                     )}
                     <div className="flex items-center gap-4 min-w-0 flex-1">
-                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-sm md:text-lg flex-shrink-0 group-hover:bg-indigo-100 transition-colors">
+                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#006B3C] text-[#FFD54F] flex items-center justify-center font-bold text-sm md:text-lg flex-shrink-0 group-hover:bg-[#004d2b] transition-colors shadow-sm">
                         {getInitials(pendingUser.full_name)}
                       </div>
                       <div className="min-w-0">
                         <h3 className="font-bold text-gray-900 truncate text-sm md:text-base">{pendingUser.full_name}</h3>
                         <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500 mt-0.5">
-                          <span className="font-medium text-[#35408e] truncate">{pendingUser.student_no}</span>
+                          <span className="font-medium text-[#006B3C] truncate">{pendingUser.student_no}</span>
                           <span className="hidden sm:inline text-gray-300">•</span>
                           <span className="hidden sm:inline truncate">{new Date(pendingUser.created_at).toLocaleDateString()}</span>
                         </div>
@@ -258,8 +258,8 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
                     <Badge className="hidden md:flex bg-yellow-100 text-yellow-800 hover:bg-yellow-200 border-0">
                       Pending
                     </Badge>
-                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
-                      <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-indigo-600" />
+                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-green-50 transition-colors">
+                      <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-[#006B3C]" />
                     </div>
                   </div>
                 </div>
@@ -272,16 +272,16 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
       {/* Floating Action Bar for Bulk Actions */}
       {selectedIds.size > 0 && isAdmin && (
         <div className="fixed bottom-20 sm:bottom-24 md:bottom-6 left-1/2 -translate-x-1/2 z-40 w-[92%] sm:w-[90%] max-w-md animate-in slide-in-from-bottom-10 fade-in">
-          <div className="bg-[#35408e] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center justify-between border border-[#28306e] ring-2 ring-white/20">
+          <div className="bg-[#006B3C] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center justify-between border border-[#004d2b] ring-2 ring-white/20">
             <span className="text-sm font-medium pl-1 sm:pl-2 flex items-center">
-              <span className="bg-white text-[#35408e] rounded-md px-2 py-0.5 mr-2 text-xs font-bold">{selectedIds.size}</span>
+              <span className="bg-white text-[#006B3C] rounded-md px-2 py-0.5 mr-2 text-xs font-bold">{selectedIds.size}</span>
               Selected
             </span>
             <div className="flex items-center gap-2">
               <Button 
                 size="sm" 
                 variant="ghost" 
-                className="text-white hover:text-red-100 hover:bg-[#28306e] h-8 px-2.5 sm:px-3 text-xs sm:text-sm font-semibold"
+                className="text-white hover:text-red-100 hover:bg-[#004d2b] h-8 px-2.5 sm:px-3 text-xs sm:text-sm font-semibold"
                 disabled={isPending}
                 onClick={handleBulkReject}
               >
@@ -311,14 +311,14 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
                  </DialogHeader>
               </div>
 
-              <div className="bg-[#35408e] p-6 text-white flex flex-col items-center text-center relative rounded-t-2xl">
+              <div className="bg-[#006B3C] p-6 text-white flex flex-col items-center text-center relative rounded-t-2xl">
                 <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center font-bold text-2xl text-white mb-3 backdrop-blur-sm border border-white/30">
                   {getInitials(selectedUser.full_name)}
                 </div>
                 <h2 className="text-xl font-bold text-white mb-1">
                   {selectedUser.full_name}
                 </h2>
-                <DialogDescription className="text-blue-100 m-0">
+                <DialogDescription className="text-green-100 m-0">
                   {selectedUser.email}
                 </DialogDescription>
               </div>
@@ -390,7 +390,7 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
         <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden rounded-2xl w-[95vw] max-h-[80vh] flex flex-col">
           <DialogHeader className="p-4 sm:p-6 sm:pb-4 border-b flex-shrink-0">
             <DialogTitle className="text-xl flex items-center gap-2">
-              <Filter className="w-5 h-5 text-[#35408e]" /> Filter Applicants
+              <Filter className="w-5 h-5 text-[#006B3C]" /> Filter Applicants
             </DialogTitle>
             <DialogDescription>
               Narrow down the verification queue using the criteria below.
@@ -405,7 +405,7 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
                   <button
                     key={prog}
                     onClick={() => setFilters(f => ({ ...f, program: prog }))}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.program === prog ? 'bg-[#35408e] text-white border-[#35408e]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#35408e]/50'}`}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.program === prog ? 'bg-[#006B3C] text-white border-[#006B3C]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#006B3C]/50'}`}
                   >
                     {prog}
                   </button>
@@ -420,7 +420,7 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
                   <button
                     key={year}
                     onClick={() => setFilters(f => ({ ...f, year_level: year }))}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.year_level === year ? 'bg-[#35408e] text-white border-[#35408e]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#35408e]/50'}`}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.year_level === year ? 'bg-[#006B3C] text-white border-[#006B3C]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#006B3C]/50'}`}
                   >
                     {year}
                   </button>
@@ -435,7 +435,7 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
                   <button
                     key={com}
                     onClick={() => setFilters(f => ({ ...f, committee: com }))}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.committee === com ? 'bg-[#35408e] text-white border-[#35408e]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#35408e]/50'}`}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.committee === com ? 'bg-[#006B3C] text-white border-[#006B3C]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#006B3C]/50'}`}
                   >
                     {com}
                   </button>
@@ -448,7 +448,7 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
               <div className="flex flex-wrap gap-2">
                 {['All', 'Last 7 Days', 'Last 30 Days', 'This Year'].map(date => (
                   <label key={date} className="flex items-center gap-2 cursor-pointer group px-2 py-1">
-                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${filters.dateApplied === date ? 'border-[#35408e] bg-[#35408e]' : 'border-gray-300 bg-white group-hover:border-[#35408e]/50'}`}>
+                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${filters.dateApplied === date ? 'border-[#006B3C] bg-[#006B3C]' : 'border-gray-300 bg-white group-hover:border-[#006B3C]/50'}`}>
                       {filters.dateApplied === date && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                     </div>
                     <span className="text-sm text-gray-700">{date === 'All' ? 'Any Time' : date}</span>
@@ -467,7 +467,7 @@ export function VerificationClient({ users, isAdmin }: { users: PendingUser[], i
               Reset All
             </Button>
             <Button 
-              className="bg-[#35408e] hover:bg-[#28306e] text-white px-6"
+              className="bg-[#006B3C] hover:bg-[#004d2b] text-white px-6"
               onClick={() => setIsFilterDialogOpen(false)}
             >
               Show Results

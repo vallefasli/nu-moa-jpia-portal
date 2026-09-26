@@ -37,7 +37,7 @@ export function EventCardClient({
 
   // Determine the status badge
   let statusBadge = (
-    <Badge variant="outline" className="bg-[#35408e]/5 text-[#35408e] border-[#35408e]/20 font-extrabold text-[10px] tracking-wider px-2.5 py-0.5 rounded-full shadow-xs">
+    <Badge variant="outline" className="bg-[#006B3C]/5 text-[#006B3C] border-[#006B3C]/20 font-extrabold text-[10px] tracking-wider px-2.5 py-0.5 rounded-full shadow-xs">
       UPCOMING
     </Badge>
   )
@@ -56,10 +56,16 @@ export function EventCardClient({
     )
   }
 
+  const posterRingClass = isOngoing
+    ? 'ring-4 ring-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.5)]'
+    : isPast
+    ? 'ring-4 ring-gray-200'
+    : 'ring-4 ring-[#006B3C]/60 shadow-[0_0_16px_rgba(0,107,60,0.2)]'
+
   const CardInner = (
     <>
       {/* Top Badges */}
-      <div className="absolute top-2 right-2 md:top-4 md:right-4 z-20 flex items-center gap-2">
+      <div className="absolute top-2 right-2 md:top-3 md:right-3 z-20 flex items-center gap-2">
         {isRSVPd && !isAdminView && (
           <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[10px] tracking-wide px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
             <CheckCircle2 className="w-3 h-3 text-emerald-600" />
@@ -69,15 +75,18 @@ export function EventCardClient({
         {statusBadge}
       </div>
 
-      {/* Large Circular Poster */}
-      <div className="w-36 h-36 md:w-48 md:h-48 rounded-full overflow-hidden relative shadow-lg mb-4 flex-shrink-0 group-hover:scale-105 group-hover:shadow-2xl transition-all duration-500 bg-gray-100 flex items-center justify-center">
+      {/* Circular Poster with status ring */}
+      <div className={`w-36 h-36 md:w-48 md:h-48 rounded-full overflow-hidden relative shadow-lg mb-4 flex-shrink-0 group-hover:scale-105 group-hover:shadow-2xl transition-all duration-500 bg-gray-100 flex items-center justify-center ${posterRingClass}`}>
+        {isOngoing && (
+          <div className="absolute inset-0 rounded-full ring-4 ring-emerald-300 animate-ping opacity-30 z-10 pointer-events-none" />
+        )}
         {event.poster_url ? (
-          <Image 
-            src={event.poster_url} 
-            alt={event.title} 
-            fill 
+          <Image
+            src={event.poster_url}
+            alt={event.title}
+            fill
             sizes="(max-width: 768px) 144px, 192px"
-            className="object-cover" 
+            className="object-cover"
             style={{ objectPosition: event.poster_position || 'center' }}
           />
         ) : (
@@ -86,28 +95,33 @@ export function EventCardClient({
       </div>
 
       {/* Date */}
-      <p className="text-gray-500 text-base md:text-lg font-medium mb-1.5 md:mb-2">
-        {eventDate}
-      </p>
+      <div className="flex items-center justify-center gap-1.5 mb-2">
+        <CalendarDays className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+        <p className="text-gray-500 text-sm md:text-base font-semibold">
+          {eventDate}
+        </p>
+      </div>
 
-      {/* Points */}
-      <p className="text-amber-600 text-base md:text-lg font-extrabold mb-1.5 md:mb-2">
-        Earn {event.points_awarded || 0} Points
-      </p>
+      {/* Points Pill */}
+      <div className="inline-flex items-center gap-1.5 bg-[#FFD54F]/20 border border-[#FFD54F]/50 text-amber-700 font-extrabold text-xs md:text-sm px-3 py-1 rounded-full mb-2 shadow-xs">
+        <Trophy className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+        +{event.points_awarded || 0} pts
+      </div>
 
       {/* Title */}
-      <h3 className="text-[#35408e] text-xl md:text-2xl font-medium mb-1.5 md:mb-2 line-clamp-2 px-3">
+      <h3 className="text-[#006B3C] text-lg md:text-xl font-extrabold mb-1.5 md:mb-2 line-clamp-2 px-2 leading-snug">
         {event.title}
       </h3>
 
-      {/* Main Category Only */}
-      <p className="text-gray-400 text-xs md:text-sm font-bold">
+      {/* Event Type */}
+      <p className="text-gray-400 text-xs md:text-sm font-bold tracking-wide">
         {event.event_type || 'General'}
       </p>
     </>
   )
 
-  const cardContainerClass = "overflow-visible text-center transition-all duration-500 bg-transparent border-0 ring-0 shadow-none outline-none hover:-translate-y-1.5 cursor-pointer group relative flex flex-col items-center p-3 md:p-6 select-none"
+  const cardContainerClass = "overflow-visible text-center transition-all duration-300 bg-transparent hover:bg-white/70 border-0 ring-0 hover:shadow-xl hover:shadow-black/5 outline-none rounded-2xl hover:-translate-y-2 cursor-pointer group relative flex flex-col items-center p-3 md:p-5 select-none"
+
 
   if (onCardClickOverride) {
     return (
@@ -134,7 +148,7 @@ export function EventCardClient({
       {/* EXPANDED MODAL (Dialog Content) */}
       <DialogContent className="max-w-3xl sm:max-w-3xl lg:max-w-4xl xl:max-w-5xl p-0 overflow-hidden bg-white/95 backdrop-blur-3xl rounded-3xl border-white shadow-2xl flex flex-col max-h-[90vh] w-[95vw]">
         {/* Banner Section */}
-        <div className="relative w-full h-40 sm:h-48 md:h-56 bg-gradient-to-br from-[#35408e]/15 via-gray-100 to-amber-50 flex items-center justify-center shrink-0">
+        <div className="relative w-full h-40 sm:h-48 md:h-56 bg-gradient-to-br from-[#006B3C]/15 via-gray-100 to-amber-50 flex items-center justify-center shrink-0">
           {event.banner_url ? (
             <Image 
               src={event.banner_url} 
@@ -157,7 +171,7 @@ export function EventCardClient({
             />
           ) : (
             <div className="flex flex-col items-center justify-center text-gray-300">
-              <ImageIcon className="w-16 h-16 mb-2 text-[#35408e]/30" />
+              <ImageIcon className="w-16 h-16 mb-2 text-[#006B3C]/30" />
               <span className="text-xs font-bold uppercase tracking-wider text-gray-400">NU MOA JPIA Event</span>
             </div>
           )}
@@ -179,7 +193,7 @@ export function EventCardClient({
                 {event.event_type || 'General'}
               </span>
               {event.themes?.map((theme: string, i: number) => (
-                <span key={i} className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full border border-blue-100">
+                <span key={i} className="px-3 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-full border border-green-100">
                   {theme}
                 </span>
               ))}
@@ -200,7 +214,7 @@ export function EventCardClient({
               
               {/* When */}
               <div className="flex items-start gap-3 flex-1">
-                <div className="w-9 h-9 rounded-xl bg-[#35408e] text-white flex items-center justify-center shrink-0 shadow-sm">
+                <div className="w-9 h-9 rounded-xl bg-[#006B3C] text-white flex items-center justify-center shrink-0 shadow-sm">
                   <CalendarDays className="w-4 h-4" />
                 </div>
                 <div className="flex-1">
@@ -219,13 +233,13 @@ export function EventCardClient({
                   className="flex items-start gap-3 flex-1 group/loc transition-all hover:opacity-90 cursor-pointer"
                   title="Open location in Google Maps"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-[#fbb03b] text-gray-900 flex items-center justify-center shrink-0 shadow-sm group-hover/loc:scale-105 transition-transform">
+                  <div className="w-9 h-9 rounded-xl bg-[#FFD54F] text-gray-900 flex items-center justify-center shrink-0 shadow-sm group-hover/loc:scale-105 transition-transform">
                     <MapPin className="w-4 h-4" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <h5 className="text-xs font-bold text-gray-900 group-hover/loc:text-[#35408e] transition-colors">Location</h5>
-                      <ExternalLink className="w-3 h-3 text-gray-400 group-hover/loc:text-[#35408e] transition-colors shrink-0" />
+                      <h5 className="text-xs font-bold text-gray-900 group-hover/loc:text-[#006B3C] transition-colors">Location</h5>
+                      <ExternalLink className="w-3 h-3 text-gray-400 group-hover/loc:text-[#006B3C] transition-colors shrink-0" />
                     </div>
                     <p className="text-xs font-medium text-gray-700 mt-0.5 whitespace-pre-wrap leading-relaxed">{event.location}</p>
                   </div>
@@ -238,7 +252,7 @@ export function EventCardClient({
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full lg:w-48 min-h-[76px] h-20 rounded-xl overflow-hidden relative shadow-xs border border-gray-200 group/map cursor-pointer bg-gray-100 shrink-0 block transition-all hover:border-[#35408e]/50 hover:shadow-md"
+                  className="w-full lg:w-48 min-h-[76px] h-20 rounded-xl overflow-hidden relative shadow-xs border border-gray-200 group/map cursor-pointer bg-gray-100 shrink-0 block transition-all hover:border-[#006B3C]/50 hover:shadow-md"
                   title="Click to open in Google Maps"
                 >
                    <iframe
@@ -264,13 +278,13 @@ export function EventCardClient({
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 bg-blue-50/70 px-4 py-3 rounded-xl border border-blue-100 shadow-xs">
-                <div className="w-9 h-9 rounded-lg bg-blue-100 text-[#35408e] flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3 bg-green-50/70 px-4 py-3 rounded-xl border border-green-100 shadow-xs">
+                <div className="w-9 h-9 rounded-lg bg-green-100 text-[#006B3C] flex items-center justify-center shrink-0">
                   <Users className="w-4 h-4" />
                 </div>
                 <div>
                   <p className="text-xs font-bold text-gray-900">Attendance Capacity</p>
-                  <p className="text-xs font-semibold text-[#35408e]">
+                  <p className="text-xs font-semibold text-[#006B3C]">
                     {event.capacity ? `${event.capacity} Attendees` : 'Unlimited'}
                   </p>
                 </div>
@@ -307,7 +321,7 @@ export function EventCardClient({
                  </Button>
                  <Button 
                    onClick={(e) => { e.stopPropagation(); setIsOpen(false); onEditAction?.(); }} 
-                   className="px-5 text-xs font-bold text-white bg-[#35408e] hover:bg-[#28316d] rounded-xl shadow-md gap-1.5"
+                   className="px-5 text-xs font-bold text-white bg-[#006B3C] hover:bg-[#004d2b] rounded-xl shadow-md gap-1.5"
                  >
                    <Edit2 className="w-3.5 h-3.5" /> Edit Event
                  </Button>

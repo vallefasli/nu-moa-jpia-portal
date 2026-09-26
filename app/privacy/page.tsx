@@ -66,7 +66,7 @@ export default function PrivacyPolicyPage() {
               As a data subject, you have the right to access, update, or request the deletion of your personal information. If you wish to exercise these rights or have any concerns regarding your data, please contact the NU MOA JPIA Executive Board or the portal administrator.
             </p>
 
-            <div className="mt-10 p-4 bg-blue-50 rounded-lg border border-blue-100 text-sm text-blue-800">
+            <div className="mt-10 p-4 bg-green-50 rounded-lg border border-[#006B3C]/20 text-sm text-[#006B3C]">
               By creating an account and using this portal, you consent to the collection and processing of your personal data as described in this Privacy Policy.
             </div>
           </CardContent>

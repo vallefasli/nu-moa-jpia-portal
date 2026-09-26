@@ -63,7 +63,7 @@ export function FeedbackModal({ eventId, eventTitle, customQuestions = [] }: Fee
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger render={
-        <Button className="w-full bg-[#35408e] hover:bg-[#252d69] text-white">
+        <Button className="w-full bg-[#006B3C] hover:bg-[#252d69] text-white">
           <Send className="w-4 h-4 mr-2" />
           Submit Feedback
         </Button>
@@ -103,7 +103,7 @@ export function FeedbackModal({ eventId, eventTitle, customQuestions = [] }: Fee
               id="comment"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className="w-full min-h-[100px] p-3 text-sm rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#35408e] resize-none"
+              className="w-full min-h-[100px] p-3 text-sm rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#006B3C] resize-none"
               placeholder="What did you like? What could be improved?"
             />
           </div>
@@ -124,7 +124,7 @@ export function FeedbackModal({ eventId, eventTitle, customQuestions = [] }: Fee
                   value={customAnswers[answerKey] || ''}
                   onChange={(e) => setCustomAnswers(prev => ({ ...prev, [answerKey]: e.target.value }))}
                   placeholder="Your answer..."
-                  className="w-full min-h-[100px] p-3 text-sm rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#35408e] resize-none"
+                  className="w-full min-h-[100px] p-3 text-sm rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#006B3C] resize-none"
                 />
               ) : q.type === 'multiple_choice' ? (
                 <div className="flex flex-col gap-2 mt-2">
@@ -136,7 +136,7 @@ export function FeedbackModal({ eventId, eventTitle, customQuestions = [] }: Fee
                         value={opt}
                         checked={customAnswers[answerKey] === opt}
                         onChange={(e) => setCustomAnswers(prev => ({ ...prev, [answerKey]: e.target.value }))}
-                        className="w-4 h-4 text-[#35408e] border-gray-300 focus:ring-[#35408e]"
+                        className="w-4 h-4 text-[#006B3C] border-gray-300 focus:ring-[#006B3C]"
                       />
                       {opt}
                     </label>
@@ -160,7 +160,7 @@ export function FeedbackModal({ eventId, eventTitle, customQuestions = [] }: Fee
                               setCustomAnswers(prev => ({ ...prev, [answerKey]: currentArray.filter(v => v !== opt) }))
                             }
                           }}
-                          className="w-4 h-4 text-[#35408e] rounded border-gray-300 focus:ring-[#35408e]"
+                          className="w-4 h-4 text-[#006B3C] rounded border-gray-300 focus:ring-[#006B3C]"
                         />
                         {opt}
                       </label>
@@ -171,7 +171,7 @@ export function FeedbackModal({ eventId, eventTitle, customQuestions = [] }: Fee
                 <select
                   value={customAnswers[answerKey] || ''}
                   onChange={(e) => setCustomAnswers(prev => ({ ...prev, [answerKey]: e.target.value }))}
-                  className="w-full h-10 rounded-md border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#35408e]"
+                  className="w-full h-10 rounded-md border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#006B3C]"
                 >
                   <option value="" disabled>Select an option</option>
                   {q.options?.map((opt, i) => (
@@ -195,8 +195,8 @@ export function FeedbackModal({ eventId, eventTitle, customQuestions = [] }: Fee
                           onClick={() => setCustomAnswers(prev => ({ ...prev, [answerKey]: num }))}
                           className={`w-5 h-5 rounded-full border-2 transition-all flex items-center justify-center ${
                             (customAnswers[answerKey] || 0) === num 
-                              ? 'border-[#35408e] bg-[#35408e] ring-4 ring-blue-100' 
-                              : 'border-gray-300 bg-white hover:border-[#35408e]'
+                              ? 'border-[#006B3C] bg-[#006B3C] ring-4 ring-blue-100' 
+                              : 'border-gray-300 bg-white hover:border-[#006B3C]'
                           }`}
                         />
                       </div>
@@ -210,7 +210,7 @@ export function FeedbackModal({ eventId, eventTitle, customQuestions = [] }: Fee
           </div>
           <div className="p-6 border-t border-gray-100 bg-gray-50 flex-shrink-0">
             <DialogFooter>
-              <Button type="submit" disabled={loading || rating === 0} className="w-full bg-[#fbb03b] hover:bg-[#e09e35] text-white">
+              <Button type="submit" disabled={loading || rating === 0} className="w-full bg-[#FFD54F] hover:bg-[#e09e35] text-white">
                 {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
                 Submit Feedback & Unlock Certificate
               </Button>

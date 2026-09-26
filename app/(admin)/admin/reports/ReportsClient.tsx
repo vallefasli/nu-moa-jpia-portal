@@ -386,12 +386,11 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
         </div>
       </div>
 
-      {/* Summary Metric Stats Bar */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
-        <div className="bg-white/80 backdrop-blur-md border border-gray-100 rounded-2xl p-3 sm:p-4 shadow-2xs hover:shadow-xs transition-all">
+        <div className="bg-white border border-gray-100 border-t-2 border-t-[#006B3C] rounded-2xl p-3 sm:p-4 shadow-sm hover:shadow-md transition-all">
           <div className="flex items-center justify-between gap-1.5">
             <span className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-wider truncate">Active Members</span>
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-green-50 text-[#006B3C] flex items-center justify-center shrink-0">
               <UserCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
@@ -399,10 +398,10 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
           <div className="text-[10px] sm:text-[11px] text-gray-500 mt-0.5 truncate">{pendingMembersCount} pending approvals</div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-md border border-gray-100 rounded-2xl p-3 sm:p-4 shadow-2xs hover:shadow-xs transition-all">
+        <div className="bg-white border border-gray-100 border-t-2 border-t-emerald-400 rounded-2xl p-3 sm:p-4 shadow-sm hover:shadow-md transition-all">
           <div className="flex items-center justify-between gap-1.5">
             <span className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-wider truncate">Total Events</span>
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-blue-50 text-[#35408e] flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-green-50 text-[#006B3C] flex items-center justify-center shrink-0">
               <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
@@ -410,10 +409,10 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
           <div className="text-[10px] sm:text-[11px] text-gray-500 mt-0.5 truncate">Recorded in portal</div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-md border border-gray-100 rounded-2xl p-3 sm:p-4 shadow-2xs hover:shadow-xs transition-all">
+        <div className="bg-white border border-gray-100 border-t-2 border-t-[#FFD54F] rounded-2xl p-3 sm:p-4 shadow-sm hover:shadow-md transition-all">
           <div className="flex items-center justify-between gap-1.5">
             <span className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-wider truncate">Attendance</span>
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-50 text-[#fbb03b] flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
               <ClipboardList className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
@@ -421,10 +420,10 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
           <div className="text-[10px] sm:text-[11px] text-gray-500 mt-0.5 truncate">Total check-in logs</div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-md border border-gray-100 rounded-2xl p-3 sm:p-4 shadow-2xs hover:shadow-xs transition-all">
+        <div className="bg-white border border-gray-100 border-t-2 border-t-[#006B3C]/50 rounded-2xl p-3 sm:p-4 shadow-sm hover:shadow-md transition-all">
           <div className="flex items-center justify-between gap-1.5">
             <span className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-wider truncate">Feedback</span>
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-green-50 text-[#006B3C] flex items-center justify-center shrink-0">
               <MessageSquareQuote className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
@@ -439,7 +438,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
           onClick={() => setActiveTab('roster')}
           className={`flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all shrink-0 active:scale-95 whitespace-nowrap ${
             activeTab === 'roster'
-              ? 'bg-[#35408e] text-white shadow-xs'
+              ? 'bg-[#006B3C] text-white shadow-xs'
               : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 bg-white border border-gray-200/60'
           }`}
         >
@@ -451,7 +450,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
           onClick={() => setActiveTab('attendance')}
           className={`flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all shrink-0 active:scale-95 whitespace-nowrap ${
             activeTab === 'attendance'
-              ? 'bg-[#35408e] text-white shadow-xs'
+              ? 'bg-[#006B3C] text-white shadow-xs'
               : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 bg-white border border-gray-200/60'
           }`}
         >
@@ -463,7 +462,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
           onClick={() => setActiveTab('leaderboard')}
           className={`flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all shrink-0 active:scale-95 whitespace-nowrap ${
             activeTab === 'leaderboard'
-              ? 'bg-[#35408e] text-white shadow-xs'
+              ? 'bg-[#006B3C] text-white shadow-xs'
               : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 bg-white border border-gray-200/60'
           }`}
         >
@@ -475,7 +474,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
           onClick={() => setActiveTab('feedback')}
           className={`flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all shrink-0 active:scale-95 whitespace-nowrap ${
             activeTab === 'feedback'
-              ? 'bg-[#35408e] text-white shadow-xs'
+              ? 'bg-[#006B3C] text-white shadow-xs'
               : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 bg-white border border-gray-200/60'
           }`}
         >
@@ -490,7 +489,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
           <CardHeader className="bg-gradient-to-r from-blue-50/50 via-white to-transparent border-b border-gray-100 p-4 sm:p-6 pb-4 sm:pb-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-100 text-[#35408e] flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-green-100 text-[#006B3C] flex items-center justify-center shrink-0">
                   <Users className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div className="min-w-0">
@@ -503,7 +502,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
               <Button
                 onClick={handleExportRoster}
                 disabled={isExportingRoster || filteredUsers.length === 0}
-                className="bg-[#35408e] hover:bg-[#28316d] text-white font-bold h-10 sm:h-11 px-4 sm:px-6 rounded-xl shadow-xs gap-2 w-full sm:w-auto text-xs sm:text-sm active:scale-95 transition-all shrink-0"
+                className="bg-[#006B3C] hover:bg-[#28316d] text-white font-bold h-10 sm:h-11 px-4 sm:px-6 rounded-xl shadow-xs gap-2 w-full sm:w-auto text-xs sm:text-sm active:scale-95 transition-all shrink-0"
               >
                 {isExportingRoster ? (
                   <>
@@ -523,7 +522,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
             {/* Filter Toolbar */}
             <div className="p-3.5 sm:p-4 bg-gray-50/80 rounded-2xl border border-gray-100 space-y-3">
               <div className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                <Filter className="w-3.5 h-3.5 text-[#35408e]" />
+                <Filter className="w-3.5 h-3.5 text-[#006B3C]" />
                 <span>Customize Export Dataset</span>
               </div>
 
@@ -545,7 +544,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="w-full h-9 px-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#35408e]/20"
+                    className="w-full h-9 px-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#006B3C]/20"
                   >
                     <option value="all">All Statuses</option>
                     <option value="active">Active Members</option>
@@ -558,7 +557,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                   <select
                     value={programFilter}
                     onChange={(e) => setProgramFilter(e.target.value)}
-                    className="w-full h-9 px-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#35408e]/20"
+                    className="w-full h-9 px-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#006B3C]/20"
                   >
                     <option value="all">All Programs</option>
                     <option value="BS Accountancy">BSA</option>
@@ -572,7 +571,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                   <select
                     value={yearFilter}
                     onChange={(e) => setYearFilter(e.target.value)}
-                    className="w-full h-9 px-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#35408e]/20"
+                    className="w-full h-9 px-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#006B3C]/20"
                   >
                     <option value="all">All Years</option>
                     <option value="1st Year">1st Year</option>
@@ -589,7 +588,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                   <select
                     value={committeeFilter}
                     onChange={(e) => setCommitteeFilter(e.target.value)}
-                    className="w-full h-9 px-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#35408e]/20"
+                    className="w-full h-9 px-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#006B3C]/20"
                   >
                     <option value="all">All Committees</option>
                     <option value="None">None (General)</option>
@@ -624,7 +623,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                   {filteredUsers.slice(0, 5).map((user) => (
                     <div key={user.id || user.student_no} className="p-3 sm:p-3.5 flex items-center justify-between gap-2 hover:bg-gray-50 transition-colors">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="w-8 h-8 rounded-full bg-[#35408e]/10 text-[#35408e] font-bold text-xs flex items-center justify-center shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-[#006B3C] text-[#FFD54F] font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
                           {user.full_name?.charAt(0) || 'U'}
                         </div>
                         <div className="min-w-0">
@@ -702,7 +701,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                   return (
                     <div
                       key={ev.id}
-                      className="bg-white border border-gray-100 rounded-2xl p-4 sm:p-5 hover:border-[#35408e]/30 hover:shadow-xs transition-all flex flex-col justify-between gap-3 sm:gap-4 group"
+                      className="bg-white border border-gray-100 rounded-2xl p-4 sm:p-5 hover:border-[#006B3C]/30 hover:shadow-xs transition-all flex flex-col justify-between gap-3 sm:gap-4 group"
                     >
                       <div className="space-y-1.5 sm:space-y-2">
                         <div className="flex items-center justify-between gap-2">
@@ -713,7 +712,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                                 ? 'bg-emerald-500 text-white font-bold text-[9px]'
                                 : effectiveStatus === 'completed'
                                 ? 'bg-gray-100 text-gray-600 text-[9px]'
-                                : 'bg-blue-50 text-[#35408e] text-[9px]'
+                                : 'bg-green-50 text-[#006B3C] text-[9px]'
                             }
                           >
                             {effectiveStatus.toUpperCase()}
@@ -722,7 +721,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                             {new Date(ev.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                           </span>
                         </div>
-                        <h3 className="font-bold text-sm sm:text-base text-gray-900 group-hover:text-[#35408e] transition-colors line-clamp-1">
+                        <h3 className="font-bold text-sm sm:text-base text-gray-900 group-hover:text-[#006B3C] transition-colors line-clamp-1">
                           {ev.title}
                         </h3>
                         <div className="pt-0.5 text-xs">
@@ -736,7 +735,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                         onClick={() => handleExportAttendance(ev.id, ev.title)}
                         disabled={isExportingThis}
                         variant="outline"
-                        className="w-full bg-gray-50 hover:bg-[#35408e] hover:text-white border-gray-200 font-bold text-xs h-10 rounded-xl transition-all gap-2"
+                        className="w-full bg-gray-50 hover:bg-[#006B3C] hover:text-white border-gray-200 font-bold text-xs h-10 rounded-xl transition-all gap-2"
                       >
                         {isExportingThis ? (
                           <>
@@ -778,7 +777,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
               <Button
                 onClick={handleExportLeaderboard}
                 disabled={isExportingLeaderboard}
-                className="bg-[#35408e] hover:bg-[#28316d] text-white font-bold h-10 sm:h-11 px-4 sm:px-6 rounded-xl shadow-xs gap-2 w-full sm:w-auto text-xs sm:text-sm active:scale-95 transition-all shrink-0"
+                className="bg-[#006B3C] hover:bg-[#28316d] text-white font-bold h-10 sm:h-11 px-4 sm:px-6 rounded-xl shadow-xs gap-2 w-full sm:w-auto text-xs sm:text-sm active:scale-95 transition-all shrink-0"
               >
                 {isExportingLeaderboard ? (
                   <>
@@ -839,7 +838,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                 onClick={handleExportLeaderboard}
                 disabled={isExportingLeaderboard}
                 variant="outline"
-                className="bg-white border-gray-200 text-[#35408e] hover:bg-blue-50 font-bold text-xs h-10 rounded-xl shadow-2xs gap-2 whitespace-nowrap w-full sm:w-auto shrink-0"
+                className="bg-white border-gray-200 text-[#006B3C] hover:bg-green-50 font-bold text-xs h-10 rounded-xl shadow-2xs gap-2 whitespace-nowrap w-full sm:w-auto shrink-0"
               >
                 <Download className="w-3.5 h-3.5" />
                 Download Report (.CSV)
@@ -905,7 +904,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                             {new Date(ev.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                           </span>
                         </div>
-                        <h3 className="font-bold text-base text-gray-900 group-hover:text-[#35408e] transition-colors line-clamp-1">
+                        <h3 className="font-bold text-base text-gray-900 group-hover:text-[#006B3C] transition-colors line-clamp-1">
                           {ev.title}
                         </h3>
                         <p className="text-xs text-gray-500">
@@ -921,7 +920,7 @@ export function ReportsClient({ users, events }: ReportsClientProps) {
                         variant="outline"
                         className={`w-full font-bold text-xs h-10 rounded-xl transition-all gap-2 ${
                           feedbackCount > 0
-                            ? 'bg-gray-50 hover:bg-[#35408e] hover:text-white text-gray-700 border-gray-200'
+                            ? 'bg-gray-50 hover:bg-[#006B3C] hover:text-white text-gray-700 border-gray-200'
                             : 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed'
                         }`}
                       >

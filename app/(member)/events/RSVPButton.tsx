@@ -38,7 +38,7 @@ export function RSVPButton({ eventId, initialIsRSVPd, disabled = false }: { even
       className={`rounded-full px-4 h-8 text-xs font-bold transition-all shadow-sm ${
         isRSVPd 
           ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200 border border-emerald-200' 
-          : 'bg-[#35408e] text-white hover:bg-[#2a3370]'
+          : 'bg-[#006B3C] text-white hover:bg-[#004d2b]'
       }`}
     >
       {isRSVPd ? (

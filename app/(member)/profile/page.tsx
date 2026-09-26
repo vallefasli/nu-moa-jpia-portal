@@ -18,8 +18,8 @@ export default async function MemberProfilePage() {
     <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 md:p-8 pb-24 md:pb-8 space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col items-center text-center mb-6 sm:mb-10 pt-2 sm:pt-4">
         <div className="relative">
-          <div className="absolute inset-0 bg-[#35408e] blur-2xl opacity-20 rounded-full" />
-          <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-[#35408e] to-[#2a3370] text-white flex items-center justify-center text-3xl sm:text-4xl font-extrabold shadow-xl ring-4 sm:ring-8 ring-white relative z-10">
+          <div className="absolute inset-0 bg-[#006B3C] blur-2xl opacity-20 rounded-full" />
+          <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-[#006B3C] to-[#004d2b] text-white flex items-center justify-center text-3xl sm:text-4xl font-extrabold shadow-xl ring-4 sm:ring-8 ring-white relative z-10">
             {initials}
           </div>
           <div className="absolute -bottom-1.5 -right-1.5 sm:-bottom-2 sm:-right-2 bg-green-500 w-5 h-5 sm:w-6 sm:h-6 rounded-full border-4 border-white shadow-sm z-20" />
@@ -28,7 +28,7 @@ export default async function MemberProfilePage() {
         <p className="text-gray-500 font-mono text-sm sm:text-base mt-1">{profile.student_no}</p>
         
         <div className="flex gap-2 mt-4 justify-center flex-wrap">
-          <Badge className="bg-[#35408e]/10 text-[#35408e] hover:bg-[#35408e]/20 border-none font-bold px-4 py-1.5 shadow-sm">
+          <Badge className="bg-[#006B3C]/10 text-[#006B3C] hover:bg-[#006B3C]/20 border-none font-bold px-4 py-1.5 shadow-sm">
             <Shield className="w-3.5 h-3.5 mr-1.5" />
             {profile.role.toUpperCase()}
           </Badge>
@@ -44,7 +44,7 @@ export default async function MemberProfilePage() {
             <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">Personal Details</h3>
             
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#35408e]">
+              <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-[#006B3C]">
                 <Mail className="w-5 h-5" />
               </div>
               <div>
@@ -54,7 +54,7 @@ export default async function MemberProfilePage() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#35408e]">
+              <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-[#006B3C]">
                 <CalendarDays className="w-5 h-5" />
               </div>
               <div>
@@ -71,7 +71,7 @@ export default async function MemberProfilePage() {
             <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">Academic & Org</h3>
             
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-[#fbb03b]">
+              <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-[#FFD54F]">
                 <BookOpen className="w-5 h-5" />
               </div>
               <div>
@@ -81,7 +81,7 @@ export default async function MemberProfilePage() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-[#fbb03b]">
+              <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-[#FFD54F]">
                 <GraduationCap className="w-5 h-5" />
               </div>
               <div>
@@ -91,7 +91,7 @@ export default async function MemberProfilePage() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-[#fbb03b]">
+              <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-[#FFD54F]">
                 <Award className="w-5 h-5" />
               </div>
               <div>

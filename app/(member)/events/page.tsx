@@ -79,7 +79,7 @@ export default async function EventsPage() {
       {/* 2. UPCOMING EVENTS SECTION */}
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both">
         <h2 className="text-xl font-extrabold text-gray-900 mb-6 flex items-center gap-3">
-          <div className="p-2 bg-yellow-100 rounded-lg text-[#fbb03b] shadow-inner">
+          <div className="p-2 bg-amber-50 rounded-lg text-[#FFD54F] shadow-inner">
             <CalendarDays className="w-5 h-5" />
           </div>
           Upcoming Events

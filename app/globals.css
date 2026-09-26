@@ -49,38 +49,67 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
+  /* NU MOA JPIA Brand Colors */
+  --nu-green: #006B3C;
+  --nu-green-dark: #004d2b;
+  --nu-green-light: #e8f5ee;
+  --nu-gold: #FFD54F;
+  --nu-gold-dark: #F9A825;
+  --nu-gold-light: #FFF9E6;
+
+  /* Core Tokens — NU Green as primary */
+  --background: oklch(0.99 0.002 145);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+
+  /* Primary = NU Green */
+  --primary: #006B3C;
+  --primary-foreground: #ffffff;
+
+  /* Secondary = light neutral */
+  --secondary: oklch(0.97 0.005 145);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
+
+  /* Muted */
+  --muted: oklch(0.97 0.003 145);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+
+  /* Accent = NU Gold */
+  --accent: #FFD54F;
+  --accent-foreground: #1a1a1a;
+
+  /* Destructive */
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
+
+  /* Borders & Inputs */
+  --border: oklch(0.922 0.003 145);
+  --input: oklch(0.922 0.003 145);
+
+  /* Ring — NU Green focus */
+  --ring: #006B3C;
+
+  /* Charts — Green/Gold palette */
+  --chart-1: #006B3C;
+  --chart-2: #FFD54F;
+  --chart-3: #34a853;
+  --chart-4: #F9A825;
+  --chart-5: #80cfa3;
+
+  /* Radius */
+  --radius: 0.75rem;
+
+  /* Sidebar — NU Green brand */
+  --sidebar: oklch(0.99 0.002 145);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-primary: #006B3C;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: oklch(0.95 0.008 145);
   --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-border: oklch(0.922 0.003 145);
+  --sidebar-ring: #006B3C;
 }
 
 .dark {
@@ -90,31 +119,40 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+
+  /* Primary = lighter NU Green for dark mode */
+  --primary: #34a853;
+  --primary-foreground: #ffffff;
+
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+
+  /* Accent = NU Gold in dark */
+  --accent: #FFD54F;
+  --accent-foreground: #1a1a1a;
+
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --ring: #34a853;
+
+  /* Charts */
+  --chart-1: #34a853;
+  --chart-2: #FFD54F;
+  --chart-3: #80cfa3;
+  --chart-4: #F9A825;
+  --chart-5: #006B3C;
+
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-primary: #34a853;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-ring: #34a853;
 }
 
 @layer base {

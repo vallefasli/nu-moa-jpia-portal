@@ -27,7 +27,7 @@ export function CertificatesListClient({ earnedEvents, feedbackMap }: Certificat
           placeholder="Search events..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 bg-white border-gray-200 focus-visible:ring-[#35408e] rounded-full h-10 shadow-sm"
+          className="pl-10 bg-white border-gray-200 focus-visible:ring-[#006B3C] rounded-full h-10 shadow-sm"
         />
       </div>
 

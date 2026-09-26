@@ -31,7 +31,7 @@ export default function GlobalError({
             <div className="pt-4">
               <Button 
                 onClick={() => reset()}
-                className="w-full bg-[#35408e] hover:bg-[#2a3370]"
+                className="w-full bg-[#006B3C] hover:bg-[#004d2b]"
               >
                 Try Again
               </Button>

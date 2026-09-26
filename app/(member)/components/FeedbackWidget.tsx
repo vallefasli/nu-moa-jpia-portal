@@ -34,7 +34,7 @@ export function FeedbackWidget({ userId }: { userId: string }) {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 sm:bottom-24 right-4 md:bottom-6 md:right-6 p-3.5 sm:p-4 bg-gradient-to-r from-[#35408e] to-[#2a3370] text-white rounded-full shadow-lg shadow-blue-900/30 hover:shadow-xl hover:scale-105 active:scale-95 transition-all z-40 flex items-center justify-center group ring-2 ring-white/50"
+        className="fixed bottom-20 sm:bottom-24 right-4 md:bottom-6 md:right-6 p-3.5 sm:p-4 bg-gradient-to-r from-[#006B3C] to-[#004d2b] text-white rounded-full shadow-lg shadow-green-900/30 hover:shadow-xl hover:scale-105 active:scale-95 transition-all z-40 flex items-center justify-center group ring-2 ring-white/50"
         title="Send Feedback"
         aria-label="Send Feedback"
       >
@@ -54,9 +54,9 @@ export function FeedbackWidget({ userId }: { userId: string }) {
             className="bg-white w-full max-w-sm rounded-3xl sm:rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 slide-in-from-bottom-6 duration-300 border border-gray-100 max-h-[85vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-4 sm:p-5 bg-gradient-to-r from-[#35408e]/5 via-white to-amber-50/30 border-b border-gray-100 flex items-center justify-between shrink-0">
+            <div className="p-4 sm:p-5 bg-gradient-to-r from-[#006B3C]/5 via-white to-amber-50/30 border-b border-gray-100 flex items-center justify-between shrink-0">
               <h3 className="font-bold text-gray-900 flex items-center gap-2 text-base sm:text-lg">
-                <div className="p-1.5 rounded-lg bg-[#35408e]/10 text-[#35408e]">
+                <div className="p-1.5 rounded-lg bg-[#006B3C]/10 text-[#006B3C]">
                   <MessageSquarePlus className="w-4 h-4" />
                 </div>
                 Send Feedback
@@ -76,7 +76,7 @@ export function FeedbackWidget({ userId }: { userId: string }) {
                 <select 
                   value={type} 
                   onChange={(e) => setType(e.target.value)}
-                  className="w-full bg-white border border-gray-200 rounded-xl p-3 text-base sm:text-sm focus:ring-2 focus:ring-[#35408e]/20 focus:border-[#35408e] outline-none transition-all font-medium text-gray-900"
+                  className="w-full bg-white border border-gray-200 rounded-xl p-3 text-base sm:text-sm focus:ring-2 focus:ring-[#006B3C]/20 focus:border-[#006B3C] outline-none transition-all font-medium text-gray-900"
                 >
                   <option value="feature_request">Feature Request</option>
                   <option value="bug">Report a Bug</option>
@@ -93,14 +93,14 @@ export function FeedbackWidget({ userId }: { userId: string }) {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="How can we improve your experience with the portal?"
-                  className="w-full bg-gray-50/70 border border-gray-200 rounded-xl p-3.5 text-base sm:text-sm focus:ring-2 focus:ring-[#35408e]/20 focus:border-[#35408e] focus:bg-white outline-none resize-none transition-all placeholder:text-gray-400 text-gray-900"
+                  className="w-full bg-gray-50/70 border border-gray-200 rounded-xl p-3.5 text-base sm:text-sm focus:ring-2 focus:ring-[#006B3C]/20 focus:border-[#006B3C] focus:bg-white outline-none resize-none transition-all placeholder:text-gray-400 text-gray-900"
                 />
               </div>
 
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-[#35408e] to-[#2a3370] hover:from-[#2a3370] hover:to-[#22295a] text-white font-bold rounded-xl h-11 shadow-md shadow-blue-900/20 active:scale-[0.99] transition-all"
+                className="w-full bg-gradient-to-r from-[#006B3C] to-[#004d2b] hover:from-[#004d2b] hover:to-[#22295a] text-white font-bold rounded-xl h-11 shadow-md shadow-green-900/20 active:scale-[0.99] transition-all"
               >
                 {isSubmitting ? 'Sending...' : 'Submit Feedback'}
               </Button>

@@ -229,7 +229,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                 placeholder="Search name, student no, program..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 bg-white border-gray-200 shadow-xs rounded-xl h-10 text-sm focus-visible:ring-1 focus-visible:ring-[#35408e]"
+                className="pl-9 bg-white border-gray-200 shadow-xs rounded-xl h-10 text-sm focus-visible:ring-1 focus-visible:ring-[#006B3C]"
               />
             </div>
             
@@ -242,7 +242,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
               <SlidersHorizontal className="w-4 h-4 text-gray-500" />
               <span className="font-medium text-xs sm:text-sm">Filters</span>
               {getActiveFilterCount() > 0 && (
-                <span className="bg-[#35408e] text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
+                <span className="bg-[#006B3C] text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
                   {getActiveFilterCount()}
                 </span>
               )}
@@ -257,7 +257,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                   id="select-all-members" 
                   checked={selectedIds.size === filteredUsers.length && filteredUsers.length > 0}
                   onCheckedChange={(c) => toggleAll(c as boolean)}
-                  className="data-checked:bg-[#35408e] data-checked:border-[#35408e] rounded-md"
+                  className="data-checked:bg-[#006B3C] data-checked:border-[#006B3C] rounded-md"
                 />
                 <span className="font-semibold text-gray-700">
                   Select All ({filteredUsers.length})
@@ -267,7 +267,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
               {getActiveFilterCount() > 0 && (
                 <button 
                   onClick={resetFilters}
-                  className="text-[#35408e] font-semibold hover:underline text-xs"
+                  className="text-[#006B3C] font-semibold hover:underline text-xs"
                 >
                   Clear Filters
                 </button>
@@ -280,8 +280,8 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
         {initialUsers.length === 0 ? (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 md:p-16">
             <div className="flex flex-col items-center justify-center text-center">
-              <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6 shadow-inner">
-                <Inbox className="w-10 h-10 text-gray-400" />
+              <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mb-6 ring-4 ring-green-50/50">
+                <Inbox className="w-10 h-10 text-[#006B3C]/40" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">No active members</h3>
               <p className="text-gray-500 max-w-md">There are no approved members in the system yet.</p>
@@ -298,7 +298,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
               return (
                 <div 
                   key={user.id} 
-                  className={`bg-white border rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between group cursor-pointer ${isSelected ? 'border-indigo-400 bg-indigo-50/30' : 'border-gray-100 hover:border-indigo-100'}`}
+                  className={`bg-white border rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between group cursor-pointer ${isSelected ? 'border-[#006B3C] bg-green-50/30' : 'border-gray-100 hover:border-green-200'}`}
                   onClick={() => { setSelectedUser(user); setIsEditMode(false); setShowQR(false); setIsDialogOpen(true); }}
                 >
                   <div className="flex items-center gap-4 min-w-0">
@@ -306,24 +306,24 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                       <Checkbox 
                         checked={isSelected}
                         onCheckedChange={(c) => toggleSelection(user.id, c as boolean)}
-                        className="data-checked:bg-[#35408e] data-checked:border-[#35408e]"
+                        className="data-checked:bg-[#006B3C] data-checked:border-[#006B3C]"
                       />
                     </div>
                     <div className="flex items-center gap-4 min-w-0 flex-1">
-                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-sm md:text-lg flex-shrink-0 group-hover:bg-indigo-100 transition-colors">
+                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#006B3C] text-[#FFD54F] flex items-center justify-center font-bold text-sm md:text-lg flex-shrink-0 group-hover:bg-[#004d2b] transition-colors">
                         {getInitials(user.full_name)}
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
                           <h3 className="font-bold text-gray-900 truncate text-sm md:text-base">{user.full_name}</h3>
                           {user.role === 'officer' && (
-                            <Badge variant="secondary" className="text-[10px] uppercase bg-blue-100 text-blue-800 border-0 flex-shrink-0">
+                            <Badge variant="secondary" className="text-[10px] uppercase bg-[#006B3C]/10 text-[#006B3C] border-0 flex-shrink-0">
                               Officer
                             </Badge>
                           )}
                         </div>
                         <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500 mt-0.5">
-                          <span className="font-medium text-[#35408e] truncate">{user.student_no}</span>
+                          <span className="font-medium text-[#006B3C] truncate">{user.student_no}</span>
                           <span className="hidden sm:inline text-gray-300">•</span>
                           <span className="hidden sm:inline truncate">{user.program}</span>
                         </div>
@@ -332,8 +332,8 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                   </div>
 
                   <div className="flex items-center gap-4 flex-shrink-0 ml-4">
-                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
-                      <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-indigo-600" />
+                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-green-50 transition-colors">
+                      <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-[#006B3C]" />
                     </div>
                   </div>
                 </div>
@@ -346,9 +346,9 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
       {/* Floating Action Bar for Bulk Remove */}
       {selectedIds.size > 0 && (
         <div className="fixed bottom-20 sm:bottom-24 md:bottom-6 left-1/2 -translate-x-1/2 z-40 w-[92%] sm:w-[90%] max-w-md animate-in slide-in-from-bottom-10 fade-in">
-          <div className="bg-[#35408e] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center justify-between border border-[#28306e] ring-2 ring-white/20">
+          <div className="bg-[#006B3C] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center justify-between border border-[#004d2b] ring-2 ring-white/20">
             <span className="text-sm font-medium pl-1 sm:pl-2 flex items-center">
-              <span className="bg-white text-[#35408e] rounded-md px-2 py-0.5 mr-2 text-xs font-bold">{selectedIds.size}</span>
+              <span className="bg-white text-[#006B3C] rounded-md px-2 py-0.5 mr-2 text-xs font-bold">{selectedIds.size}</span>
               Selected
             </span>
             <Button 
@@ -374,7 +374,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
               </div>
 
               {!showQR && (
-                <div className="bg-gradient-to-br from-[#35408e] to-[#28306e] p-6 text-white flex flex-col items-center text-center relative rounded-t-2xl animate-in fade-in slide-in-from-top-4 duration-300">
+                <div className="bg-gradient-to-br from-[#006B3C] to-[#004d2b] p-6 text-white flex flex-col items-center text-center relative rounded-t-2xl animate-in fade-in slide-in-from-top-4 duration-300">
                   {selectedUser.role === 'officer' && (
                     <div className="absolute top-4 left-4 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider flex items-center gap-1 shadow-sm">
                       <ShieldAlert className="w-3 h-3" /> Officer
@@ -597,7 +597,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                 <Button type="button" variant="outline" onClick={() => setIsEditMode(false)} disabled={isPending}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isPending} className="bg-[#35408e] hover:bg-[#28306e]">
+                <Button type="submit" disabled={isPending} className="bg-[#006B3C] hover:bg-[#004d2b]">
                   {isPending ? 'Saving...' : 'Save changes'}
                 </Button>
               </DialogFooter>
@@ -612,7 +612,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
         <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden rounded-2xl w-[95vw] max-h-[80vh] flex flex-col">
           <DialogHeader className="p-4 sm:p-6 sm:pb-4 border-b flex-shrink-0">
             <DialogTitle className="text-xl flex items-center gap-2">
-              <Filter className="w-5 h-5 text-[#35408e]" /> Filter Members
+              <Filter className="w-5 h-5 text-[#006B3C]" /> Filter Members
             </DialogTitle>
             <DialogDescription>
               Narrow down the member list using the criteria below.
@@ -627,7 +627,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                   <button
                     key={prog}
                     onClick={() => setFilters(f => ({ ...f, program: prog }))}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.program === prog ? 'bg-[#35408e] text-white border-[#35408e]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#35408e]/50'}`}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.program === prog ? 'bg-[#006B3C] text-white border-[#006B3C]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#006B3C]/50'}`}
                   >
                     {prog}
                   </button>
@@ -642,7 +642,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                   <button
                     key={year}
                     onClick={() => setFilters(f => ({ ...f, year_level: year }))}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.year_level === year ? 'bg-[#35408e] text-white border-[#35408e]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#35408e]/50'}`}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.year_level === year ? 'bg-[#006B3C] text-white border-[#006B3C]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#006B3C]/50'}`}
                   >
                     {year}
                   </button>
@@ -657,7 +657,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                   <button
                     key={com}
                     onClick={() => setFilters(f => ({ ...f, committee: com }))}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.committee === com ? 'bg-[#35408e] text-white border-[#35408e]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#35408e]/50'}`}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors border ${filters.committee === com ? 'bg-[#006B3C] text-white border-[#006B3C]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#006B3C]/50'}`}
                   >
                     {com}
                   </button>
@@ -671,7 +671,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                 <div className="flex flex-col gap-2">
                   {['All', 'member', 'officer'].map(role => (
                     <label key={role} className="flex items-center gap-2 cursor-pointer group">
-                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${filters.role === role ? 'border-[#35408e] bg-[#35408e]' : 'border-gray-300 bg-white group-hover:border-[#35408e]/50'}`}>
+                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${filters.role === role ? 'border-[#006B3C] bg-[#006B3C]' : 'border-gray-300 bg-white group-hover:border-[#006B3C]/50'}`}>
                         {filters.role === role && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                       </div>
                       <span className="text-sm text-gray-700 capitalize">{role === 'All' ? 'Any Role' : role}</span>
@@ -685,7 +685,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
                 <div className="flex flex-col gap-2">
                   {['All', 'Last 7 Days', 'Last 30 Days', 'This Year'].map(date => (
                     <label key={date} className="flex items-center gap-2 cursor-pointer group">
-                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${filters.dateJoined === date ? 'border-[#35408e] bg-[#35408e]' : 'border-gray-300 bg-white group-hover:border-[#35408e]/50'}`}>
+                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${filters.dateJoined === date ? 'border-[#006B3C] bg-[#006B3C]' : 'border-gray-300 bg-white group-hover:border-[#006B3C]/50'}`}>
                         {filters.dateJoined === date && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                       </div>
                       <span className="text-sm text-gray-700">{date === 'All' ? 'Any Time' : date}</span>
@@ -705,7 +705,7 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
               Reset All
             </Button>
             <Button 
-              className="bg-[#35408e] hover:bg-[#28306e] text-white px-6"
+              className="bg-[#006B3C] hover:bg-[#004d2b] text-white px-6"
               onClick={() => setIsFilterDialogOpen(false)}
             >
               Show Results

@@ -38,12 +38,12 @@ export function EventRecordCard({ event, feedbackSubmitted, feedbackData }: Even
 
   return (
     <>
-    <div className="group bg-white border border-gray-100 rounded-2xl p-4 sm:p-5 hover:border-[#35408e]/30 hover:shadow-xl hover:shadow-[#35408e]/5 transition-all flex flex-col md:flex-row md:items-center gap-5 relative overflow-hidden">
-      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#35408e] to-[#fbb03b] opacity-0 group-hover:opacity-100 transition-opacity" />
+    <div className="group bg-white border border-gray-100 rounded-2xl p-4 sm:p-5 hover:border-[#006B3C]/30 hover:shadow-xl hover:shadow-[#006B3C]/5 transition-all flex flex-col md:flex-row md:items-center gap-5 relative overflow-hidden">
+      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#006B3C] to-[#FFD54F] opacity-0 group-hover:opacity-100 transition-opacity" />
       
       {/* Event Details (Left Side) */}
       <div className="flex-1 flex items-start md:items-center gap-4 pl-1 sm:pl-0">
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors relative overflow-hidden bg-gray-50 border border-gray-100 group-hover:border-[#35408e]/20 group-hover:bg-[#35408e]/5">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors relative overflow-hidden bg-gray-50 border border-gray-100 group-hover:border-[#006B3C]/20 group-hover:bg-[#006B3C]/5">
           {event.poster_url ? (
             <Image 
               src={event.poster_url} 
@@ -53,15 +53,15 @@ export function EventRecordCard({ event, feedbackSubmitted, feedbackData }: Even
               className="object-cover" 
             />
           ) : (
-            <Award className="w-7 h-7 text-gray-400 group-hover:text-[#35408e] transition-colors" />
+            <Award className="w-7 h-7 text-gray-400 group-hover:text-[#006B3C] transition-colors" />
           )}
         </div>
         
         <div>
-          <h3 className="font-bold text-gray-900 text-lg sm:text-xl group-hover:text-[#35408e] transition-colors leading-tight mb-1.5">{event.title}</h3>
+          <h3 className="font-bold text-gray-900 text-lg sm:text-xl group-hover:text-[#006B3C] transition-colors leading-tight mb-1.5">{event.title}</h3>
           <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500">
             <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-gray-400" /> {new Date(event.date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-            <span className="flex items-center gap-1.5 font-bold text-[#fbb03b] bg-[#fbb03b]/10 px-2.5 py-0.5 rounded-full"><Award className="w-3.5 h-3.5" /> {event.points_awarded || 0} Points</span>
+            <span className="flex items-center gap-1.5 font-bold text-[#FFD54F] bg-[#FFD54F]/10 px-2.5 py-0.5 rounded-full"><Award className="w-3.5 h-3.5" /> {event.points_awarded || 0} Points</span>
           </div>
         </div>
       </div>
@@ -98,7 +98,7 @@ export function EventRecordCard({ event, feedbackSubmitted, feedbackData }: Even
             {autoCertificateEnabled && (
               <button 
                 onClick={() => setIsModalOpen(true)}
-                className="flex w-full items-center justify-center gap-2 h-11 bg-[#35408e] hover:bg-[#28316d] text-white rounded-xl font-bold transition-colors shadow-md group/btn"
+                className="flex w-full items-center justify-center gap-2 h-11 bg-[#006B3C] hover:bg-[#28316d] text-white rounded-xl font-bold transition-colors shadow-md group/btn"
               >
                 <Award className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
                 View Auto-Certificate
@@ -140,7 +140,7 @@ export function EventRecordCard({ event, feedbackSubmitted, feedbackData }: Even
                 <a 
                   href={`/api/certificates/${event.id}`}
                   download={`Certificate_${event.title.replace(/\s+/g, '_')}.png`}
-                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 h-11 px-8 bg-[#35408e] hover:bg-[#28316d] text-white rounded-xl font-bold transition-colors shadow-md group/dl"
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 h-11 px-8 bg-[#006B3C] hover:bg-[#28316d] text-white rounded-xl font-bold transition-colors shadow-md group/dl"
                 >
                   <Download className="w-4 h-4 group-hover/dl:-translate-y-0.5 transition-transform" />
                   Download High Quality PNG

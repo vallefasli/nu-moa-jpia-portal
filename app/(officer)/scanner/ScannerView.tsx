@@ -176,7 +176,7 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
             {/* Event Selector */}
             <Card className="border-gray-200/80 shadow-xs rounded-2xl bg-white">
               <CardContent className="p-4 flex items-center gap-3.5">
-                <div className="p-2.5 bg-[#fbb03b]/15 rounded-xl text-[#fbb03b]">
+                <div className="p-2.5 bg-[#FFD54F]/15 rounded-xl text-[#FFD54F]">
                   <CalendarDays className="w-5 h-5" />
                 </div>
                 <div className="flex-1 text-base sm:text-lg font-bold text-gray-900 truncate">
@@ -197,7 +197,7 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
                     <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-gray-400" />
                     <Input 
                       placeholder="Search by Name or Student No..." 
-                      className="pl-10 h-11 bg-gray-50/70 border-gray-200 rounded-xl text-sm focus-visible:ring-1 focus-visible:ring-[#35408e]"
+                      className="pl-10 h-11 bg-gray-50/70 border-gray-200 rounded-xl text-sm focus-visible:ring-1 focus-visible:ring-[#006B3C]"
                       value={manualQuery}
                       onChange={e => setManualQuery(e.target.value)}
                       autoComplete="off"
@@ -217,16 +217,16 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
                             className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors text-left group"
                           >
                             <div>
-                              <span className="font-bold text-gray-900 text-sm block group-hover:text-[#35408e] transition-colors">{user.full_name}</span>
+                              <span className="font-bold text-gray-900 text-sm block group-hover:text-[#006B3C] transition-colors">{user.full_name}</span>
                               <span className="text-xs text-gray-400 font-mono">{user.student_no}</span>
                             </div>
-                            <span className="text-xs font-semibold text-[#35408e] bg-blue-50 px-2.5 py-1 rounded-md">Check In</span>
+                            <span className="text-xs font-semibold text-[#006B3C] bg-green-50 px-2.5 py-1 rounded-md">Check In</span>
                           </button>
                         ))}
                       </div>
                     )}
                   </div>
-                  <Button type="submit" className="h-11 px-7 bg-[#35408e] hover:bg-[#2a3370] text-white rounded-xl font-bold transition-all shadow-xs">
+                  <Button type="submit" className="h-11 px-7 bg-[#006B3C] hover:bg-[#004d2b] text-white rounded-xl font-bold transition-all shadow-xs">
                     Submit
                   </Button>
                 </form>
@@ -254,7 +254,7 @@ export function ScannerView({ activeEvents, initialFeed }: { activeEvents: any[]
           <CardHeader className="border-b border-gray-100 bg-gray-50/50 p-4 sm:p-5">
             <div className="flex justify-between items-center">
               <CardTitle className="text-base font-bold flex items-center gap-2 text-gray-900">
-                <Activity className="w-4 h-4 text-[#35408e]" /> Live Feed
+                <Activity className="w-4 h-4 text-[#006B3C]" /> Live Feed
               </CardTitle>
               {isPending && <Loader2 className="w-4 h-4 animate-spin text-gray-400" />}
             </div>
