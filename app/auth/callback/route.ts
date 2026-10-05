@@ -24,7 +24,13 @@ export async function GET(request: Request) {
     }
 
     if (data.user) {
-      console.log('OAuth successful for user:', data.user.id)
+      console.log('Auth successful for user:', data.user.id)
+
+      // If this is a password recovery request, proceed directly to reset password page
+      if (next === '/reset-password' || type === 'recovery') {
+        return NextResponse.redirect(`${baseUrl}/reset-password`)
+      }
+
       // Check if the user is missing required profile information
       const { data: profile, error: profileError } = await supabase
         .from('users')
@@ -71,7 +77,7 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${baseUrl}${redirectPath}`)
     }
   } else if (token_hash) {
-    // Handle email confirmation via token hash (manual signup flow)
+    // Handle email confirmation via token hash (manual signup or recovery flow)
     const supabase = await createClient()
     const otpType = (type || 'signup') as any
     const { error } = await supabase.auth.verifyOtp({ token_hash, type: otpType })
@@ -79,6 +85,10 @@ export async function GET(request: Request) {
     if (error) {
       console.error('OTP verification error:', error)
       return NextResponse.redirect(`${baseUrl}/?error=invalid_token`)
+    }
+
+    if (otpType === 'recovery' || next === '/reset-password') {
+      return NextResponse.redirect(`${baseUrl}/reset-password`)
     }
     
     const { data: { user } } = await supabase.auth.getUser()
@@ -104,6 +114,11 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${baseUrl}${next || '/dashboard'}`)
     }
   } else {
+    // If next is /reset-password or recovery, the tokens are in the hash fragment (#access_token=...)
+    // Browsers don't send hashes to the server, so forward the browser to /reset-password where the client can read the hash
+    if (next === '/reset-password' || type === 'recovery') {
+      return NextResponse.redirect(`${baseUrl}/reset-password`)
+    }
     console.error('No code or token_hash found in URL params')
   }
 

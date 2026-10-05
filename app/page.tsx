@@ -24,6 +24,7 @@ import {
   Award
 } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
+import { ForgotPasswordDialog } from '@/components/auth/ForgotPasswordDialog'
 
 function LoginForm({ role }: { role: string }) {
   const [mode, setMode] = useState<'login' | 'signup'>('login')
@@ -31,6 +32,8 @@ function LoginForm({ role }: { role: string }) {
   const [signupState, signupAction, isSignupPending] = useActionState(signup, null)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false)
+  const [email, setEmail] = useState('')
   
   const isSignupMode = role === 'member' && mode === 'signup'
   
@@ -67,6 +70,13 @@ function LoginForm({ role }: { role: string }) {
 
   return (
     <div className="space-y-5">
+      {/* Forgot Password Modal */}
+      <ForgotPasswordDialog 
+        open={isForgotPasswordOpen} 
+        onOpenChange={setIsForgotPasswordOpen} 
+        initialEmail={email}
+      />
+
       {/* Error Alert */}
       {state?.error && (
         <div className="bg-rose-50 border border-rose-200/90 text-rose-700 px-4 py-3 rounded-xl text-xs sm:text-sm flex items-start gap-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
@@ -112,6 +122,8 @@ function LoginForm({ role }: { role: string }) {
               id={`email-${role}`} 
               name="email" 
               type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="personal@gmail.com" 
               required 
               className="pl-10 h-11 text-sm bg-slate-50/60 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#006B3C] focus:ring-2 focus:ring-[#006B3C]/15 transition-all"
@@ -128,6 +140,15 @@ function LoginForm({ role }: { role: string }) {
             >
               Password
             </Label>
+            {!isSignupMode && (
+              <button
+                type="button"
+                onClick={() => setIsForgotPasswordOpen(true)}
+                className="text-xs font-semibold text-[#006B3C] hover:text-[#004d2b] hover:underline transition-colors cursor-pointer"
+              >
+                Forgot password?
+              </button>
+            )}
           </div>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -284,9 +305,25 @@ function AuthStateSync({ setActiveRole }: { setActiveRole: (role: string) => voi
   const searchParams = useSearchParams()
   
   useEffect(() => {
+    // If the browser arrives with a password recovery hash fragment, redirect straight to reset-password
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hash = window.location.hash
+      if (hash.includes('type=recovery')) {
+        window.location.href = `/reset-password${hash}`
+        return
+      }
+    }
+
     if (searchParams.get('expired') === 'true') {
       toast.error('Session Expired', {
         description: 'You have been signed out due to inactivity.'
+      })
+      window.history.replaceState({}, '', '/')
+    }
+
+    if (searchParams.get('reset') === 'success') {
+      toast.success('Password Updated', {
+        description: 'Your password has been reset successfully. Please sign in with your new password.'
       })
       window.history.replaceState({}, '', '/')
     }
@@ -296,6 +333,16 @@ function AuthStateSync({ setActiveRole }: { setActiveRole: (role: string) => voi
         description: 'The confirmation link is invalid or was opened in a different browser. Please try signing up again if your account is not verified.'
       })
       window.history.replaceState({}, '', '/')
+    }
+
+    if (searchParams.get('error') === 'auth_failed') {
+      // Don't show confusing toast if we're redirecting via hash
+      if (typeof window === 'undefined' || !window.location.hash.includes('type=recovery')) {
+        toast.error('Authentication Error', {
+          description: 'The authentication link has expired or is invalid. Please request a new link.'
+        })
+        window.history.replaceState({}, '', '/')
+      }
     }
 
     if (searchParams.get('error') === 'not_officer') {

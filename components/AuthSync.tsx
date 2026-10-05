@@ -46,7 +46,11 @@ export function AuthSync() {
 
     // Listen for auth changes triggered from other tabs
     channel.onmessage = (event) => {
-      if (event.data.type === 'AUTH_CHANGE') {
+      if (event.data?.type === 'AUTH_CHANGE') {
+        // Never auto-refresh landing page if another tab is doing password reset
+        if (event.data.from === '/reset-password' || event.data.isRecovery) {
+          return
+        }
         router.refresh()
         if (event.data.event === 'SIGNED_OUT') {
           setTimeout(handleSignOutRedirect, 100)
@@ -55,9 +59,22 @@ export function AuthSync() {
     }
     
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // Do not broadcast login events from the password reset page or recovery flows
+      if (typeof window !== 'undefined' && window.location.pathname === '/reset-password') {
+        return
+      }
+      if (event === 'PASSWORD_RECOVERY') {
+        return
+      }
+
       if (event === 'SIGNED_OUT' || event === 'SIGNED_IN' || event === 'USER_UPDATED') {
         // Broadcast the event to other tabs
-        channel.postMessage({ type: 'AUTH_CHANGE', event })
+        channel.postMessage({ 
+          type: 'AUTH_CHANGE', 
+          event, 
+          from: typeof window !== 'undefined' ? window.location.pathname : '',
+          isRecovery: (event as string) === 'PASSWORD_RECOVERY'
+        })
 
         // Handle it locally as well
         if (event === 'SIGNED_OUT') {

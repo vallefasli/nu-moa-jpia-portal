@@ -34,7 +34,7 @@ export async function updateSession(request: NextRequest) {
   const path = request.nextUrl.pathname
 
   const isAuthRoute = path === '/' || path.startsWith('/admin-login')
-  const isPublicRoute = path.startsWith('/auth/callback') || path.startsWith('/confirmed') || path.startsWith('/privacy') || path.startsWith('/terms') || path.startsWith('/rejected')
+  const isPublicRoute = path.startsWith('/auth/callback') || path.startsWith('/confirmed') || path.startsWith('/privacy') || path.startsWith('/terms') || path.startsWith('/rejected') || path.startsWith('/reset-password')
 
   // Allow public routes through without any checks
   if (isPublicRoute) {
