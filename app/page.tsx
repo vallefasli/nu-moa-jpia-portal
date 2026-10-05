@@ -18,7 +18,10 @@ import {
   AlertCircle, 
   CheckCircle2, 
   Info,
-  ArrowRight
+  ArrowRight,
+  UserCheck,
+  CalendarDays,
+  Award
 } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 
@@ -361,20 +364,23 @@ export default function LoginPage() {
         <div className="relative z-10 animate-in fade-in duration-1000 delay-200">
           <div className="space-y-6">
             {[
-              { icon: '🎓', title: 'Membership Management', desc: 'Track your membership status and ID' },
-              { icon: '📅', title: 'Events & Attendance', desc: 'Register for events and earn points' },
-              { icon: '🏅', title: 'Certificates & Rewards', desc: 'Access your earned certificates' },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-lg shrink-0 backdrop-blur-sm">
-                  {item.icon}
+              { icon: UserCheck, title: 'Membership Management', desc: 'Track your membership status and ID' },
+              { icon: CalendarDays, title: 'Events & Attendance', desc: 'Register for events and earn points' },
+              { icon: Award, title: 'Certificates & Rewards', desc: 'Access your earned certificates' },
+            ].map((item, i) => {
+              const Icon = item.icon
+              return (
+                <div key={i} className="flex items-center gap-4 group">
+                  <div className="w-11 h-11 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-[#FFD54F] shrink-0 backdrop-blur-md shadow-xs group-hover:bg-white/15 transition-all">
+                    <Icon className="w-5 h-5 text-[#FFD54F]" />
+                  </div>
+                  <div>
+                    <p className="text-white font-semibold text-sm tracking-tight">{item.title}</p>
+                    <p className="text-white/60 text-xs mt-0.5 leading-relaxed">{item.desc}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-white font-semibold text-sm">{item.title}</p>
-                  <p className="text-white/50 text-xs mt-0.5">{item.desc}</p>
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
 

@@ -12,19 +12,15 @@ export default async function DigitalIdPage() {
   const initials = profile.full_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase()
 
   return (
-    <div className="w-full max-w-sm mx-auto p-4 py-6 sm:py-8 flex flex-col items-center justify-center min-h-[calc(100dvh-12rem)] md:min-h-[calc(100vh-80px)] relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#006B3C]/5 to-transparent -z-10" />
+    <div className="w-full max-w-sm mx-auto px-4 flex flex-col items-center justify-center min-h-[calc(100dvh-11.5rem)] md:min-h-[calc(100vh-6rem)] relative -mb-24 md:mb-0">
+      <div className="absolute inset-0 bg-gradient-to-b from-[#006B3C]/5 to-transparent -z-10 pointer-events-none" />
       
-      <div className="text-center mb-4 sm:mb-6 animate-in fade-in slide-in-from-top-4 duration-500">
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 tracking-tight leading-tight">My Digital ID</h1>
-        <p className="text-gray-500 mt-1 text-xs sm:text-sm">Present this QR code at JPIA events to log your attendance and earn points.</p>
+      <div className="text-center mb-2 sm:mb-2.5 shrink-0 animate-in fade-in slide-in-from-top-4 duration-500">
+        <h1 className="text-lg sm:text-xl font-black text-gray-900 tracking-tight leading-tight">My Digital ID</h1>
+        <p className="text-gray-500 text-[11px] sm:text-xs">Present this QR code at events to log attendance.</p>
       </div>
 
       <DigitalIdCard profile={profile} initials={initials} />
-      
-      <p className="text-center text-[10px] text-gray-400 mt-6 max-w-[200px] font-medium leading-relaxed animate-in fade-in duration-1000 delay-500">
-        Tip: Turn up your screen brightness when scanning in low-light environments.
-      </p>
     </div>
   )
 }

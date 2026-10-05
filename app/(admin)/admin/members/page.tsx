@@ -2,7 +2,13 @@ import { createClient, getAuthenticatedUser, getCurrentUserProfile } from '@/uti
 import MembersClient from './MembersClient'
 import { redirect } from 'next/navigation'
 
-export default async function MembersPage() {
+import { Suspense } from 'react'
+
+export default async function MembersPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
   const user = await getAuthenticatedUser()
   if (!user) {
     redirect('/')
@@ -12,6 +18,10 @@ export default async function MembersPage() {
   if (profile?.role !== 'admin') {
     redirect('/admin/scanner') // Redirect non-admins away
   }
+
+  const sp = searchParams ? await searchParams : {}
+  const targetMemberId = typeof sp.editMember === 'string' ? sp.editMember : undefined
+  const targetStudentNo = typeof sp.studentNo === 'string' ? sp.studentNo : (typeof sp.search === 'string' ? sp.search : undefined)
 
   const supabase = await createClient()
 
@@ -26,6 +36,12 @@ export default async function MembersPage() {
     .order('full_name', { ascending: true })
 
   return (
-    <MembersClient initialUsers={users || []} />
+    <Suspense fallback={null}>
+      <MembersClient 
+        initialUsers={users || []} 
+        targetMemberId={targetMemberId}
+        targetStudentNo={targetStudentNo}
+      />
+    </Suspense>
   )
 }

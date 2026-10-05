@@ -320,10 +320,10 @@ export function FeedbackClient({
                     </div>
 
                     <div className="flex items-center gap-2">
-                      {/* Jump to Member Profile if Profile Update */}
-                      {item.type === 'profile_update' && item.users?.student_no && (
+                      {/* Jump to Member Profile if user info is present */}
+                      {(item.type === 'profile_update' || item.user_id || item.users?.student_no) && (item.user_id || item.users?.student_no) && (
                         <Link
-                          href={`/admin/members?search=${encodeURIComponent(item.users.student_no)}`}
+                          href={`/admin/members?editMember=${encodeURIComponent(item.user_id || '')}&studentNo=${encodeURIComponent(item.users?.student_no || '')}`}
                           className="inline-flex items-center gap-1 px-3 py-1 bg-white hover:bg-gray-50 text-[#006B3C] text-xs font-semibold rounded-xl border border-gray-200 transition-colors shadow-2xs"
                         >
                           <User className="w-3 h-3" />

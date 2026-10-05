@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Inbox, ChevronRight, Search, Edit, Trash2, ShieldAlert, QrCode, Filter, SlidersHorizontal } from 'lucide-react'
 import QRCode from 'react-qr-code'
@@ -42,7 +43,16 @@ type User = {
   qr_token: string
 }
 
-export default function MembersClient({ initialUsers }: { initialUsers: User[] }) {
+export default function MembersClient({ 
+  initialUsers,
+  targetMemberId,
+  targetStudentNo,
+}: { 
+  initialUsers: User[]
+  targetMemberId?: string
+  targetStudentNo?: string
+}) {
+  const searchParams = useSearchParams()
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
@@ -56,6 +66,31 @@ export default function MembersClient({ initialUsers }: { initialUsers: User[] }
     dateJoined: 'All'
   })
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false)
+
+  // Automatically open the targeted member in edit mode if arriving from Support & Feedback
+  useEffect(() => {
+    const editId = targetMemberId || searchParams?.get('editMember')
+    const studentNo = targetStudentNo || searchParams?.get('studentNo') || searchParams?.get('search')
+    
+    if (editId || studentNo) {
+      const match = initialUsers.find(u => 
+        (editId && u.id === editId) ||
+        (studentNo && (
+          u.student_no?.toLowerCase() === studentNo.toLowerCase() ||
+          u.member_id?.toLowerCase() === studentNo.toLowerCase()
+        ))
+      )
+
+      if (match) {
+        setSelectedUser(match)
+        setIsEditMode(true)
+        setShowQR(false)
+        setIsDialogOpen(true)
+        setSearchQuery(match.student_no)
+        toast.info(`Editing member details for ${match.full_name}`)
+      }
+    }
+  }, [targetMemberId, targetStudentNo, searchParams, initialUsers])
 
   const getActiveFilterCount = () => {
     let count = 0;
