@@ -4,8 +4,18 @@ import { Button } from '@/components/ui/button'
 import { logout } from '@/app/(auth)/actions'
 import { LogoutDialog } from '@/components/LogoutDialog'
 import { PendingPoller } from './PendingPoller'
+import { getAuthenticatedUser, getCurrentUserProfile } from '@/utils/supabase/server'
+import { redirect } from 'next/navigation'
 
-export default function PendingVerificationPage() {
+export default async function PendingVerificationPage() {
+  const user = await getAuthenticatedUser()
+  if (!user) redirect('/')
+
+  const profile = await getCurrentUserProfile(user.id)
+  if (profile?.role === 'member' && !profile?.student_no) redirect('/complete-profile')
+  if (profile?.account_status === 'active') redirect('/dashboard')
+  if (profile?.account_status === 'rejected') redirect('/rejected')
+
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-[#004d2b] via-[#006B3C] to-[#00854a] p-4 overflow-hidden">
       <PendingPoller />

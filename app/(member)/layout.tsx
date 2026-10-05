@@ -18,6 +18,14 @@ export default async function MemberLayout({
     redirect('/admin/verification')
   }
 
+  if (profile?.role === 'member' && !profile?.student_no) {
+    redirect('/complete-profile')
+  }
+
+  if (profile?.account_status === 'rejected') {
+    redirect('/rejected')
+  }
+
   if (profile?.account_status !== 'active') {
     redirect('/pending')
   }

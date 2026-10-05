@@ -1,13 +1,18 @@
-'use client'
-
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { getAuthenticatedUser, getCurrentUserProfile } from '@/utils/supabase/server'
+import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-export default function AcceptedPage() {
-  const router = useRouter()
+export default async function AcceptedPage() {
+  const user = await getAuthenticatedUser()
+  if (!user) redirect('/')
+
+  const profile = await getCurrentUserProfile(user.id)
+  if (profile?.role === 'member' && !profile?.student_no) redirect('/complete-profile')
+  if (profile?.account_status === 'pending') redirect('/pending')
+  if (profile?.account_status === 'rejected') redirect('/rejected')
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center p-4 overflow-hidden bg-gradient-to-br from-[#004d2b] via-[#006B3C] to-[#00854a]">
@@ -32,9 +37,11 @@ export default function AcceptedPage() {
           <p className="mb-6 text-sm text-gray-500 leading-relaxed text-center">
             Welcome to the <strong className="text-[#006B3C]">NU MOA JPIA Portal</strong>. You can now access all member features including events, your digital ID, and certificates.
           </p>
-          <Button onClick={() => router.push('/dashboard')} className="w-full bg-[#006B3C] hover:bg-[#004d2b] text-white py-6 text-base font-bold rounded-2xl transition-all active:scale-[0.98] shadow-lg shadow-[#006B3C]/20 gap-2">
-            Go to Dashboard →
-          </Button>
+          <Link href="/dashboard" className="w-full">
+            <Button className="w-full bg-[#006B3C] hover:bg-[#004d2b] text-white py-6 text-base font-bold rounded-2xl transition-all active:scale-[0.98] shadow-lg shadow-[#006B3C]/20 gap-2">
+              Go to Dashboard →
+            </Button>
+          </Link>
         </CardContent>
       </Card>
 

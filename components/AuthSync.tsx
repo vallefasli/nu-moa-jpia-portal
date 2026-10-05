@@ -13,31 +13,43 @@ export function AuthSync() {
     // Create a BroadcastChannel to communicate across tabs
     const channel = new BroadcastChannel('auth-sync-channel')
 
+    const handleSignOutRedirect = () => {
+      const skipSync = localStorage.getItem('skip_auth_sync') === 'true'
+      if (skipSync) {
+        localStorage.removeItem('skip_auth_sync')
+        return
+      }
+      const path = window.location.pathname
+      const isExcluded = 
+        path === '/' ||
+        path === '/pending' ||
+        path === '/rejected' ||
+        path === '/confirmed' ||
+        path.startsWith('/admin-login') ||
+        path.startsWith('/auth/callback') ||
+        path.startsWith('/privacy') ||
+        path.startsWith('/terms')
+
+      if (isExcluded) {
+        return
+      }
+
+      const isAdmin = path.startsWith('/admin')
+      const isExpired = localStorage.getItem('nu_moa_expired') === 'true'
+      if (isExpired) {
+        localStorage.removeItem('nu_moa_expired')
+        window.location.href = isAdmin ? '/admin-login?expired=true' : '/?expired=true'
+      } else {
+        window.location.href = isAdmin ? '/admin-login' : '/'
+      }
+    }
+
     // Listen for auth changes triggered from other tabs
     channel.onmessage = (event) => {
       if (event.data.type === 'AUTH_CHANGE') {
         router.refresh()
         if (event.data.event === 'SIGNED_OUT') {
-          setTimeout(() => {
-            const skipSync = localStorage.getItem('skip_auth_sync') === 'true'
-            if (skipSync) {
-              localStorage.removeItem('skip_auth_sync')
-              return
-            }
-            if (window.location.pathname === '/pending') {
-              return
-            }
-            const isAdmin = window.location.pathname.startsWith('/admin')
-            const isExpired = localStorage.getItem('nu_moa_expired') === 'true'
-            if (isExpired) {
-              localStorage.removeItem('nu_moa_expired')
-              window.location.href = isAdmin ? '/admin-login?expired=true' : '/?expired=true'
-            } else {
-              if (window.location.pathname !== '/rejected') {
-                window.location.href = isAdmin ? '/admin-login' : '/'
-              }
-            }
-          }, 100)
+          setTimeout(handleSignOutRedirect, 100)
         }
       }
     }
@@ -50,26 +62,7 @@ export function AuthSync() {
         // Handle it locally as well
         if (event === 'SIGNED_OUT') {
           router.refresh()
-          setTimeout(() => {
-            const skipSync = localStorage.getItem('skip_auth_sync') === 'true'
-            if (skipSync) {
-              localStorage.removeItem('skip_auth_sync')
-              return
-            }
-            if (window.location.pathname === '/pending') {
-              return
-            }
-            const isAdmin = window.location.pathname.startsWith('/admin')
-            const isExpired = localStorage.getItem('nu_moa_expired') === 'true'
-            if (isExpired) {
-              localStorage.removeItem('nu_moa_expired')
-              window.location.href = isAdmin ? '/admin-login?expired=true' : '/?expired=true'
-            } else {
-              if (window.location.pathname !== '/rejected') {
-                window.location.href = isAdmin ? '/admin-login' : '/'
-              }
-            }
-          }, 100)
+          setTimeout(handleSignOutRedirect, 100)
         } else {
           router.refresh()
         }

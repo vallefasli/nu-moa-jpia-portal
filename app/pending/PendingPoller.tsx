@@ -30,7 +30,7 @@ export function PendingPoller() {
 
       const { data: profile } = await supabase
         .from('users')
-        .select('account_status')
+        .select('account_status, student_no, role')
         .eq('id', user.id)
         .single()
 
@@ -39,6 +39,11 @@ export function PendingPoller() {
         localStorage.setItem('skip_auth_sync', 'true')
         await supabase.auth.signOut()
         window.location.href = '/rejected'
+        return
+      }
+
+      if (profile.role === 'member' && !profile.student_no) {
+        window.location.href = '/complete-profile'
         return
       }
 

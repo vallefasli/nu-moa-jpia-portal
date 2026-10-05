@@ -30,7 +30,7 @@ export async function login(prevState: any, formData: FormData): Promise<AuthSta
   // Fetch role and status to redirect correctly
   const { data: profile } = await supabase
     .from('users')
-    .select('role, account_status')
+    .select('role, account_status, student_no')
     .eq('id', authData.user.id)
     .single()
 
@@ -61,6 +61,11 @@ export async function login(prevState: any, formData: FormData): Promise<AuthSta
 
   (await cookies()).set('active_role', requestedRole, { path: '/' })
 
+  // Ensure member profiles are complete before proceeding
+  if (actualRole === 'member' && !profile?.student_no) {
+    redirect('/complete-profile')
+  }
+
   if (status === 'pending') {
     redirect('/pending')
   } else if (actualRole === 'admin') {
@@ -90,7 +95,9 @@ export async function signup(prevState: any, formData: FormData): Promise<AuthSt
   const supabase = await createClient()
 
   const headersList = await headers()
-  const origin = headersList.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const host = headersList.get('x-forwarded-host') || headersList.get('host')
+  const proto = headersList.get('x-forwarded-proto') || 'https'
+  const origin = headersList.get('origin') || (host ? `${proto}://${host}` : (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'))
 
   const { error, data } = await supabase.auth.signUp({
     email,
@@ -113,6 +120,6 @@ export async function signup(prevState: any, formData: FormData): Promise<AuthSt
     return { success: 'Registration successful! Please check your email and click the confirmation link to complete your setup.' }
   }
 
-  redirect('/pending')
+  redirect('/complete-profile')
 }
 // trigger rebuild

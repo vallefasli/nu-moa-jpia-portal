@@ -85,6 +85,9 @@ export default function CompleteProfilePage() {
             setFirstName(profile.full_name)
           }
         }
+        if (user.email && user.email.endsWith('@students.nu-moa.edu.ph')) {
+          setStudentEmail(user.email)
+        }
       }
       isHydrated.current = true
     }
